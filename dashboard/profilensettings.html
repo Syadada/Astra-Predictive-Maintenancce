@@ -1,0 +1,635 @@
+<!DOCTYPE html><html class="light" lang="en" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Project ASTRA | User Profile &amp; Settings</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Playfair+Display:wght@700&amp;display=swap" rel="stylesheet">
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                "inverse-primary": "#9ed2b1",
+                "on-primary-fixed": "#002111",
+                "on-error": "#ffffff",
+                "error-container": "#ffdad6",
+                "on-secondary-fixed": "#002110",
+                "on-primary": "#ffffff",
+                "primary-fixed": "#baefcc",
+                "surface-tint": "#38684d",
+                "on-primary-container": "#8bbe9e",
+                "surface-variant": "#e3e2df",
+                "on-secondary-container": "#227049",
+                "secondary-container": "#a3f0bf",
+                "on-tertiary-fixed-variant": "#00522b",
+                "amber-warn": "#E67E22",
+                "green-good": "#27AE60",
+                "on-background": "#1b1c1a",
+                "on-primary-fixed-variant": "#1f5036",
+                "tertiary-fixed-dim": "#71dc96",
+                "outline-variant": "#c0c9c1",
+                "surface-container": "#efeeeb",
+                "tertiary": "#00371b",
+                "surface": "#FFFFFF",
+                "red-alert": "#C0392B",
+                "surface-container-highest": "#e3e2df",
+                "surface-bright": "#faf9f6",
+                "on-secondary-fixed-variant": "#005230",
+                "primary": "#003720",
+                "surface-dim": "#dbdad7",
+                "primary-container": "#1d4e35",
+                "on-tertiary-fixed": "#00210e",
+                "on-tertiary-container": "#5cc784",
+                "secondary-fixed-dim": "#8ad7a7",
+                "border": "#E2DDD6",
+                "tertiary-fixed": "#8df9b1",
+                "on-tertiary": "#ffffff",
+                "on-surface-variant": "#414943",
+                "surface-container-high": "#e9e8e5",
+                "inverse-on-surface": "#f2f1ee",
+                "secondary": "#1c6b45",
+                "on-surface": "#1b1c1a",
+                "on-secondary": "#ffffff",
+                "surface-container-lowest": "#ffffff",
+                "primary-fixed-dim": "#9ed2b1",
+                "ink": "#1A1A18",
+                "tertiary-container": "#00502a",
+                "green-light": "#EAF2EC",
+                "surface-container-low": "#f4f3f0",
+                "secondary-fixed": "#a6f3c2",
+                "outline": "#717972",
+                "inverse-surface": "#2f312f",
+                "error": "#ba1a1a",
+                "background": "#faf9f6",
+                "on-error-container": "#93000a",
+                "ink-muted": "#6B6860",
+                "mono-data": "#2C3E50"
+            },
+            "borderRadius": {
+                "DEFAULT": "0.125rem",
+                "lg": "0.25rem",
+                "xl": "0.5rem",
+                "full": "0.75rem"
+            },
+            "spacing": {
+                "margin-desktop": "64px",
+                "xl": "48px",
+                "xxl": "96px",
+                "md": "16px",
+                "lg": "24px",
+                "base": "4px",
+                "sm": "8px",
+                "gutter": "24px",
+                "xs": "4px",
+                "margin-mobile": "16px"
+            },
+            "fontFamily": {
+                "hero-lg-mobile": ["Playfair Display"],
+                "body-sm": ["Inter"],
+                "headline-display": ["Playfair Display"],
+                "body-md": ["Inter"],
+                "data-value": ["JetBrains Mono"],
+                "data-display": ["JetBrains Mono"],
+                "hero-lg": ["Playfair Display"],
+                "data-label": ["JetBrains Mono"],
+                "body-lg": ["Inter"]
+            },
+            "fontSize": {
+                "hero-lg-mobile": ["42px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                "body-sm": ["14px", {"lineHeight": "1.4", "fontWeight": "500"}],
+                "headline-display": ["40px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                "data-value": ["14px", {"lineHeight": "1.0", "fontWeight": "500"}],
+                "data-display": ["48px", {"lineHeight": "1.0", "letterSpacing": "-0.03em", "fontWeight": "500"}],
+                "hero-lg": ["68px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                "data-label": ["11px", {"lineHeight": "1.0", "letterSpacing": "0.05em", "fontWeight": "400"}],
+                "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: #faf9f6;
+            color: #1b1c1a;
+            -webkit-font-smoothing: antialiased;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #717972;
+            border-radius: 10px;
+        }
+    </style>
+<link rel="stylesheet" href="css/styles.css">
+<script src="js/interactions.js"></script>
+</head>
+<body class="bg-background text-on-background font-body-md flex h-screen overflow-hidden">
+<!-- Main Canvas -->
+<main class="flex-1 md:ml-64 h-screen bg-background overflow-y-auto custom-scrollbar">
+<!-- TopAppBar (Authority: JSON) -->
+<header class="flex justify-between items-center px-lg h-16 w-full z-[100] backdrop-blur-md border-b border-border bg-surface/80 sticky top-0">
+<div class="flex items-center gap-md md:hidden">
+<span class="material-symbols-outlined text-primary cursor-pointer" data-sidebar-toggle aria-label="Open navigation menu">menu</span>
+<span class="font-hero-lg text-body-lg text-primary font-bold">Project ASTRA</span>
+</div>
+<div class="hidden md:flex items-center gap-md">
+<h2 class="font-hero-lg text-body-lg text-primary font-bold">Account Settings</h2>
+<div class="h-4 w-[1px] bg-outline-variant mx-sm"></div>
+<p class="font-body-sm text-body-sm text-on-surface-variant italic" id="header-profile-title">Lead Engineer Profile</p>
+</div>
+<div class="flex items-center gap-md">
+<div class="flex items-center gap-sm px-md py-base bg-surface-container-low rounded-full border border-border">
+<span class="w-2 h-2 rounded-full bg-green-good animate-pulse"></span>
+<span class="font-data-label text-data-label text-primary">SYSTEM READY</span>
+</div>
+<div class="flex gap-sm">
+<span class="material-symbols-outlined cursor-pointer text-on-surface-variant hover:text-primary" data-icon="help">help</span>
+<span class="material-symbols-outlined cursor-pointer text-on-surface-variant hover:text-primary" data-icon="account_circle">account_circle</span>
+</div>
+</div>
+</header>
+<!-- Content Area -->
+<div class="max-w-[1200px] mx-auto py-xxl px-margin-mobile md:px-margin-desktop space-y-xl">
+<!-- Hero Section: Profile Header -->
+<section class="grid grid-cols-1 md:grid-cols-12 gap-lg items-start">
+<div class="md:col-span-8 flex flex-col md:flex-row gap-lg items-center md:items-end">
+<div class="relative group">
+<div class="w-32 h-32 md:w-40 md:h-40 rounded-xl overflow-hidden border-2 border-primary-container p-1 bg-surface ring-4 ring-primary/5">
+<img id="profile-avatar" alt="User Profile Picture" class="w-full h-full object-cover rounded-lg" src="">
+</div>
+<button class="absolute -bottom-2 -right-2 bg-primary text-white p-2 rounded-lg shadow-lg hover:bg-primary-container transition-all active:scale-95" onclick="const newUrl = prompt('Enter Profile Image URL:', document.getElementById('profile-input-avatar').value); if(newUrl !== null) { document.getElementById('profile-input-avatar').value = newUrl; document.getElementById('profile-avatar').src = newUrl || 'https://lh3.googleusercontent.com/aida-public/AB6AXuAJB3nF963ZDZN5AzByGsqb2MxVyIvYYJZPDV3NOPF900ug_3y-d7MEHM9IcmdVDLg62EThO7ZZgtVfPH2qBLypFdU6CntX3pU3T1JaCfwVtgGdlrtJC5dzHHTfJxSNG-UN1NvfxKBe1DzYgQaD3aqaZg3Xxnt5j4CGxyaLfpyjHJO3tUUkGQIBvHZZAZPScXVH5c1S1afsZtZtXFKb6SEtVWsYVchjtnhJNUrqnmceziBRB5_XQGZV4hDOih0mFzLsvnv-I80nDtU'; }">
+<span class="material-symbols-outlined text-sm">edit</span>
+</button>
+</div>
+<div class="text-center md:text-left pb-base">
+<span class="font-data-label text-data-label uppercase tracking-widest text-primary-container mb-2 block">System Identity</span>
+<h1 class="font-headline-display text-headline-display text-primary leading-tight" id="profile-name">Justin Bieber</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant font-medium" id="profile-title">Lead Engineer &amp; Predictive Analytics Specialist</p>
+</div>
+</div>
+<div class="md:col-span-4 bg-primary p-lg rounded-xl flex flex-col justify-between h-full min-h-[160px] text-white shadow-xl relative overflow-hidden">
+<div class="relative z-10">
+<p class="font-data-label text-data-label opacity-70 uppercase tracking-widest mb-1">Clearance Level</p>
+<h3 class="font-data-display text-headline-display text-secondary-fixed" id="profile-clearance">LEVEL 4</h3>
+</div>
+<div class="relative z-10 flex items-center gap-sm">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">verified_user</span>
+<span class="font-body-sm text-body-sm" id="profile-privileges">Global Admin Privileges</span>
+</div>
+<!-- Decorative Background Element -->
+<div class="absolute -right-8 -bottom-8 opacity-10">
+<span class="material-symbols-outlined text-[120px]">shield</span>
+</div>
+</div>
+</section>
+<!-- Bento Grid: Details & Settings -->
+<section class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+<!-- Card: Facility Permissions -->
+<div class="md:col-span-2 bg-surface border border-border p-lg rounded-xl hover:shadow-sm transition-shadow">
+<div class="flex justify-between items-center mb-lg">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary">factory</span>
+<h4 class="font-body-md text-body-md font-bold text-primary">Facility Access Control</h4>
+</div>
+<button class="font-data-label text-data-label text-secondary font-bold hover:underline" onclick="pgToast('Node management requires Plant Control System credentials', 'info')">MANAGE NODES</button>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-md">
+<div class="bg-green-light border border-secondary/10 p-md rounded-lg flex items-center justify-between">
+<div>
+<h5 class="font-data-value text-data-value text-primary font-bold">ASTRA Facility</h5>
+<p class="font-data-label text-data-label text-on-surface-variant">Primary Hub (Lead Eng.)</p>
+</div>
+<span class="material-symbols-outlined text-green-good">check_circle</span>
+</div>
+<div class="bg-surface-container-low border border-border p-md rounded-lg flex items-center justify-between opacity-70">
+<div>
+<h5 class="font-data-value text-data-value text-primary font-bold">Plant 12 - Dublin</h5>
+<p class="font-data-label text-data-label text-on-surface-variant">Secondary Monitor</p>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant">visibility</span>
+</div>
+<div class="bg-surface-container-low border border-border p-md rounded-lg flex items-center justify-between opacity-70">
+<div>
+<h5 class="font-data-value text-data-value text-primary font-bold">Plant 04 - Naas</h5>
+<p class="font-data-label text-data-label text-on-surface-variant">Audit Access Only</p>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant">lock_open</span>
+</div>
+<div class="border border-dashed border-outline-variant p-md rounded-lg flex items-center justify-center gap-sm text-outline cursor-pointer hover:bg-surface-container-low transition-colors">
+<span class="material-symbols-outlined">add</span>
+<span class="font-data-label text-data-label">REQUEST ACCESS</span>
+</div>
+</div>
+</div>
+<!-- Card: Notification Toggles -->
+<div class="bg-surface border border-border p-lg rounded-xl pg-card">
+<div class="flex items-center gap-sm mb-lg">
+<span class="material-symbols-outlined text-primary">notifications_active</span>
+<h4 class="font-body-md text-body-md font-bold text-primary">Predictive Alerts</h4>
+</div>
+<div class="space-y-lg">
+<div class="flex items-center justify-between">
+<div>
+<p class="font-body-sm text-body-sm font-semibold text-ink">Critical CCP Failure</p>
+<p class="font-data-label text-data-label text-ink-muted">Instant Push &amp; Email</p>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox">
+<div class="w-11 h-6 bg-surface-variant peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+</label>
+</div>
+<div class="flex items-center justify-between">
+<div>
+<p class="font-body-sm text-body-sm font-semibold text-ink">Early Anomaly Detection</p>
+<p class="font-data-label text-data-label text-ink-muted">Dashboard Only</p>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox">
+<div class="w-11 h-6 bg-surface-variant peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+</label>
+</div>
+<div class="flex items-center justify-between">
+<div>
+<p class="font-body-sm text-body-sm font-semibold text-ink">Weekly Performance</p>
+<p class="font-data-label text-data-label text-ink-muted">PDF Digest via Email</p>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input class="sr-only peer" type="checkbox">
+<div class="w-11 h-6 bg-surface-variant peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+</label>
+</div>
+</div>
+</div>
+<!-- Card: Technical Specifications (XAI Style) -->
+<div class="bg-surface-container-high border border-border p-lg rounded-xl md:col-span-1">
+<div class="flex items-center gap-sm mb-md">
+<span class="material-symbols-outlined text-primary">data_usage</span>
+<h4 class="font-data-label text-data-label font-bold text-primary uppercase">Engine Telemetry</h4>
+</div>
+<div class="space-y-md">
+<div>
+<div class="flex justify-between font-data-label text-[10px] mb-1">
+<span class="text-ink-muted">AI MODEL ACCURACY</span>
+<span class="text-primary font-bold">98.4%</span>
+</div>
+<div class="h-1 bg-surface-variant rounded-full overflow-hidden">
+<div class="h-full bg-primary" style="width: 98.4%"></div>
+</div>
+</div>
+<div class="flex items-center gap-md">
+<div class="flex-1">
+<p class="font-data-label text-[10px] text-ink-muted mb-1">LAST SYNC</p>
+<p class="font-data-value text-data-value text-primary">04:12:08 UTC</p>
+</div>
+<div class="flex-1">
+<p class="font-data-label text-[10px] text-ink-muted mb-1">LATENCY</p>
+<p class="font-data-value text-data-value text-primary">12ms</p>
+</div>
+</div>
+</div>
+<div class="mt-lg pt-lg border-t border-outline/10">
+<button class="w-full bg-white border border-border py-sm rounded font-data-label text-data-label text-primary hover:bg-surface-container-lowest transition-all flex items-center justify-center gap-sm" onclick="pgMockDownload('Activity_Log_KG8892_2026','csv')">
+<span class="material-symbols-outlined text-md">download</span>
+                            EXPORT LOGS
+                        </button>
+</div>
+</div>
+<!-- Card: Interactive Settings -->
+<div class="bg-surface border border-border p-lg rounded-xl md:col-span-2 pg-card">
+<h4 class="font-body-md text-body-md font-bold text-primary mb-lg">Profile Settings</h4>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-md">
+  <div>
+    <label class="block font-data-label text-data-label text-on-surface-variant mb-1 uppercase">Full Name</label>
+    <input id="profile-input-name" class="w-full bg-surface-container-low border-border rounded-lg text-ink font-body-sm focus:ring-primary focus:border-primary px-md py-sm" type="text" value="">
+  </div>
+  <div>
+    <label class="block font-data-label text-data-label text-on-surface-variant mb-1 uppercase">Job Title / Specialty</label>
+    <input id="profile-input-title" class="w-full bg-surface-container-low border-border rounded-lg text-ink font-body-sm focus:ring-primary focus:border-primary px-md py-sm" type="text" value="">
+  </div>
+  <div>
+    <label class="block font-data-label text-data-label text-on-surface-variant mb-1 uppercase">Work Email</label>
+    <input id="profile-input-email" class="w-full bg-surface-container-low border-border rounded-lg text-ink font-body-sm focus:ring-primary focus:border-primary px-md py-sm" type="text" value="">
+  </div>
+  <div>
+    <label class="block font-data-label text-data-label text-on-surface-variant mb-1 uppercase">Avatar Image URL</label>
+    <input id="profile-input-avatar" class="w-full bg-surface-container-low border-border rounded-lg text-ink font-body-sm focus:ring-primary focus:border-primary px-md py-sm" type="text" value="">
+  </div>
+  <div class="sm:col-span-2">
+    <label class="block font-data-label text-data-label text-on-surface-variant mb-1 uppercase">Employee ID (Read Only)</label>
+    <input id="profile-employee-id" class="w-full bg-surface-container-highest border-border rounded-lg text-ink-muted font-data-value px-md py-sm cursor-not-allowed" disabled="" type="text" value="ASTRA-USER-2026">
+  </div>
+</div>
+</div>
+
+<!-- Card: Notification Gateway Configuration -->
+<div class="bg-surface border border-border p-lg rounded-xl md:col-span-3 pg-card">
+<div class="flex items-center gap-sm mb-lg">
+<span class="material-symbols-outlined text-primary">mail_outline</span>
+<h4 class="font-body-md text-body-md font-bold text-primary">Notification Gateway Configuration</h4>
+</div>
+<form id="notificationSettingsForm" class="space-y-lg">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-lg">
+<!-- SMTP Settings -->
+<div class="space-y-md">
+<h5 class="font-body-sm text-body-sm font-bold text-secondary border-b border-border pb-2">SMTP Email Settings</h5>
+<div>
+<label class="block font-data-label text-data-label text-on-surface-variant mb-1">SMTP Server</label>
+<input id="smtp_server" class="w-full bg-surface-container-low border-border rounded-lg text-ink font-body-sm focus:ring-primary focus:border-primary px-md py-sm" type="text" placeholder="smtp.gmail.com">
+</div>
+<div class="grid grid-cols-3 gap-md">
+<div class="col-span-2">
+<label class="block font-data-label text-data-label text-on-surface-variant mb-1">Sender Email</label>
+<input id="sender_email" class="w-full bg-surface-container-low border-border rounded-lg text-ink font-body-sm focus:ring-primary focus:border-primary px-md py-sm" type="email" placeholder="example@gmail.com">
+</div>
+<div>
+<label class="block font-data-label text-data-label text-on-surface-variant mb-1">SMTP Port</label>
+<input id="smtp_port" class="w-full bg-surface-container-low border-border rounded-lg text-ink font-body-sm focus:ring-primary focus:border-primary px-md py-sm" type="number" placeholder="587">
+</div>
+</div>
+<div>
+<label class="block font-data-label text-data-label text-on-surface-variant mb-1">SMTP App Password</label>
+<input id="sender_password" class="w-full bg-surface-container-low border-border rounded-lg text-ink font-body-sm focus:ring-primary focus:border-primary px-md py-sm" type="password" placeholder="••••••••">
+</div>
+<div>
+<label class="block font-data-label text-data-label text-on-surface-variant mb-1">Recipient Email</label>
+<input id="recipient_email" class="w-full bg-surface-container-low border-border rounded-lg text-ink font-body-sm focus:ring-primary focus:border-primary px-md py-sm" type="email" placeholder="recipient@example.com">
+</div>
+</div>
+<!-- Twilio Settings -->
+<div class="space-y-md">
+<h5 class="font-body-sm text-body-sm font-bold text-secondary border-b border-border pb-2">Twilio WhatsApp Settings</h5>
+<div>
+<label class="block font-data-label text-data-label text-on-surface-variant mb-1">Twilio Account SID</label>
+<input id="twilio_account_sid" class="w-full bg-surface-container-low border-border rounded-lg text-ink font-body-sm focus:ring-primary focus:border-primary px-md py-sm" type="text" placeholder="AC...">
+</div>
+<div>
+<label class="block font-data-label text-data-label text-on-surface-variant mb-1">Twilio Auth Token</label>
+<input id="twilio_auth_token" class="w-full bg-surface-container-low border-border rounded-lg text-ink font-body-sm focus:ring-primary focus:border-primary px-md py-sm" type="password" placeholder="••••••••">
+</div>
+<div>
+<label class="block font-data-label text-data-label text-on-surface-variant mb-1">Twilio WhatsApp From (Sandbox)</label>
+<input id="twilio_whatsapp_from" class="w-full bg-surface-container-low border-border rounded-lg text-ink font-body-sm focus:ring-primary focus:border-primary px-md py-sm" type="text" placeholder="+14155238886">
+</div>
+<div>
+<label class="block font-data-label text-data-label text-on-surface-variant mb-1">Recipient WhatsApp Number</label>
+<input id="recipient_whatsapp" class="w-full bg-surface-container-low border-border rounded-lg text-ink font-body-sm focus:ring-primary focus:border-primary px-md py-sm" type="text" placeholder="+62...">
+</div>
+</div>
+</div>
+<div class="flex justify-end gap-md pt-md border-t border-border">
+<button type="button" id="btnTestNotifications" class="px-xl py-sm bg-white border border-border text-primary font-body-sm font-bold rounded hover:bg-surface-container-low transition-all">
+Test Connection
+</button>
+<button type="submit" class="px-xl py-sm bg-primary text-white font-body-sm font-bold rounded hover:bg-opacity-90 transition-all">
+Save Settings
+</button>
+</div>
+</form>
+</div>
+</section>
+<!-- Dangerous Area -->
+<section class="pt-lg border-t border-border">
+<div class="flex flex-col md:flex-row justify-between items-center gap-lg">
+<div>
+<h4 class="font-body-md text-body-md font-bold text-red-alert">Account Operations</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Profile deactivation requires Senior Management approval for Lead roles.</p>
+</div>
+<div class="flex gap-md w-full md:w-auto">
+<button class="flex-1 md:flex-none px-xl py-sm bg-white border border-border text-primary font-body-sm font-bold rounded hover:bg-surface-container-low transition-all" onclick="saveUserProfile()">
+                            Save Changes
+                        </button>
+<button class="flex-1 md:flex-none px-xl py-sm bg-red-alert text-white font-body-sm font-bold rounded hover:bg-opacity-90 transition-all" onclick="pgConfirm('Sign out of Project ASTRA?', function(){ localStorage.removeItem('currentUser'); location.href='presentationsite.html'; })">
+                            Sign Out
+                        </button>
+</div>
+</div>
+</section>
+</div>
+</main>
+<!-- Success Message Micro-interaction (Hidden by default) -->
+<div class="fixed bottom-lg right-lg bg-primary text-white px-lg py-md rounded-xl shadow-2xl flex items-center gap-md transform translate-y-24 opacity-0 transition-all duration-300 z-[200]" id="saveToast">
+<span class="material-symbols-outlined text-green-good">check_circle</span>
+<span class="font-body-sm text-body-sm">Settings updated successfully</span>
+</div>
+<script>
+        // Search logic placeholder
+        document.addEventListener('keydown', (e) => {
+            if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+                e.preventDefault();
+                alert('Search triggered: Commands for Facility ASTRA Facility');
+            }
+        });
+
+        // ─── NOTIFICATION CONFIGURATION HANDLERS ──────────────────────────────────
+        const apiBaseUrl = window.location.protocol === 'file:' ? 'http://127.0.0.1:8000' : '';
+        const settingsUrl = apiBaseUrl + '/api/settings/notifications';
+        const dispatchUrl = apiBaseUrl + '/api/alerts/dispatch';
+
+        async function loadNotificationSettings() {
+            try {
+                const res = await fetch(settingsUrl);
+                if (!res.ok) throw new Error('HTTP ' + res.status);
+                const data = await res.json();
+                
+                if (data) {
+                    document.getElementById('smtp_server').value = data.smtp_server || '';
+                    document.getElementById('smtp_port').value = data.smtp_port || '';
+                    document.getElementById('sender_email').value = data.sender_email || '';
+                    document.getElementById('sender_password').value = data.sender_password || '';
+                    document.getElementById('recipient_email').value = data.recipient_email || '';
+                    document.getElementById('twilio_account_sid').value = data.twilio_account_sid || '';
+                    document.getElementById('twilio_auth_token').value = data.twilio_auth_token || '';
+                    document.getElementById('twilio_whatsapp_from').value = data.twilio_whatsapp_from || '';
+                    document.getElementById('recipient_whatsapp').value = data.recipient_whatsapp || '';
+                }
+            } catch (err) {
+                console.error('Error loading notification settings:', err);
+                pgToast('Failed to load notification settings: ' + err.message, 'error');
+            }
+        }
+
+        async function saveNotificationSettings(e) {
+            if (e) e.preventDefault();
+            
+            const payload = {
+                smtp_server: document.getElementById('smtp_server').value,
+                smtp_port: parseInt(document.getElementById('smtp_port').value) || 0,
+                sender_email: document.getElementById('sender_email').value,
+                sender_password: document.getElementById('sender_password').value,
+                recipient_email: document.getElementById('recipient_email').value,
+                twilio_account_sid: document.getElementById('twilio_account_sid').value,
+                twilio_auth_token: document.getElementById('twilio_auth_token').value,
+                twilio_whatsapp_from: document.getElementById('twilio_whatsapp_from').value,
+                recipient_whatsapp: document.getElementById('recipient_whatsapp').value
+            };
+
+            try {
+                const res = await fetch(settingsUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                if (!res.ok) throw new Error('HTTP ' + res.status);
+                
+                toast.classList.remove('translate-y-24', 'opacity-0');
+                toast.classList.add('translate-y-0', 'opacity-100');
+                
+                setTimeout(() => {
+                    toast.classList.add('translate-y-24', 'opacity-0');
+                    toast.classList.remove('translate-y-0', 'opacity-100');
+                }, 3000);
+                
+                await loadNotificationSettings();
+            } catch (err) {
+                console.error('Error saving notification settings:', err);
+                pgToast('Failed to save settings: ' + err.message, 'error');
+            }
+        }
+
+        async function testNotifications() {
+            await saveNotificationSettings();
+            
+            pgToast('Triggering test notifications...', 'info', 1500);
+            try {
+                pgDispatchAlert(
+                    "ASTRA-MTR-TEST", 
+                    "Test Winding Motor", 
+                    "This is a Project ASTRA gateway test notification. SMTP Email & Twilio WhatsApp connections verified successfully."
+                );
+            } catch (err) {
+                console.error('Error sending test notification:', err);
+                pgToast('Failed to send test: ' + err.message, 'error');
+            }
+        }
+
+        // ─── USER ROLE ACCESS & UI ADAPTATION ──────────────────────────────────
+        function applyUserRoleSettings() {
+            const user = JSON.parse(localStorage.getItem('currentUser')) || {
+                name: "Guest Operator",
+                role: "Operator",
+                clearance: "Level 1",
+                title: "Field Systems Operator",
+                avatar: "",
+                email: ""
+            };
+
+            // Populate Profile UI
+            if (user.avatar) {
+                document.getElementById('profile-avatar').src = user.avatar;
+            } else {
+                document.getElementById('profile-avatar').src = 'https://lh3.googleusercontent.com/aida-public/AB6AXuAJB3nF963ZDZN5AzByGsqb2MxVyIvYYJZPDV3NOPF900ug_3y-d7MEHM9IcmdVDLg62EThO7ZZgtVfPH2qBLypFdU6CntX3pU3T1JaCfwVtgGdlrtJC5dzHHTfJxSNG-UN1NvfxKBe1DzYgQaD3aqaZg3Xxnt5j4CGxyaLfpyjHJO3tUUkGQIBvHZZAZPScXVH5c1S1afsZtZtXFKb6SEtVWsYVchjtnhJNUrqnmceziBRB5_XQGZV4hDOih0mFzLsvnv-I80nDtU';
+            }
+            document.getElementById('profile-name').innerText = user.name;
+            document.getElementById('profile-title').innerText = user.title;
+            document.getElementById('profile-clearance').innerText = user.clearance.toUpperCase();
+            document.getElementById('profile-privileges').innerText = user.role + ' Privileges';
+            document.getElementById('header-profile-title').innerText = user.role + ' Profile';
+            
+            // Prefill inputs
+            document.getElementById('profile-input-name').value = user.name;
+            document.getElementById('profile-input-title').value = user.title;
+            document.getElementById('profile-input-email').value = user.email || '';
+            document.getElementById('profile-input-avatar').value = user.avatar || '';
+            
+            // Employee ID mockup generator based on name initials
+            const initials = user.name.split(' ').map(n => n[0]).join('').toUpperCase();
+            document.getElementById('profile-employee-id').value = `ASTRA-${initials}-2026`;
+
+            // Securing Notification Gateway form
+            if (user.role !== 'Super Admin') {
+                const form = document.getElementById('notificationSettingsForm');
+                
+                // Disable all inputs
+                form.querySelectorAll('input').forEach(input => {
+                    input.disabled = true;
+                    input.classList.remove('bg-surface-container-low');
+                    input.classList.add('bg-surface-container-highest', 'text-ink-muted', 'cursor-not-allowed');
+                });
+                
+                // Disable buttons
+                form.querySelectorAll('button').forEach(btn => {
+                    btn.disabled = true;
+                    btn.classList.add('opacity-50', 'cursor-not-allowed');
+                    btn.removeAttribute('onclick');
+                });
+
+                // Display a warning banner on top of the gateway form
+                if (!form.querySelector('.security-warning-banner')) {
+                    const warningBanner = document.createElement('div');
+                    warningBanner.className = 'p-md bg-amber-500/10 border border-amber-500/30 text-amber-900 rounded-lg text-sm flex items-center gap-sm mb-lg security-warning-banner';
+                    warningBanner.innerHTML = `
+                        <span class="material-symbols-outlined text-lg">warning</span>
+                        <span><strong>Super Admin Clearance Required:</strong> You only have read access to the notification gateway settings.</span>
+                    `;
+                    form.insertBefore(warningBanner, form.firstChild);
+                }
+            }
+        }
+
+        async function saveUserProfile() {
+            const user = JSON.parse(localStorage.getItem('currentUser'));
+            if (!user) return;
+            
+            const name = document.getElementById('profile-input-name').value.trim();
+            const title = document.getElementById('profile-input-title').value.trim();
+            const newEmail = document.getElementById('profile-input-email').value.trim();
+            const avatar = document.getElementById('profile-input-avatar').value.trim();
+
+            if (!name || !title || !newEmail) {
+                pgToast('Name, job title, and email are required fields', 'error');
+                return;
+            }
+
+            pgToast('Saving profile updates...', 'info', 1500);
+
+            try {
+                const apiBase = window.location.protocol === 'file:' ? 'http://127.0.0.1:8000' : '';
+                const res = await fetch(`${apiBase}/api/users/profile/${encodeURIComponent(user.email)}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, title, new_email: newEmail, avatar: avatar || null })
+                });
+
+                if (res.ok) {
+                    const updatedUser = await res.json();
+                    localStorage.setItem('currentUser', JSON.stringify(updatedUser));
+                    applyUserRoleSettings();
+                    pgToast('Profile updated successfully!', 'success');
+                } else {
+                    const data = await res.json();
+                    throw new Error(data.detail || 'HTTP ' + res.status);
+                }
+            } catch (err) {
+                console.error('Failed to update user profile:', err);
+                pgToast('Failed to save profile: ' + err.message, 'error');
+            }
+        }
+
+        document.getElementById('notificationSettingsForm').addEventListener('submit', saveNotificationSettings);
+        document.getElementById('btnTestNotifications').addEventListener('click', testNotifications);
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            applyUserRoleSettings();
+            loadNotificationSettings();
+        });
+    </script>
+<script src="js/sidebar.js"></script>
+<script>renderSidebar('settings');</script>
+</body></html>

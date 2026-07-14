@@ -1,0 +1,364 @@
+<!DOCTYPE html><html class="light" lang="en" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Project ASTRA | Industrial Reliability Reports</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Playfair+Display:wght@700&amp;family=JetBrains+Mono:wght@400;500;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "inverse-primary": "#9ed2b1",
+                      "on-primary-fixed": "#002111",
+                      "on-error": "#ffffff",
+                      "error-container": "#ffdad6",
+                      "on-secondary-fixed": "#002110",
+                      "on-primary": "#ffffff",
+                      "primary-fixed": "#baefcc",
+                      "surface-tint": "#38684d",
+                      "on-primary-container": "#8bbe9e",
+                      "surface-variant": "#e3e2df",
+                      "on-secondary-container": "#227049",
+                      "secondary-container": "#a3f0bf",
+                      "on-tertiary-fixed-variant": "#00522b",
+                      "amber-warn": "#E67E22",
+                      "green-good": "#27AE60",
+                      "on-background": "#1b1c1a",
+                      "on-primary-fixed-variant": "#1f5036",
+                      "tertiary-fixed-dim": "#71dc96",
+                      "outline-variant": "#c0c9c1",
+                      "surface-container": "#efeeeb",
+                      "tertiary": "#00371b",
+                      "surface": "#FFFFFF",
+                      "red-alert": "#C0392B",
+                      "surface-container-highest": "#e3e2df",
+                      "surface-bright": "#faf9f6",
+                      "on-secondary-fixed-variant": "#005230",
+                      "primary": "#003720",
+                      "surface-dim": "#dbdad7",
+                      "primary-container": "#1d4e35",
+                      "on-tertiary-fixed": "#00210e",
+                      "on-tertiary-container": "#5cc784",
+                      "secondary-fixed-dim": "#8ad7a7",
+                      "border": "#E2DDD6",
+                      "tertiary-fixed": "#8df9b1",
+                      "on-tertiary": "#ffffff",
+                      "on-surface-variant": "#414943",
+                      "surface-container-high": "#e9e8e5",
+                      "inverse-on-surface": "#f2f1ee",
+                      "secondary": "#1c6b45",
+                      "on-surface": "#1b1c1a",
+                      "on-secondary": "#ffffff",
+                      "surface-container-lowest": "#ffffff",
+                      "primary-fixed-dim": "#9ed2b1",
+                      "ink": "#1A1A18",
+                      "tertiary-container": "#00502a",
+                      "green-light": "#EAF2EC",
+                      "surface-container-low": "#f4f3f0",
+                      "secondary-fixed": "#a6f3c2",
+                      "outline": "#717972",
+                      "inverse-surface": "#2f312f",
+                      "error": "#ba1a1a",
+                      "background": "#faf9f6",
+                      "on-error-container": "#93000a",
+                      "ink-muted": "#6B6860",
+                      "mono-data": "#2C3E50"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "margin-desktop": "64px",
+                      "xl": "48px",
+                      "xxl": "96px",
+                      "md": "16px",
+                      "lg": "24px",
+                      "base": "4px",
+                      "sm": "8px",
+                      "gutter": "24px",
+                      "xs": "4px",
+                      "margin-mobile": "16px"
+              },
+              "fontFamily": {
+                      "hero-lg-mobile": ["Playfair Display"],
+                      "body-sm": ["Inter"],
+                      "headline-display": ["Playfair Display"],
+                      "body-md": ["Inter"],
+                      "data-value": ["JetBrains Mono"],
+                      "data-display": ["JetBrains Mono"],
+                      "hero-lg": ["Playfair Display"],
+                      "data-label": ["JetBrains Mono"],
+                      "body-lg": ["Inter"]
+              },
+              "fontSize": {
+                      "hero-lg-mobile": ["42px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                      "body-sm": ["14px", {"lineHeight": "1.4", "fontWeight": "500"}],
+                      "headline-display": ["40px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                      "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                      "data-value": ["14px", {"lineHeight": "1.0", "fontWeight": "500"}],
+                      "data-display": ["48px", {"lineHeight": "1.0", "letterSpacing": "-0.03em", "fontWeight": "500"}],
+                      "hero-lg": ["68px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "data-label": ["11px", {"lineHeight": "1.0", "letterSpacing": "0.05em", "fontWeight": "400"}],
+                      "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}]
+              }
+            },
+          },
+        }
+      </script>
+<style>
+        .backdrop-glass { backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+        .sparkline-svg { stroke-dasharray: 1000; stroke-dashoffset: 1000; animation: dash 3s linear forwards; }
+        @keyframes dash { to { stroke-dashoffset: 0; } }
+    </style>
+<link rel="stylesheet" href="css/styles.css">
+<script src="js/interactions.js"></script>
+</head>
+<body class="bg-background flex min-h-screen overflow-x-hidden font-body-md text-on-background">
+<!-- Main Content Canvas -->
+<main class="flex-1 md:ml-64 min-h-screen bg-background">
+<!-- TopNavBar -->
+<header class="flex justify-between items-center px-lg h-16 w-full sticky top-0 z-[100] bg-surface/80 backdrop-blur-md border-b border-border">
+<div class="flex items-center gap-md">
+<span class="md:hidden material-symbols-outlined text-primary cursor-pointer" data-sidebar-toggle aria-label="Open navigation menu">menu</span>
+<h2 class="font-headline-display text-body-lg text-primary">Reports</h2>
+</div>
+<div class="flex items-center gap-md text-on-surface-variant">
+<span class="material-symbols-outlined hover:text-primary transition-colors cursor-pointer" onclick="location.href='profilensettings.html'" title="Settings">settings</span>
+<span class="material-symbols-outlined hover:text-primary transition-colors cursor-pointer" onclick="location.href='support.html'" title="Help">help</span>
+<span class="material-symbols-outlined hover:text-primary transition-colors cursor-pointer text-[28px]" onclick="location.href='profilensettings.html'" title="Account">account_circle</span>
+</div>
+</header>
+<!-- Page Content -->
+<div class="p-margin-desktop">
+<!-- Page Header -->
+<header class="mb-xxl max-w-[1200px] mx-auto">
+<div class="flex justify-between items-end">
+<div>
+<nav class="flex gap-sm mb-sm text-on-surface-variant/60 font-data-label text-data-label uppercase tracking-widest">
+<span>Analytics</span>
+<span>/</span>
+<span class="text-primary font-bold">Reporting Suite</span>
+</nav>
+<h2 class="font-headline-display text-headline-display text-primary">Industrial Reliability Reports</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mt-md">
+                        Comprehensive auditing and performance analytics for Project ASTRA's operational compliance. Access automated summaries of Critical Control Points (CCP) and equipment lifecycle metrics.
+                    </p>
+</div>
+<div class="hidden lg:flex gap-md">
+<button class="bg-primary text-white px-lg py-sm rounded hover:bg-primary-container transition-colors flex items-center gap-sm font-data-label text-data-label uppercase" onclick="pgToast('Report scheduled — delivery via email every Monday at 06:00 IST', 'success')">
+<span class="material-symbols-outlined text-[18px]">schedule</span>
+                        Schedule New Report
+                    </button>
+</div>
+</div>
+</header>
+<div class="max-w-[1200px] mx-auto space-y-xl">
+<!-- Performance Bento Grid -->
+<section class="grid grid-cols-1 md:grid-cols-12 gap-gutter">
+<!-- Monthly Reliability Trend Card -->
+<div class="md:col-span-8 bg-surface border border-border p-lg flex flex-col justify-between group overflow-hidden">
+<div class="flex justify-between items-start mb-xl">
+<div>
+<span class="font-data-label text-data-label text-on-surface-variant uppercase mb-xs block">Reliability Index</span>
+<h3 class="font-body-lg text-body-lg font-bold">Monthly Systemic Health Trend</h3>
+</div>
+<div class="flex items-center gap-sm">
+<span class="text-green-good font-data-value text-data-value">+2.4%</span>
+<span class="material-symbols-outlined text-green-good">trending_up</span>
+</div>
+</div>
+<div class="h-48 w-full relative flex items-end justify-between px-md">
+<!-- Simulated Waveform/Sparkline -->
+<div class="absolute inset-0 pointer-events-none opacity-10">
+
+</div>
+<svg class="w-full h-32 overflow-visible" viewBox="0 0 800 100">
+<path class="sparkline-svg" d="M0,80 Q100,20 200,60 T400,30 T600,70 T800,40" fill="none" stroke="#003720" stroke-width="2"></path>
+<circle class="pulse-red" cx="800" cy="40" fill="#27AE60" r="4"></circle>
+</svg>
+<!-- Month Labels -->
+<div class="absolute bottom-0 left-0 right-0 flex justify-between px-md pt-md border-t border-border">
+<span class="font-data-label text-[9px] text-on-surface-variant">JAN</span>
+<span class="font-data-label text-[9px] text-on-surface-variant">FEB</span>
+<span class="font-data-label text-[9px] text-on-surface-variant">MAR</span>
+<span class="font-data-label text-[9px] text-on-surface-variant">APR</span>
+<span class="font-data-label text-[9px] text-on-surface-variant">MAY</span>
+<span class="font-data-label text-[9px] text-primary font-bold">JUN (CUR)</span>
+</div>
+</div>
+</div>
+<!-- Snapshot Data Point -->
+<div class="md:col-span-4 bg-primary text-on-primary p-lg flex flex-col justify-between">
+<div>
+<span class="font-data-label text-data-label text-on-primary/60 uppercase mb-sm block">Uptime Confidence</span>
+<div class="font-data-display text-data-display">99.82<span class="text-[20px] ml-1">%</span></div>
+</div>
+<div class="mt-xl">
+<p class="font-body-sm text-body-sm opacity-80 mb-md">Current performance exceeding baseline safety protocols by 0.12 pts.</p>
+<div class="w-full bg-on-primary/20 h-1">
+<div class="bg-secondary-container h-full w-[99.8%]"></div>
+</div>
+</div>
+</div>
+</section>
+<!-- Downloadable Reports Section -->
+<section>
+<div class="flex items-center gap-md mb-lg">
+<h3 class="font-body-lg text-body-lg font-bold">Archived Documentation</h3>
+<div class="h-[1px] flex-grow bg-border"></div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+<!-- Report Card: Weekly Health -->
+<div class="bg-surface border border-border p-lg hover:border-primary transition-all duration-300 group">
+<div class="flex justify-between items-start mb-md">
+<div class="w-10 h-10 bg-green-light flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">analytics</span>
+</div>
+<span class="font-data-label text-data-label bg-surface-container text-on-surface-variant px-sm py-xs">WEEKLY</span>
+</div>
+<h4 class="font-body-md font-bold mb-xs">Weekly Health Summary</h4>
+<p class="font-body-sm text-on-surface-variant mb-xl">Cross-site sensor analysis and preventative maintenance prioritization.</p>
+<div class="flex gap-sm border-t border-border pt-md mt-auto">
+<button class="flex-grow bg-surface-container-low hover:bg-surface-container text-primary font-data-label text-[10px] py-sm flex items-center justify-center gap-xs transition-colors" onclick="pgMockDownload('Weekly_Health_Summary_W24_2026','pdf')">
+<span class="material-symbols-outlined text-[14px]">picture_as_pdf</span> PDF
+                            </button>
+<button class="flex-grow bg-surface-container-low hover:bg-surface-container text-primary font-data-label text-[10px] py-sm flex items-center justify-center gap-xs transition-colors" onclick="pgMockDownload('Weekly_Health_Summary_W24_2026','csv')">
+<span class="material-symbols-outlined text-[14px]">table_chart</span> CSV
+                            </button>
+</div>
+</div>
+<!-- Report Card: CMMS Compliance -->
+<div class="bg-surface border border-border p-lg hover:border-primary transition-all duration-300 group">
+<div class="flex justify-between items-start mb-md">
+<div class="w-10 h-10 bg-red-alert/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-red-alert">verified_user</span>
+</div>
+<span class="font-data-label text-data-label bg-red-alert text-white px-sm py-xs">AUDIT READY</span>
+</div>
+<h4 class="font-body-md font-bold mb-xs">CMMS Compliance Log</h4>
+<p class="font-body-sm text-on-surface-variant mb-xl">Automated temperature and sanitation logs for food safety certification.</p>
+<div class="flex gap-sm border-t border-border pt-md mt-auto">
+<button class="flex-grow bg-surface-container-low hover:bg-surface-container text-primary font-data-label text-[10px] py-sm flex items-center justify-center gap-xs transition-colors" onclick="pgMockDownload('CMMS_Compliance_Log_Q2_2026','pdf')">
+<span class="material-symbols-outlined text-[14px]">picture_as_pdf</span> PDF
+                            </button>
+<button class="flex-grow bg-surface-container-low hover:bg-surface-container text-primary font-data-label text-[10px] py-sm flex items-center justify-center gap-xs transition-colors" onclick="pgToast('Digital signature requested — pending QA Manager approval (KG-QA-7721)', 'info')">
+<span class="material-symbols-outlined text-[14px]">history_edu</span> SIGN
+                            </button>
+</div>
+</div>
+<!-- Report Card: Asset Downtime -->
+<div class="bg-surface border border-border p-lg hover:border-primary transition-all duration-300 group">
+<div class="flex justify-between items-start mb-md">
+<div class="w-10 h-10 bg-green-light flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">precision_manufacturing</span>
+</div>
+<span class="font-data-label text-data-label bg-surface-container text-on-surface-variant px-sm py-xs">MONTHLY</span>
+</div>
+<h4 class="font-body-md font-bold mb-xs">Asset Downtime Analysis</h4>
+<p class="font-body-sm text-on-surface-variant mb-xl">Detailed breakdown of unplanned shutdowns and ROI on AI interventions.</p>
+<div class="flex gap-sm border-t border-border pt-md mt-auto">
+<button class="flex-grow bg-surface-container-low hover:bg-surface-container text-primary font-data-label text-[10px] py-sm flex items-center justify-center gap-xs transition-colors" onclick="pgMockDownload('Asset_Downtime_Analysis_Jun2026','pdf')">
+<span class="material-symbols-outlined text-[14px]">picture_as_pdf</span> PDF
+                            </button>
+<button class="flex-grow bg-surface-container-low hover:bg-surface-container text-primary font-data-label text-[10px] py-sm flex items-center justify-center gap-xs transition-colors" onclick="pgMockDownload('Asset_Downtime_Analysis_Jun2026','csv')">
+<span class="material-symbols-outlined text-[14px]">table_chart</span> CSV
+                            </button>
+</div>
+</div>
+</div>
+</section>
+<!-- Table: Recent Reports Generation History -->
+<section class="bg-surface border border-border overflow-hidden">
+<div class="p-lg border-b border-border flex justify-between items-center">
+<h3 class="font-body-md font-bold">Report Generation History</h3>
+<button class="text-primary font-data-label text-data-label hover:underline" onclick="pgToast('Showing full report history — 127 records', 'info')">View All History</button>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left pg-table">
+<thead class="bg-surface-container-low font-data-label text-[10px] uppercase text-on-surface-variant tracking-wider">
+<tr>
+<th class="px-lg py-md">Document Name</th>
+<th class="px-lg py-md">Generated By</th>
+<th class="px-lg py-md">Status</th>
+<th class="px-lg py-md">Date</th>
+<th class="px-lg py-md text-right">Action</th>
+</tr>
+</thead>
+<tbody class="font-body-sm divide-y divide-border">
+<tr class="hover:bg-surface-container-lowest transition-colors">
+<td class="px-lg py-md font-medium">Q2_Facility_Wide_Compliance_V3.pdf</td>
+<td class="px-lg py-md">AI System Autogen</td>
+<td class="px-lg py-md">
+<span class="bg-green-good/10 text-green-good px-sm py-xs font-data-label text-[10px] rounded-sm">COMPLETED</span>
+</td>
+<td class="px-lg py-md text-on-surface-variant">Jun 14, 2024</td>
+<td class="px-lg py-md text-right">
+<button class="material-symbols-outlined text-primary hover:scale-110 transition-transform" onclick="pgMockDownload('Q2_Facility_Wide_Compliance_V3','pdf')">download</button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-lowest transition-colors">
+<td class="px-lg py-md font-medium">Critical_Asset_Health_Detailed.csv</td>
+<td class="px-lg py-md">ASTRA O'Sullivan</td>
+<td class="px-lg py-md">
+<span class="bg-green-good/10 text-green-good px-sm py-xs font-data-label text-[10px] rounded-sm">COMPLETED</span>
+</td>
+<td class="px-lg py-md text-on-surface-variant">Jun 12, 2024</td>
+<td class="px-lg py-md text-right">
+<button class="material-symbols-outlined text-primary hover:scale-110 transition-transform" onclick="pgMockDownload('Critical_Asset_Health_Detailed','csv')">download</button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-lowest transition-colors">
+<td class="px-lg py-md font-medium">Monthly_Waste_Reduction_Audit.pdf</td>
+<td class="px-lg py-md">System Root</td>
+<td class="px-lg py-md">
+<span class="bg-amber-warn/10 text-amber-warn px-sm py-xs font-data-label text-[10px] rounded-sm">PROCESSING</span>
+</td>
+<td class="px-lg py-md text-on-surface-variant">Jun 15, 2024</td>
+<td class="px-lg py-md text-right">
+<button class="material-symbols-outlined text-on-surface-variant cursor-not-allowed">refresh</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</div>
+<!-- Explainer Panel -->
+<section class="max-w-[1200px] mx-auto mt-xxl bg-surface-container-low border border-border p-xl">
+<div class="flex flex-col md:flex-row gap-xl items-center">
+<div class="flex-shrink-0">
+<img class="w-32 h-32 rounded-full border-4 border-white shadow-sm object-cover" data-alt="A clean, close-up photograph of high-tech stainless steel industrial equipment in a food manufacturing plant, with focused, cool lighting that suggests precision and cleanliness. The background is softly blurred, keeping the emphasis on the technical detail and quality of the machinery. The color palette follows a professional corporate green and silver aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC4ZOqb44H6iokE2PsT3plcpQzxXrpco5RwbE8u_gz71xC9KbZVV_j2fRl_LEdmTsBWusLyFz0Yk6GvVlaDsLI5ANkqIpxbUEWITebvojoaHL2XrjWaqpOPbAMSVneSi79WKSoK9Z0ek9lw1zv6EnzB3SFRYtg8jVwqW7V7uyLGLBKyPYED5tl35aQLObbKYs0qov24LtYmPf56ETFgtKhn-0SkmNi4XgyxbAuaRnyFPHspVT-tNCNOOhOythvHtfDicqTQh1Q7wGI">
+</div>
+<div>
+<h4 class="font-data-label text-data-label text-primary font-bold uppercase mb-sm">AI Explainability (XAI)</h4>
+<p class="font-body-md text-on-surface-variant">
+                        Our reporting engine uses <span class="font-bold text-primary">Explainable AI</span> to not only report failures but to identify the specific sensor correlations that led to a prediction. This transparency allows ASTRA engineers to verify "why" a report flags a specific CCP before taking action.
+                    </p>
+</div>
+</div>
+</section>
+</div>
+</main>
+<script>
+        // Micro-interaction for report cards
+        document.querySelectorAll('.group').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.transform = 'translateY(-4px)';
+                card.style.boxShadow = '0 10px 25px -5px rgba(0, 55, 32, 0.05)';
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'translateY(0)';
+                card.style.boxShadow = 'none';
+            });
+        });
+    </script>
+<script src="js/sidebar.js"></script>
+<script>renderSidebar('reports');</script>
+</body></html>

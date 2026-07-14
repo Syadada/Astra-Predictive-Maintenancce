@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Project ASTRA | On-Premise DB Telemetry Simulation</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Playfair+Display:wght@700&amp;display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+    
+    <!-- Theme Configuration -->
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                "on-primary-container": "#8bbe9e",
+                "on-tertiary-container": "#5cc784",
+                "error": "#ba1a1a",
+                "secondary-container": "#a3f0bf",
+                "on-tertiary-fixed": "#00210e",
+                "surface-variant": "#e3e2df",
+                "primary-fixed": "#baefcc",
+                "on-secondary-fixed-variant": "#005230",
+                "mono-data": "#2C3E50",
+                "secondary-fixed-dim": "#8ad7a7",
+                "inverse-surface": "#2f312f",
+                "outline": "#717972",
+                "secondary-fixed": "#a6f3c2",
+                "surface-container-high": "#e9e8e5",
+                "on-error": "#ffffff",
+                "surface-container-low": "#f4f3f0",
+                "on-tertiary-fixed-variant": "#00522b",
+                "ink": "#1A1A18",
+                "on-primary": "#ffffff",
+                "tertiary": "#00371b",
+                "tertiary-container": "#00502a",
+                "secondary": "#1c6b45",
+                "primary": "#003720",
+                "on-secondary-container": "#227049",
+                "ink-muted": "#6B6860",
+                "primary-container": "#1d4e35",
+                "on-surface-variant": "#414943",
+                "inverse-primary": "#9ed2b1",
+                "border": "#E2DDD6",
+                "on-surface": "#1b1c1a",
+                "amber-warn": "#E67E22",
+                "surface": "#FFFFFF",
+                "on-background": "#1b1c1a",
+                "surface-container": "#efeeeb",
+                "red-alert": "#C0392B",
+                "background": "#faf9f6",
+                "inverse-on-surface": "#f2f1ee",
+                "surface-dim": "#dbdad7",
+                "tertiary-fixed-dim": "#71dc96",
+                "on-error-container": "#93000a",
+                "surface-container-lowest": "#ffffff",
+                "green-light": "#EAF2EC",
+                "outline-variant": "#c0c9c1",
+                "green-good": "#27AE60",
+                "surface-bright": "#faf9f6",
+                "on-tertiary": "#ffffff",
+                "primary-fixed-dim": "#9ed2b1",
+                "error-container": "#ffdad6",
+                "on-secondary-fixed": "#002110",
+                "on-primary-fixed": "#002111",
+                "surface-tint": "#38684d",
+                "surface-container-highest": "#e3e2df",
+                "on-secondary": "#ffffff",
+                "tertiary-fixed": "#8df9b1",
+                "on-primary-fixed-variant": "#1f5036"
+            },
+            "borderRadius": {
+                "DEFAULT": "0.125rem",
+                "lg": "0.25rem",
+                "xl": "0.5rem",
+                "full": "0.75rem"
+            },
+            "spacing": {
+                "xl": "48px",
+                "base": "4px",
+                "lg": "24px",
+                "margin-desktop": "64px",
+                "xs": "4px",
+                "xxl": "96px",
+                "gutter": "24px",
+                "sm": "8px",
+                "md": "16px",
+                "margin-mobile": "16px"
+            },
+            "fontFamily": {
+                "hero-lg-mobile": ["Playfair Display"],
+                "data-display": ["JetBrains Mono"],
+                "body-sm": ["Inter"],
+                "headline-display": ["Playfair Display"],
+                "data-label": ["JetBrains Mono"],
+                "body-md": ["Inter"],
+                "body-lg": ["Inter"],
+                "data-value": ["JetBrains Mono"],
+                "hero-lg": ["Playfair Display"]
+            }
+          }
+        }
+      };
+    </script>
+</head>
+<body class="bg-background text-on-background font-body-md overflow-x-hidden">
+
+<div class="flex min-h-screen">
+    <!-- Sidebar Container (rendered dynamically) -->
+    <div id="sidebar-target" class="w-64 shrink-0 hidden md:block"></div>
+
+    <!-- Main Content Area -->
+    <main class="flex-grow p-lg md:p-xl max-w-7xl mx-auto">
+        <!-- Top Bar -->
+        <header class="flex flex-col md:flex-row justify-between items-start md:items-center gap-md border-b border-outline/10 pb-md mb-lg">
+            <div>
+                <h1 class="font-headline-display font-bold text-3xl text-primary">DB Telemetry Simulation</h1>
+                <p class="text-ink-muted text-body-sm mt-xs">Inject raw sensor values directly into the on-premise SQLite database to test data cleaning and warning rules.</p>
+            </div>
+            <div class="flex items-center gap-sm bg-surface-container-low px-md py-sm rounded-lg border border-outline/10">
+                <span class="relative flex h-3 w-3">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-good opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-3 w-3 bg-green-good"></span>
+                </span>
+                <span class="font-data-label text-[11px] text-primary uppercase font-bold tracking-wider">TimescaleDB Mock: ACTIVE</span>
+            </div>
+        </header>
+
+        <!-- Grid Layout -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-lg">
+            <!-- Left Side: Interactive Input Form -->
+            <section class="lg:col-span-7 bg-white p-lg rounded-xl border border-outline/10 shadow-sm flex flex-col gap-md">
+                <h2 class="font-body-lg font-bold text-primary flex items-center gap-sm border-b border-outline/10 pb-sm">
+                    <span class="material-symbols-outlined text-primary">edit_note</span>
+                    Manual Sensor Ingestion Form
+                </h2>
+
+                <!-- Select Target Motor -->
+                <div class="flex flex-col gap-xs">
+                    <label for="motor-id" class="font-data-label text-xs uppercase font-bold text-ink-muted">Select Target Induction Motor</label>
+                    <select id="motor-id" class="w-full bg-surface-container-low border border-outline/20 rounded-lg p-sm font-data-label text-body-sm focus:outline-none focus:border-primary transition-colors">
+                        <option value="ASTRA-MTR-101">Motor M-101 (Conveyor Drive)</option>
+                        <option value="ASTRA-MTR-204">Motor M-204 (Cooling Fan)</option>
+                        <option value="ASTRA-MTR-300">Motor M-300 (Water Pump)</option>
+                        <option value="ASTRA-MTR-305">Motor M-305 (Air Compressor)</option>
+                    </select>
+                </div>
+
+                <!-- Sliders & Inputs -->
+                <div class="flex flex-col gap-md mt-sm">
+                    <!-- Vibration Slider -->
+                    <div class="bg-surface-container-lowest p-md rounded-lg border border-outline/5 flex flex-col gap-sm">
+                        <div class="flex justify-between items-center">
+                            <span class="font-data-label text-xs uppercase font-bold text-ink-muted flex items-center gap-xs">
+                                <span class="material-symbols-outlined text-xs">analytics</span>
+                                Vibration RMS (mm/s)
+                            </span>
+                            <input type="number" id="val-vibration-num" step="0.01" min="0.0" max="12.0" value="0.15" class="w-20 text-right bg-transparent border-b border-outline/20 font-data-value text-sm text-primary font-bold focus:outline-none">
+                        </div>
+                        <input type="range" id="val-vibration" min="0.0" max="12.0" step="0.01" value="0.15" class="w-full h-1 bg-surface-container-high rounded-lg appearance-none cursor-pointer accent-primary">
+                        <div class="flex justify-between text-[10px] text-ink-muted">
+                            <span>0.0 (Normal Baseline)</span>
+                            <span>12.0 (Physical Clip Boundary)</span>
+                        </div>
+                    </div>
+
+                    <!-- Current Slider -->
+                    <div class="bg-surface-container-lowest p-md rounded-lg border border-outline/5 flex flex-col gap-sm">
+                        <div class="flex justify-between items-center">
+                            <span class="font-data-label text-xs uppercase font-bold text-ink-muted flex items-center gap-xs">
+                                <span class="material-symbols-outlined text-xs">bolt</span>
+                                Motor Current (A)
+                            </span>
+                            <input type="number" id="val-current-num" step="0.1" min="0.0" max="40.0" value="1.2" class="w-20 text-right bg-transparent border-b border-outline/20 font-data-value text-sm text-primary font-bold focus:outline-none">
+                        </div>
+                        <input type="range" id="val-current" min="0.0" max="40.0" step="0.1" value="1.2" class="w-full h-1 bg-surface-container-high rounded-lg appearance-none cursor-pointer accent-primary">
+                        <div class="flex justify-between text-[10px] text-ink-muted">
+                            <span>0.0 A</span>
+                            <span>40.0 A (Overload Boundary)</span>
+                        </div>
+                    </div>
+
+                    <!-- Temperature Slider -->
+                    <div class="bg-surface-container-lowest p-md rounded-lg border border-outline/5 flex flex-col gap-sm">
+                        <div class="flex justify-between items-center">
+                            <span class="font-data-label text-xs uppercase font-bold text-ink-muted flex items-center gap-xs">
+                                <span class="material-symbols-outlined text-xs">thermostat</span>
+                                Temperature (&deg;C)
+                            </span>
+                            <input type="number" id="val-temperature-num" step="0.5" min="15.0" max="150.0" value="65.0" class="w-20 text-right bg-transparent border-b border-outline/20 font-data-value text-sm text-primary font-bold focus:outline-none">
+                        </div>
+                        <input type="range" id="val-temperature" min="15.0" max="150.0" step="0.5" value="65.0" class="w-full h-1 bg-surface-container-high rounded-lg appearance-none cursor-pointer accent-primary">
+                        <div class="flex justify-between text-[10px] text-ink-muted">
+                            <span>15.0 &deg;C</span>
+                            <span class="text-red-alert font-bold">80.0 &deg;C (Limit Alert Rule)</span>
+                            <span>150.0 &deg;C</span>
+                        </div>
+                    </div>
+
+                    <!-- Speed Slider -->
+                    <div class="bg-surface-container-lowest p-md rounded-lg border border-outline/5 flex flex-col gap-sm">
+                        <div class="flex justify-between items-center">
+                            <span class="font-data-label text-xs uppercase font-bold text-ink-muted flex items-center gap-xs">
+                                <span class="material-symbols-outlined text-xs">speed</span>
+                                Shaft Speed (RPM)
+                            </span>
+                            <input type="number" id="val-speed-num" step="50" min="500" max="5000" value="1500" class="w-20 text-right bg-transparent border-b border-outline/20 font-data-value text-sm text-primary font-bold focus:outline-none">
+                        </div>
+                        <input type="range" id="val-speed" min="500" max="5000" step="50" value="1500" class="w-full h-1 bg-surface-container-high rounded-lg appearance-none cursor-pointer accent-primary">
+                        <div class="flex justify-between text-[10px] text-ink-muted">
+                            <span>500 RPM</span>
+                            <span>5000 RPM</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <button id="btn-inject" class="w-full py-md mt-sm bg-primary text-white font-data-label text-xs uppercase tracking-widest rounded-lg hover:bg-primary-container transition-all active:scale-[0.98] flex items-center justify-center gap-sm">
+                    <span class="material-symbols-outlined text-sm">publish</span>
+                    Inject Telemetry Record
+                </button>
+            </section>
+
+            <!-- Right Side: Presets & SQLite Feed Console -->
+            <section class="lg:col-span-5 flex flex-col gap-lg">
+                <!-- Preset Configurations -->
+                <div class="bg-white p-lg rounded-xl border border-outline/10 shadow-sm flex flex-col gap-md">
+                    <h3 class="font-body-lg font-bold text-primary flex items-center gap-sm border-b border-outline/10 pb-sm">
+                        <span class="material-symbols-outlined text-primary">flock</span>
+                        Simulation Presets
+                    </h3>
+                    <p class="text-ink-muted text-xs">Load standard values or anomaly states instantly:</p>
+                    
+                    <div class="grid grid-cols-2 gap-sm">
+                        <button onclick="loadPreset('normal')" class="p-sm bg-green-light hover:bg-green-light/80 border border-outline/5 rounded-lg text-left transition-colors group">
+                            <span class="font-bold text-xs text-secondary flex items-center gap-xs">
+                                <span class="material-symbols-outlined text-sm">check_circle</span> Normal State
+                            </span>
+                            <p class="text-[10px] text-ink-muted mt-xs">Vib: 0.15 | Temp: 65&deg;C | RPM: 1500</p>
+                        </button>
+
+                        <button onclick="loadPreset('spike')" class="p-sm bg-red-alert/5 hover:bg-red-alert/10 border border-outline/5 rounded-lg text-left transition-colors group">
+                            <span class="font-bold text-xs text-red-alert flex items-center gap-xs">
+                                <span class="material-symbols-outlined text-sm">error</span> Heat Spike
+                            </span>
+                            <p class="text-[10px] text-ink-muted mt-xs">Temp: 86&deg;C (>80&deg;C Limit Rule)</p>
+                        </button>
+
+                        <button onclick="loadPreset('flatline')" class="p-sm bg-amber-warn/5 hover:bg-amber-warn/10 border border-outline/5 rounded-lg text-left transition-colors group">
+                            <span class="font-bold text-xs text-amber-warn flex items-center gap-xs">
+                                <span class="material-symbols-outlined text-sm">lock</span> Sensor Lock
+                            </span>
+                            <p class="text-[10px] text-ink-muted mt-xs">Identical Vib/Temp. Inject 5x to trigger lock alert.</p>
+                        </button>
+
+                        <button onclick="loadPreset('outlier')" class="p-sm bg-surface-container-high hover:bg-surface-container-highest border border-outline/5 rounded-lg text-left transition-colors group">
+                            <span class="font-bold text-xs text-primary flex items-center gap-xs">
+                                <span class="material-symbols-outlined text-sm">vertical_align_center</span> Raw Outlier
+                            </span>
+                            <p class="text-[10px] text-ink-muted mt-xs">Vib: 10.5 mm/s. DB clips it to 12.0 max.</p>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Database Preprocessing Logs Console -->
+                <div class="bg-primary text-on-primary p-lg rounded-xl shadow-lg border border-outline/20 flex flex-col gap-md flex-grow">
+                    <div class="flex justify-between items-center border-b border-on-primary-container/20 pb-sm">
+                        <h3 class="font-data-label text-xs uppercase font-bold text-on-primary-container flex items-center gap-sm">
+                            <span class="material-symbols-outlined text-sm">code</span>
+                            On-Premise Ingestion Pipeline Log
+                        </h3>
+                        <button onclick="clearConsole()" class="text-on-primary-container/60 hover:text-on-primary-container text-[10px] font-data-label uppercase">Clear</button>
+                    </div>
+
+                    <!-- Live Logging Console Terminal -->
+                    <div class="flex-grow bg-black/45 rounded-lg p-md font-data-value text-xs text-on-tertiary-container overflow-y-auto max-h-[300px] flex flex-col gap-xs select-text" id="console-terminal">
+                        <span class="text-on-primary-container/50">[DBManager] Pipeline Initialized. Ready for data stream...</span>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+</div>
+
+<!-- JavaScript Integration -->
+<script src="js/api_client.js"></script>
+<script src="js/interactions.js"></script>
+<script src="js/sidebar.js"></script>
+<script>
+    // Load the shared sidebar
+    renderSidebar('simulation');
+
+    // Slide/Input synchronization
+    const mapping = [
+        { sl: 'val-vibration', num: 'val-vibration-num' },
+        { sl: 'val-current', num: 'val-current-num' },
+        { sl: 'val-temperature', num: 'val-temperature-num' },
+        { sl: 'val-speed', num: 'val-speed-num' }
+    ];
+
+    mapping.forEach(m => {
+        const slider = document.getElementById(m.sl);
+        const number = document.getElementById(m.num);
+        slider.addEventListener('input', () => { number.value = slider.value; });
+        number.addEventListener('input', () => { slider.value = number.value; });
+    });
+
+    // Presets Loader
+    function loadPreset(type) {
+        if (type === 'normal') {
+            setValues(0.15, 1.2, 65.0, 1500);
+            logConsole("[Preset Selected] Normal operational state loaded.");
+        } else if (type === 'spike') {
+            setValues(0.22, 2.1, 86.5, 1800);
+            logConsole("[Preset Selected] High-Limit Thermal Spike state loaded.");
+        } else if (type === 'flatline') {
+            setValues(0.12, 1.1, 72.0, 1300);
+            logConsole("[Preset Selected] Sensor Lock state loaded. Send 5 consecutive clicks.");
+        } else if (type === 'outlier') {
+            setValues(10.50, 4.8, 75.0, 2200);
+            logConsole("[Preset Selected] High Outlier Vibration state loaded.");
+        }
+    }
+
+    function setValues(vib, cur, temp, speed) {
+        document.getElementById('val-vibration').value = vib;
+        document.getElementById('val-vibration-num').value = vib;
+        document.getElementById('val-current').value = cur;
+        document.getElementById('val-current-num').value = cur;
+        document.getElementById('val-temperature').value = temp;
+        document.getElementById('val-temperature-num').value = temp;
+        document.getElementById('val-speed').value = speed;
+        document.getElementById('val-speed-num').value = speed;
+    }
+
+    // Terminal Logging Console
+    function logConsole(message, isErr = false) {
+        const term = document.getElementById('console-terminal');
+        const line = document.createElement('span');
+        line.className = isErr ? 'text-red-400' : 'text-on-tertiary-container';
+        line.innerHTML = `[${new Date().toLocaleTimeString()}] ${message}`;
+        term.appendChild(line);
+        term.scrollTop = term.scrollHeight;
+    }
+
+    function clearConsole() {
+        document.getElementById('console-terminal').innerHTML = '<span class="text-on-primary-container/50">[Console cleared. System ready...]</span>';
+    }
+
+    // Telemetry Ingestion Action
+    document.getElementById('btn-inject').addEventListener('click', async () => {
+        const btn = document.getElementById('btn-inject');
+        const motorId = document.getElementById('motor-id').value;
+        const vib = parseFloat(document.getElementById('val-vibration-num').value);
+        const cur = parseFloat(document.getElementById('val-current-num').value);
+        const temp = parseFloat(document.getElementById('val-temperature-num').value);
+        const speed = parseFloat(document.getElementById('val-speed-num').value);
+
+        // Convert speed (RPM) to flow_rate proxy expected by the ML model backend (RPM / 20)
+        const flowRateProxy = speed / 20.0;
+
+        btn.disabled = true;
+        btn.innerHTML = `<span class="material-symbols-outlined animate-spin text-sm">sync</span> Injecting...`;
+
+        try {
+            logConsole(`Attempting DB Telemetry Write for ${motorId}...`);
+            const response = await pgFetch('/api/db/insert', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    machine_id: motorId,
+                    vibration_rms: vib,
+                    motor_current: cur,
+                    temperature: temp,
+                    flow_rate: flowRateProxy
+                })
+            });
+
+            // Log validation & clipping differences
+            const cleaned = response.cleaned_data;
+            let cleaningLog = `DB Write Success! Preprocessing Pipeline details:<br>`;
+            cleaningLog += ` &bull; Raw Temperature: ${temp}&deg;C &rarr; Cleaned: ${cleaned.temperature}&deg;C<br>`;
+            cleaningLog += ` &bull; Raw Vibration: ${vib} mm/s &rarr; Cleaned: ${cleaned.vibration_rms} mm/s<br>`;
+            cleaningLog += ` &bull; Raw Current: ${cur} A &rarr; Cleaned: ${cleaned.motor_current} A<br>`;
+            cleaningLog += ` &bull; Calculated Speed proxy: ${flowRateProxy} flow_rate`;
+            
+            logConsole(cleaningLog);
+            pgToast(`Telemetry inserted for ${motorId}!`, 'success');
+
+        } catch (err) {
+            logConsole(`Ingestion Error: ${err.message}`, true);
+            pgToast(`Failed to insert telemetry: ${err.message}`, 'error');
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = `<span class="material-symbols-outlined text-sm">publish</span> Inject Telemetry Record`;
+        }
+    });
+</script>
+</body>
+</html>

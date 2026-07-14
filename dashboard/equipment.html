@@ -1,0 +1,471 @@
+<!DOCTYPE html><html class="light" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Project ASTRA | Equipment Management</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Playfair+Display:wght@700&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;family=Playfair+Display:wght@100..900&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary-container": "#00502a",
+                        "primary": "#003720",
+                        "surface-tint": "#38684d",
+                        "tertiary-fixed-dim": "#71dc96",
+                        "on-primary-container": "#8bbe9e",
+                        "surface": "#FFFFFF",
+                        "surface-container-lowest": "#ffffff",
+                        "on-secondary-fixed": "#002110",
+                        "inverse-surface": "#2f312f",
+                        "on-secondary-fixed-variant": "#005230",
+                        "green-light": "#EAF2EC",
+                        "on-tertiary-fixed": "#00210e",
+                        "on-tertiary": "#ffffff",
+                        "background": "#faf9f6",
+                        "surface-bright": "#faf9f6",
+                        "tertiary-fixed": "#8df9b1",
+                        "outline-variant": "#c0c9c1",
+                        "secondary": "#1c6b45",
+                        "surface-container": "#efeeeb",
+                        "primary-fixed-dim": "#9ed2b1",
+                        "error": "#ba1a1a",
+                        "on-secondary-container": "#227049",
+                        "on-background": "#1b1c1a",
+                        "secondary-fixed-dim": "#8ad7a7",
+                        "inverse-on-surface": "#f2f1ee",
+                        "on-error": "#ffffff",
+                        "surface-container-high": "#e9e8e5",
+                        "on-surface-variant": "#414943",
+                        "on-surface": "#1b1c1a",
+                        "red-alert": "#C0392B",
+                        "mono-data": "#2C3E50",
+                        "surface-dim": "#dbdad7",
+                        "outline": "#717972",
+                        "secondary-fixed": "#a6f3c2",
+                        "primary-fixed": "#baefcc",
+                        "green-good": "#27AE60",
+                        "secondary-container": "#a3f0bf",
+                        "on-primary": "#ffffff",
+                        "tertiary": "#00371b",
+                        "ink": "#1A1A18",
+                        "border": "#E2DDD6",
+                        "on-tertiary-fixed-variant": "#00522b",
+                        "ink-muted": "#6B6860",
+                        "on-tertiary-container": "#5cc784",
+                        "amber-warn": "#E67E22",
+                        "on-primary-fixed": "#002111",
+                        "on-primary-fixed-variant": "#1f5036",
+                        "inverse-primary": "#9ed2b1",
+                        "surface-variant": "#e3e2df",
+                        "on-error-container": "#93000a",
+                        "surface-container-highest": "#e3e2df",
+                        "on-secondary": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "primary-container": "#1d4e35",
+                        "surface-container-low": "#f4f3f0"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "xxl": "96px",
+                        "md": "16px",
+                        "margin-mobile": "16px",
+                        "xs": "4px",
+                        "base": "4px",
+                        "sm": "8px",
+                        "xl": "48px",
+                        "margin-desktop": "64px",
+                        "lg": "24px",
+                        "gutter": "24px"
+                    },
+                    "fontFamily": {
+                        "hero-lg": ["Playfair Display"],
+                        "data-label": ["JetBrains Mono"],
+                        "headline-display": ["Playfair Display"],
+                        "hero-lg-mobile": ["Playfair Display"],
+                        "body-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "data-display": ["JetBrains Mono"],
+                        "data-value": ["JetBrains Mono"]
+                    },
+                    "fontSize": {
+                        "hero-lg": ["68px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "data-label": ["11px", {"lineHeight": "1.0", "letterSpacing": "0.05em", "fontWeight": "400"}],
+                        "headline-display": ["40px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                        "hero-lg-mobile": ["42px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                        "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                        "body-sm": ["14px", {"lineHeight": "1.4", "fontWeight": "500"}],
+                        "data-display": ["48px", {"lineHeight": "1.0", "letterSpacing": "-0.03em", "fontWeight": "500"}],
+                        "data-value": ["14px", {"lineHeight": "1.0", "fontWeight": "500"}]
+                    }
+                }
+            }
+        }
+    </script>
+<link rel="stylesheet" href="css/styles.css">
+<script src="js/interactions.js"></script>
+</head>
+<body class="bg-background text-on-background font-body-md min-h-screen flex">
+<!-- Main Content Area -->
+<main class="md:ml-64 flex-1 flex flex-col min-w-0 min-h-screen bg-background">
+<!-- TopNavBar -->
+<header class="h-16 px-lg flex items-center justify-between sticky top-0 bg-surface/80 backdrop-blur-md z-[100] border-b border-border w-full">
+<div class="flex items-center gap-md">
+<span class="md:hidden material-symbols-outlined text-primary cursor-pointer" data-sidebar-toggle aria-label="Open navigation menu">menu</span>
+<div>
+<h2 class="font-headline-display text-body-lg text-primary">Equipment Inventory</h2>
+<nav class="flex gap-sm mt-xs">
+<span class="text-on-surface-variant font-body-sm">Global Operations</span>
+<span class="text-outline">/</span>
+<span class="text-on-surface-variant font-body-sm">Naas Processing Facility</span>
+</nav>
+</div>
+</div>
+<div class="flex items-center gap-lg">
+<div class="relative">
+<span class="material-symbols-outlined absolute left-md top-1/2 -translate-y-1/2 text-outline" data-icon="search">search</span>
+<input class="bg-surface border border-border rounded-lg pl-xl pr-md py-sm w-80 font-body-sm focus:ring-2 focus:ring-primary focus:border-primary outline-none" placeholder="Search asset ID or tag..." type="text">
+</div>
+<button class="bg-primary text-white px-lg py-sm rounded-lg font-data-label text-data-label flex items-center gap-sm hover:bg-primary-container transition-colors" onclick="pgConfirm('Register a new asset in the ASTRA Facility registry?', function(){ pgToast('Asset registration form opened — Asset ID: KG-P07-NEW-001', 'info'); })">
+<span class="material-symbols-outlined text-[18px]" data-icon="add">add</span>
+                    REGISTER ASSET
+                </button>
+</div>
+</header>
+<div class="p-margin-desktop flex flex-col gap-xl">
+<!-- KPI Cards -->
+<section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-lg">
+<div class="bg-surface border border-border p-lg rounded-lg shadow-sm">
+<div class="flex justify-between items-start mb-md">
+<span class="text-outline font-data-label text-data-label uppercase tracking-widest">Total Assets</span>
+<span class="material-symbols-outlined text-primary" data-icon="inventory">inventory</span>
+</div>
+<div class="font-data-display text-data-display text-primary">45</div>
+<div class="mt-sm flex items-center gap-xs">
+<span class="material-symbols-outlined text-green-good text-sm" data-icon="trending_up">trending_up</span>
+<span class="text-green-good font-data-value text-data-value">+2 this month</span>
+</div>
+</div>
+<div class="bg-surface border border-border p-lg rounded-lg shadow-sm">
+<div class="flex justify-between items-start mb-md">
+<span class="text-outline font-data-label text-data-label uppercase tracking-widest">Avg. Health</span>
+<span class="material-symbols-outlined text-secondary" data-icon="vital_signs">vital_signs</span>
+</div>
+<div class="font-data-display text-data-display text-secondary">88%</div>
+<div class="mt-sm w-full bg-green-light h-1 rounded-full overflow-hidden">
+<div class="bg-secondary h-full" style="width: 88%"></div>
+</div>
+</div>
+<div class="bg-surface border border-border p-lg rounded-lg shadow-sm border-l-4 border-l-red-alert">
+<div class="flex justify-between items-start mb-md">
+<span class="text-outline font-data-label text-data-label uppercase tracking-widest">Critical CCPs</span>
+<span class="material-symbols-outlined text-red-alert status-pulse" data-icon="dangerous">dangerous</span>
+</div>
+<div class="font-data-display text-data-display text-red-alert">08</div>
+<div class="mt-sm">
+<span class="text-ink-muted font-body-sm">Requires immediate review</span>
+</div>
+</div>
+<div class="bg-surface border border-border p-lg rounded-lg shadow-sm">
+<div class="flex justify-between items-start mb-md">
+<span class="text-outline font-data-label text-data-label uppercase tracking-widest">Active Monitoring</span>
+<span class="material-symbols-outlined text-primary" data-icon="sensors">sensors</span>
+</div>
+<div class="font-data-display text-data-display text-primary">100%</div>
+<div class="mt-sm">
+<span class="text-green-good font-data-value text-data-value">All nodes connected</span>
+</div>
+</div>
+</section>
+<!-- Main Layout Split -->
+<div class="grid grid-cols-12 gap-lg items-start">
+<!-- Asset Table -->
+<section class="col-span-12 xl:col-span-8 bg-surface border border-border rounded-lg overflow-hidden flex flex-col">
+<div class="px-lg py-md border-b border-border flex justify-between items-center bg-surface-container-lowest">
+<h3 class="font-body-md font-semibold text-primary">Asset Registry</h3>
+<div class="flex gap-sm">
+<button class="p-sm text-outline hover:text-primary transition-colors" onclick="pgToast('Asset filter panel — available in v2.1', 'info')"><span class="material-symbols-outlined" data-icon="filter_list">filter_list</span></button>
+<button class="p-sm text-outline hover:text-primary transition-colors" onclick="pgMockDownload('Asset_Registry_Plant07_ASTRA_2026','csv')"><span class="material-symbols-outlined" data-icon="download">download</span></button>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse pg-table">
+<thead>
+<tr class="bg-surface-container-low border-b border-border">
+<th class="px-lg py-sm font-data-label text-data-label text-outline uppercase">Asset ID / Name</th>
+<th class="px-lg py-sm font-data-label text-data-label text-outline uppercase">Location</th>
+<th class="px-lg py-sm font-data-label text-data-label text-outline uppercase">Health Index</th>
+<th class="px-lg py-sm font-data-label text-data-label text-outline uppercase">Status</th>
+<th class="px-lg py-sm"></th>
+</tr>
+</thead>
+<tbody class="divide-y divide-border">
+<tr class="hover:bg-green-light/30 transition-colors group cursor-pointer">
+<td class="px-lg py-lg">
+<div class="flex items-center gap-md">
+<div class="w-10 h-10 bg-green-light rounded flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" data-icon="water_pump">water_pump</span>
+</div>
+<div>
+<p class="font-body-md font-bold text-primary">Pump P-101</p>
+<p class="font-data-label text-[10px] text-outline">INSTALLED: 12-OCT-2022</p>
+</div>
+</div>
+</td>
+<td class="px-lg py-lg">
+<p class="font-body-sm text-on-surface-variant">Liquid Processing Line 4</p>
+<p class="font-data-label text-[10px] text-outline">ZONE A-12</p>
+</td>
+<td class="px-lg py-lg w-48">
+<div class="flex items-center gap-sm">
+<div class="flex-1 bg-surface-container-high h-1.5 rounded-full overflow-hidden">
+<div class="bg-green-good h-full" style="width: 94%"></div>
+</div>
+<span class="font-data-value text-data-value text-green-good">94</span>
+</div>
+</td>
+<td class="px-lg py-lg">
+<span class="px-sm py-xs bg-green-good/10 text-green-good font-data-label text-[10px] rounded uppercase font-bold tracking-wider">Optimal</span>
+</td>
+<td class="px-lg py-lg text-right">
+<span class="material-symbols-outlined text-outline opacity-0 group-hover:opacity-100 transition-opacity" data-icon="chevron_right">chevron_right</span>
+</td>
+</tr>
+<tr class="hover:bg-green-light/30 transition-colors group cursor-pointer bg-surface-container-low/20">
+<td class="px-lg py-lg">
+<div class="flex items-center gap-md">
+<div class="w-10 h-10 bg-amber-warn/10 rounded flex items-center justify-center text-amber-warn">
+<span class="material-symbols-outlined" data-icon="mixer">timer</span>
+</div>
+<div>
+<p class="font-body-md font-bold text-primary">Mixer M-204</p>
+<p class="font-data-label text-[10px] text-outline">INSTALLED: 05-JAN-2023</p>
+</div>
+</div>
+</td>
+<td class="px-lg py-lg">
+<p class="font-body-sm text-on-surface-variant">Batch Processing Line 1</p>
+<p class="font-data-label text-[10px] text-outline">ZONE B-05</p>
+</td>
+<td class="px-lg py-lg w-48">
+<div class="flex items-center gap-sm">
+<div class="flex-1 bg-surface-container-high h-1.5 rounded-full overflow-hidden">
+<div class="bg-amber-warn h-full" style="width: 62%"></div>
+</div>
+<span class="font-data-value text-data-value text-amber-warn">62</span>
+</div>
+</td>
+<td class="px-lg py-lg">
+<span class="px-sm py-xs bg-amber-warn/10 text-amber-warn font-data-label text-[10px] rounded uppercase font-bold tracking-wider">Warning</span>
+</td>
+<td class="px-lg py-lg text-right">
+<span class="material-symbols-outlined text-outline opacity-0 group-hover:opacity-100 transition-opacity" data-icon="chevron_right">chevron_right</span>
+</td>
+</tr>
+<tr class="hover:bg-green-light/30 transition-colors group cursor-pointer border-l-4 border-l-red-alert">
+<td class="px-lg py-lg">
+<div class="flex items-center gap-md">
+<div class="w-10 h-10 bg-red-alert/10 rounded flex items-center justify-center text-red-alert">
+<span class="material-symbols-outlined" data-icon="air">air</span>
+</div>
+<div>
+<p class="font-body-md font-bold text-primary">Spray Dryer SD-305</p>
+<p class="font-data-label text-[10px] text-outline">INSTALLED: 18-MAR-2021</p>
+</div>
+</div>
+</td>
+<td class="px-lg py-lg">
+<p class="font-body-sm text-on-surface-variant">Powder Finishing Line 2</p>
+<p class="font-data-label text-[10px] text-outline">ZONE C-01</p>
+</td>
+<td class="px-lg py-lg w-48">
+<div class="flex items-center gap-sm">
+<div class="flex-1 bg-surface-container-high h-1.5 rounded-full overflow-hidden">
+<div class="bg-red-alert h-full" style="width: 38%"></div>
+</div>
+<span class="font-data-value text-data-value text-red-alert">38</span>
+</div>
+</td>
+<td class="px-lg py-lg">
+<span class="px-sm py-xs bg-red-alert/10 text-red-alert font-data-label text-[10px] rounded uppercase font-bold tracking-wider status-pulse">Critical</span>
+</td>
+<td class="px-lg py-lg text-right">
+<span class="material-symbols-outlined text-outline opacity-0 group-hover:opacity-100 transition-opacity" data-icon="chevron_right">chevron_right</span>
+</td>
+</tr>
+<tr class="hover:bg-green-light/30 transition-colors group cursor-pointer">
+<td class="px-lg py-lg">
+<div class="flex items-center gap-md">
+<div class="w-10 h-10 bg-green-light rounded flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" data-icon="conveyor_belt">conveyor_belt</span>
+</div>
+<div>
+<p class="font-body-md font-bold text-primary">Conveyor CV-99</p>
+<p class="font-data-label text-[10px] text-outline">INSTALLED: 30-SEP-2023</p>
+</div>
+</div>
+</td>
+<td class="px-lg py-lg">
+<p class="font-body-sm text-on-surface-variant">Packaging Unit 3</p>
+<p class="font-data-label text-[10px] text-outline">ZONE D-14</p>
+</td>
+<td class="px-lg py-lg w-48">
+<div class="flex items-center gap-sm">
+<div class="flex-1 bg-surface-container-high h-1.5 rounded-full overflow-hidden">
+<div class="bg-green-good h-full" style="width: 89%"></div>
+</div>
+<span class="font-data-value text-data-value text-green-good">89</span>
+</div>
+</td>
+<td class="px-lg py-lg">
+<span class="px-sm py-xs bg-green-good/10 text-green-good font-data-label text-[10px] rounded uppercase font-bold tracking-wider">Optimal</span>
+</td>
+<td class="px-lg py-lg text-right">
+<span class="material-symbols-outlined text-outline opacity-0 group-hover:opacity-100 transition-opacity" data-icon="chevron_right">chevron_right</span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<!-- Asset Detail Sidebar Integrated -->
+<aside class="col-span-12 xl:col-span-4 flex flex-col gap-lg">
+<div class="bg-primary text-on-primary p-lg rounded-lg shadow-md relative overflow-hidden">
+<div class="relative z-10">
+<h4 class="font-data-label text-data-label opacity-60 uppercase mb-sm">Focused Analysis</h4>
+<h3 class="font-headline-display text-2xl mb-md">Spray Dryer SD-305</h3>
+<div class="grid grid-cols-2 gap-md mt-lg">
+<div class="bg-white/10 p-sm rounded border border-white/5">
+<p class="text-[10px] uppercase opacity-60">Status</p>
+<p class="font-data-value text-red-alert font-bold">ANOMALY DETECTED</p>
+</div>
+<div class="bg-white/10 p-sm rounded border border-white/5">
+<p class="text-[10px] uppercase opacity-60">Next Svc</p>
+<p class="font-data-value">02-FEB-24</p>
+</div>
+</div>
+</div>
+<div class="absolute -right-8 -bottom-8 opacity-10">
+<span class="material-symbols-outlined text-[160px]" data-icon="air">air</span>
+</div>
+</div>
+<!-- Sensor Telemetry -->
+<div class="bg-surface border border-border p-lg rounded-lg shadow-sm">
+<h4 class="font-body-md font-bold text-primary mb-lg flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary text-xl" data-icon="analytics">analytics</span>
+                            Live Sensor Streams
+                        </h4>
+<div class="space-y-lg">
+<div>
+<div class="flex justify-between items-end mb-xs">
+<span class="font-data-label text-[10px] text-outline uppercase">Vibration (Peak-to-Peak)</span>
+<span class="font-data-value text-red-alert">14.2 mm/s</span>
+</div>
+<div class="h-12 bg-surface-container rounded border border-border relative overflow-hidden">
+<canvas class="w-full h-full" id="vibrationChart"></canvas>
+</div>
+</div>
+<div>
+<div class="flex justify-between items-end mb-xs">
+<span class="font-data-label text-[10px] text-outline uppercase">Temperature</span>
+<span class="font-data-value">84.5 °C</span>
+</div>
+<div class="h-12 bg-surface-container rounded border border-border relative overflow-hidden">
+<canvas class="w-full h-full" id="tempChart"></canvas>
+</div>
+</div>
+<div>
+<div class="flex justify-between items-end mb-xs">
+<span class="font-data-label text-[10px] text-outline uppercase">Current Draw</span>
+<span class="font-data-value">42.1 A</span>
+</div>
+<div class="h-12 bg-surface-container rounded border border-border relative overflow-hidden">
+<canvas class="w-full h-full" id="currentChart"></canvas>
+</div>
+</div>
+</div>
+<button class="w-full mt-xl border border-primary text-primary py-sm rounded-lg font-data-label text-data-label hover:bg-green-light transition-colors active:scale-[0.98]" onclick="pgMockDownload('Full_Diagnostic_Report_SD305_2026','pdf')">
+                            FULL DIAGNOSTIC REPORT
+                        </button>
+</div>
+<!-- AI Insights / XAI -->
+<div class="bg-green-light border border-secondary/20 p-lg rounded-lg">
+<div class="flex items-center gap-sm mb-md text-secondary">
+<span class="material-symbols-outlined" data-icon="psychology">psychology</span>
+<span class="font-body-sm font-bold">Predictive Intelligence</span>
+</div>
+<p class="text-on-surface-variant font-body-sm leading-relaxed">
+                            Vibration patterns on SD-305 suggest <span class="font-bold text-red-alert">Bearing Degradation</span> in the primary intake fan. AI confidence: 89%. Recommended action: Inspect within 48 hours to prevent unplanned downtime.
+                        </p>
+<div class="mt-md flex items-center gap-sm">
+<span class="font-data-label text-[10px] text-outline">FEATURE IMPORTANCE:</span>
+<div class="flex-1 flex h-1.5 gap-xs">
+<div class="w-1/2 bg-red-alert rounded-full" title="Vibration"></div>
+<div class="w-1/4 bg-amber-warn rounded-full" title="Temp"></div>
+<div class="w-1/4 bg-primary rounded-full" title="Current"></div>
+</div>
+</div>
+</div>
+</aside>
+</div>
+</div>
+</main>
+<script>
+        // Real-time sensor simulation using simple canvas drawing
+        function drawSparkline(canvasId, color) {
+            const canvas = document.getElementById(canvasId);
+            const ctx = canvas.getContext('2d');
+            let points = Array.from({length: 40}, () => Math.random() * canvas.height);
+            
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.beginPath();
+                ctx.strokeStyle = color;
+                ctx.lineWidth = 1.5;
+                ctx.moveTo(0, points[0]);
+                
+                for(let i = 1; i < points.length; i++) {
+                    const x = (canvas.width / (points.length - 1)) * i;
+                    ctx.lineTo(x, points[i]);
+                }
+                ctx.stroke();
+                
+                // Shift points
+                points.shift();
+                points.push(Math.random() * canvas.height);
+                
+                requestAnimationFrame(() => {
+                    setTimeout(animate, 100);
+                });
+            }
+            
+            // Adjust canvas resolution
+            const dpr = window.devicePixelRatio || 1;
+            const rect = canvas.getBoundingClientRect();
+            canvas.width = rect.width * dpr;
+            canvas.height = rect.height * dpr;
+            ctx.scale(dpr, dpr);
+            
+            animate();
+        }
+
+        // Initialize charts when page loads
+        window.onload = () => {
+            drawSparkline('vibrationChart', '#C0392B');
+            drawSparkline('tempChart', '#1c6b45');
+            drawSparkline('currentChart', '#003720');
+        };
+    </script>
+<script src="js/sidebar.js"></script>
+<script>renderSidebar('equipment');</script>
+</body></html>

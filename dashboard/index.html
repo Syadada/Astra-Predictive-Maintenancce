@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Project ASTRA | On-Premise Induction Motor Predictive Maintenance</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+          "on-surface-variant": "#414943",
+          "inverse-surface": "#2f312f",
+          "red-alert": "#C0392B",
+          "tertiary": "#00371b",
+          "surface-container-highest": "#e3e2df",
+          "on-error": "#ffffff",
+          "green-good": "#27AE60",
+          "ink-muted": "#6B6860",
+          "surface-container": "#efeeeb",
+          "on-background": "#1b1c1a",
+          "surface-container-high": "#e9e8e5",
+          "on-surface": "#1b1c1a",
+          "background": "#faf9f6",
+          "on-tertiary-fixed-variant": "#00522b",
+          "surface-container-low": "#f4f3f0",
+          "on-secondary": "#ffffff",
+          "on-primary-fixed": "#002111",
+          "border": "#E2DDD6",
+          "on-tertiary-container": "#5cc784",
+          "on-secondary-fixed": "#002110",
+          "outline-variant": "#c0c9c1",
+          "surface-bright": "#faf9f6",
+          "on-primary-container": "#8bbe9e",
+          "secondary-fixed-dim": "#8ad7a7",
+          "on-primary-fixed-variant": "#1f5036",
+          "secondary-container": "#a3f0bf",
+          "secondary-fixed": "#a6f3c2",
+          "primary-container": "#1d4e35",
+          "error": "#ba1a1a",
+          "surface-container-lowest": "#ffffff",
+          "on-error-container": "#93000a",
+          "amber-warn": "#E67E22",
+          "outline": "#717972",
+          "on-tertiary": "#ffffff",
+          "tertiary-fixed": "#8df9b1",
+          "secondary": "#1c6b45",
+          "primary-fixed": "#baefcc",
+          "surface-variant": "#e3e2df",
+          "primary": "#003720",
+          "tertiary-container": "#00502a",
+          "on-secondary-fixed-variant": "#005230",
+          "inverse-primary": "#9ed2b1",
+          "ink": "#1A1A18",
+          "surface-dim": "#dbdad7",
+          "green-light": "#EAF2EC",
+          "surface-tint": "#38684d",
+          "on-tertiary-fixed": "#00210e",
+          "on-primary": "#ffffff",
+          "on-secondary-container": "#227049",
+          "surface": "#FFFFFF",
+          "mono-data": "#2C3E50",
+          "inverse-on-surface": "#f2f1ee",
+          "primary-fixed-dim": "#9ed2b1",
+          "error-container": "#ffdad6",
+          "tertiary-fixed-dim": "#71dc96"
+        },
+        "borderRadius": {
+          "DEFAULT": "0.125rem",
+          "lg": "0.25rem",
+          "xl": "0.5rem",
+          "full": "0.75rem"
+        },
+        "spacing": {
+          "md": "16px",
+          "gutter": "24px",
+          "xs": "4px",
+          "margin-desktop": "64px",
+          "lg": "24px",
+          "sm": "8px",
+          "margin-mobile": "16px",
+          "xl": "48px",
+          "xxl": "96px",
+          "base": "4px"
+        },
+        "fontFamily": {
+          "headline-display": ["Playfair Display"],
+          "body-lg": ["Inter"],
+          "body-md": ["Inter"],
+          "data-display": ["JetBrains Mono"],
+          "body-sm": ["Inter"],
+          "data-value": ["JetBrains Mono"],
+          "data-label": ["JetBrains Mono"]
+        },
+        "fontSize": {
+          "headline-display": ["40px", {"lineHeight": "1.2", "fontWeight": "700"}],
+          "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+          "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
+          "data-display": ["48px", {"lineHeight": "1.0", "letterSpacing": "-0.03em", "fontWeight": "500"}],
+          "body-sm": ["14px", {"lineHeight": "1.4", "fontWeight": "500"}],
+          "data-value": ["14px", {"lineHeight": "1.0", "fontWeight": "500"}],
+          "data-label": ["11px", {"lineHeight": "1.0", "letterSpacing": "0.05em", "fontWeight": "400"}]
+        }
+      }
+    }
+  }
+</script>
+<style>
+  .material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  }
+  .pg-grid-bg {
+    background-image:
+      linear-gradient(rgba(0,55,32,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,55,32,0.04) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+  .pg-card-link {
+    transition: box-shadow 0.15s, transform 0.15s, border-color 0.15s;
+  }
+  .pg-card-link:hover {
+    box-shadow: 0 8px 32px rgba(0,55,32,0.10);
+    transform: translateY(-2px);
+    border-color: #003720;
+  }
+  @keyframes fade-up {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .animate-fade-up { animation: fade-up 0.5s ease both; }
+  .delay-1 { animation-delay: 0.08s; }
+  .delay-2 { animation-delay: 0.16s; }
+  .delay-3 { animation-delay: 0.24s; }
+  .delay-4 { animation-delay: 0.32s; }
+</style>
+<script src="js/interactions.js"></script>
+</head>
+<body class="bg-background text-on-surface font-body-md min-h-screen">
+
+<!-- Top bar -->
+<header class="sticky top-0 z-50 bg-surface/80 backdrop-blur border-b border-border h-16 flex items-center px-margin-mobile md:px-margin-desktop">
+  <div class="flex justify-between items-center w-full max-w-[1200px] mx-auto">
+    <div class="flex items-center gap-sm">
+      <span class="font-headline-display text-[22px] text-primary leading-none">Project ASTRA</span>
+      <span class="font-data-label text-[10px] text-ink-muted uppercase hidden md:block mt-1">On-Premise Motor Monitoring</span>
+    </div>
+    <div class="flex items-center gap-sm">
+      <a href="presentationsite.html" class="px-md py-sm text-sm font-body-sm text-on-surface-variant hover:text-primary transition-colors border border-border rounded-lg">
+        Presentation
+      </a>
+      <a href="overview.html" class="px-md py-sm text-sm font-body-sm bg-primary text-on-primary rounded-lg hover:bg-tertiary transition-colors flex items-center gap-xs">
+        Enter Dashboard
+        <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+      </a>
+    </div>
+  </div>
+</header>
+
+<!-- Hero -->
+<section class="pg-grid-bg border-b border-border">
+  <div class="max-w-[1200px] mx-auto px-margin-mobile md:px-margin-desktop py-xxl flex flex-col items-center text-center gap-lg">
+
+    <!-- Live badge -->
+    <div class="animate-fade-up inline-flex items-center gap-sm px-md py-xs bg-green-light border border-green-good/20 rounded-full">
+      <span class="relative flex h-2 w-2">
+        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-good opacity-75"></span>
+        <span class="relative inline-flex rounded-full h-2 w-2 bg-green-good"></span>
+      </span>
+      <span class="font-data-label uppercase text-primary">On-Premise Ingestion · Live Prototype</span>
+    </div>
+
+    <!-- Brand name -->
+    <h1 class="animate-fade-up delay-1 font-headline-display text-[56px] md:text-[80px] text-primary leading-[1.05] tracking-[-0.02em]">
+      Project ASTRA
+    </h1>
+
+    <!-- Tagline -->
+    <p class="animate-fade-up delay-2 text-body-lg text-ink-muted max-w-[560px]">
+      On-Premise Predictive Maintenance Intelligence Platform for Rotating Induction Motors.
+    </p>
+
+    <!-- Dataset badges -->
+    <div class="animate-fade-up delay-3 flex flex-wrap justify-center gap-sm">
+      <span class="font-data-label text-[10px] uppercase px-md py-xs rounded-full bg-primary/5 text-primary border border-primary/20">SKAB · Anomaly Detection</span>
+      <span class="font-data-label text-[10px] uppercase px-md py-xs rounded-full bg-amber-warn/5 text-amber-warn border border-amber-warn/20">CWRU · Bearing Fault Classification</span>
+      <span class="font-data-label text-[10px] uppercase px-md py-xs rounded-full bg-red-alert/5 text-red-alert border border-red-alert/20">NASA CMAPSS · Remaining Useful Life</span>
+    </div>
+
+    <!-- CTA buttons -->
+    <div class="animate-fade-up delay-4 flex flex-col sm:flex-row gap-sm mt-sm">
+      <a href="presentationsite.html"
+         class="px-xl py-md font-body-sm text-sm border border-primary text-primary rounded-lg hover:bg-green-light transition-colors flex items-center gap-sm justify-center">
+        <span class="material-symbols-outlined text-[18px]">slideshow</span>
+        View Presentation
+      </a>
+      <a href="overview.html"
+         class="px-xl py-md font-body-sm text-sm bg-primary text-on-primary rounded-lg hover:bg-tertiary transition-colors flex items-center gap-sm justify-center">
+        <span class="material-symbols-outlined text-[18px]">dashboard</span>
+        Enter Live Dashboard
+        <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+      </a>
+    </div>
+
+  </div>
+</section>
+
+<!-- Page navigator grid -->
+<section class="max-w-[1200px] mx-auto px-margin-mobile md:px-margin-desktop py-xl">
+
+  <div class="flex items-center justify-between mb-lg">
+    <div>
+      <h2 class="font-headline-display text-[22px] text-primary">All Pages</h2>
+      <p class="text-sm text-ink-muted mt-xs">Navigate directly to any section of the prototype</p>
+    </div>
+    <span class="font-data-label text-[10px] text-ink-muted uppercase">8 views</span>
+  </div>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-md">
+
+    <!-- Overview -->
+    <a href="overview.html" class="pg-card-link bg-surface border border-border rounded-xl p-lg flex flex-col gap-md group">
+      <div class="w-10 h-10 rounded-xl bg-primary/8 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-on-primary transition-colors">
+        <span class="material-symbols-outlined text-[20px]">dashboard</span>
+      </div>
+      <div>
+        <div class="font-body-md font-semibold text-[15px] text-on-surface">Overview</div>
+        <div class="text-[12px] text-ink-muted mt-xs leading-relaxed">Live equipment monitoring, KPI cards, anomaly alerts, XAI drawers</div>
+      </div>
+      <div class="mt-auto flex items-center gap-xs text-primary font-data-label text-[10px] uppercase">
+        Open <span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+      </div>
+    </a>
+
+    <!-- Alerts -->
+    <a href="alerts.html" class="pg-card-link bg-surface border border-border rounded-xl p-lg flex flex-col gap-md group">
+      <div class="w-10 h-10 rounded-xl bg-red-alert/8 flex items-center justify-center text-red-alert group-hover:bg-red-alert group-hover:text-white transition-colors">
+        <span class="material-symbols-outlined text-[20px]">notifications_active</span>
+      </div>
+      <div>
+        <div class="font-body-md font-semibold text-[15px] text-on-surface">Alerts</div>
+        <div class="text-[12px] text-ink-muted mt-xs leading-relaxed">Critical event monitor, SHAP explanations, work order creation</div>
+      </div>
+      <div class="mt-auto flex items-center gap-xs text-red-alert font-data-label text-[10px] uppercase">
+        Open <span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+      </div>
+    </a>
+
+    <!-- Maintenance -->
+    <a href="maintenance.html" class="pg-card-link bg-surface border border-border rounded-xl p-lg flex flex-col gap-md group">
+      <div class="w-10 h-10 rounded-xl bg-amber-warn/8 flex items-center justify-center text-amber-warn group-hover:bg-amber-warn group-hover:text-white transition-colors">
+        <span class="material-symbols-outlined text-[20px]">build</span>
+      </div>
+      <div>
+        <div class="font-body-md font-semibold text-[15px] text-on-surface">Maintenance</div>
+        <div class="text-[12px] text-ink-muted mt-xs leading-relaxed">Work order management, timeline, AI-optimised scheduling</div>
+      </div>
+      <div class="mt-auto flex items-center gap-xs text-amber-warn font-data-label text-[10px] uppercase">
+        Open <span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+      </div>
+    </a>
+
+    <!-- Equipment -->
+    <a href="equipment.html" class="pg-card-link bg-surface border border-border rounded-xl p-lg flex flex-col gap-md group">
+      <div class="w-10 h-10 rounded-xl bg-primary/8 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-on-primary transition-colors">
+        <span class="material-symbols-outlined text-[20px]">precision_manufacturing</span>
+      </div>
+      <div>
+        <div class="font-body-md font-semibold text-[15px] text-on-surface">Equipment</div>
+        <div class="text-[12px] text-ink-muted mt-xs leading-relaxed">Asset registry, health scores, diagnostic reports, MTBF tracking</div>
+      </div>
+      <div class="mt-auto flex items-center gap-xs text-primary font-data-label text-[10px] uppercase">
+        Open <span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+      </div>
+    </a>
+
+    <!-- Prediction -->
+    <a href="prediction.html" class="pg-card-link bg-surface border border-border rounded-xl p-lg flex flex-col gap-md group">
+      <div class="w-10 h-10 rounded-xl bg-primary/8 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-on-primary transition-colors">
+        <span class="material-symbols-outlined text-[20px]">biotech</span>
+      </div>
+      <div>
+        <div class="font-body-md font-semibold text-[15px] text-on-surface">Prediction Lab</div>
+        <div class="text-[12px] text-ink-muted mt-xs leading-relaxed">Interactive sensor simulator, anomaly score, RUL estimate, SHAP values</div>
+      </div>
+      <div class="mt-auto flex items-center gap-xs text-primary font-data-label text-[10px] uppercase">
+        Open <span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+      </div>
+    </a>
+
+    <!-- Reports -->
+    <a href="reports.html" class="pg-card-link bg-surface border border-border rounded-xl p-lg flex flex-col gap-md group">
+      <div class="w-10 h-10 rounded-xl bg-green-good/8 flex items-center justify-center text-green-good group-hover:bg-green-good group-hover:text-white transition-colors">
+        <span class="material-symbols-outlined text-[20px]">bar_chart</span>
+      </div>
+      <div>
+        <div class="font-body-md font-semibold text-[15px] text-on-surface">Reports</div>
+        <div class="text-[12px] text-ink-muted mt-xs leading-relaxed">CMMS compliance logs, asset downtime analysis, scheduled exports</div>
+      </div>
+      <div class="mt-auto flex items-center gap-xs text-green-good font-data-label text-[10px] uppercase">
+        Open <span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+      </div>
+    </a>
+
+    <!-- Support -->
+    <a href="support.html" class="pg-card-link bg-surface border border-border rounded-xl p-lg flex flex-col gap-md group">
+      <div class="w-10 h-10 rounded-xl bg-primary/8 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-on-primary transition-colors">
+        <span class="material-symbols-outlined text-[20px]">help</span>
+      </div>
+      <div>
+        <div class="font-body-md font-semibold text-[15px] text-on-surface">Support</div>
+        <div class="text-[12px] text-ink-muted mt-xs leading-relaxed">Technical documentation, knowledge base, engineer contact</div>
+      </div>
+      <div class="mt-auto flex items-center gap-xs text-primary font-data-label text-[10px] uppercase">
+        Open <span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+      </div>
+    </a>
+
+    <!-- Profile & Settings -->
+    <a href="profilensettings.html" class="pg-card-link bg-surface border border-border rounded-xl p-lg flex flex-col gap-md group">
+      <div class="w-10 h-10 rounded-xl bg-primary/8 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-on-primary transition-colors">
+        <span class="material-symbols-outlined text-[20px]">manage_accounts</span>
+      </div>
+      <div>
+        <div class="font-body-md font-semibold text-[15px] text-on-surface">Profile & Settings</div>
+        <div class="text-[12px] text-ink-muted mt-xs leading-relaxed">User profile, node access, activity logs, biometric credentials</div>
+      </div>
+      <div class="mt-auto flex items-center gap-xs text-primary font-data-label text-[10px] uppercase">
+        Open <span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+      </div>
+    </a>
+
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="border-t border-border mt-xl">
+  <div class="max-w-[1200px] mx-auto px-margin-mobile md:px-margin-desktop py-lg flex flex-col sm:flex-row justify-between items-center gap-sm">
+    <span class="font-data-label text-[10px] text-ink-muted uppercase">Project ASTRA · On-Premise Induction Motor Predictive Maintenance · Prototype v1.0</span>
+    <div class="flex items-center gap-md">
+      <span class="font-data-label text-[10px] text-ink-muted uppercase">Datasets:</span>
+      <span class="font-data-label text-[10px] text-primary">SKAB</span>
+      <span class="text-border">·</span>
+      <span class="font-data-label text-[10px] text-amber-warn">CWRU</span>
+      <span class="text-border">·</span>
+      <span class="font-data-label text-[10px] text-red-alert">NASA CMAPSS</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

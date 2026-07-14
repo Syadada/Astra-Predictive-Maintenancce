@@ -1,0 +1,63 @@
+{
+  "task": "anomaly_detection",
+  "dataset": "SKAB",
+  "best_model": "RandomForest",
+  "validation": {
+    "IsolationForest": {
+      "model": "IsolationForest",
+      "weighted_f1": 0.2387,
+      "roc_auc": 0.8147,
+      "precision_anomaly": 0.4103,
+      "recall_anomaly": 1.0,
+      "f1_anomaly": 0.5818,
+      "accuracy": 0.4103
+    },
+    "RandomForest": {
+      "model": "RandomForest",
+      "weighted_f1": 0.9259,
+      "roc_auc": 0.9242,
+      "precision_anomaly": 1.0,
+      "recall_anomaly": 0.8229,
+      "f1_anomaly": 0.9029,
+      "accuracy": 0.9274
+    },
+    "MLP": {
+      "model": "MLP",
+      "weighted_f1": 0.4879,
+      "roc_auc": 0.6615,
+      "precision_anomaly": 0.4595,
+      "recall_anomaly": 0.8854,
+      "f1_anomaly": 0.605,
+      "accuracy": 0.5256
+    }
+  },
+  "test": {
+    "IsolationForest": {
+      "model": "IsolationForest",
+      "weighted_f1": 0.2472,
+      "roc_auc": 0.8015,
+      "precision_anomaly": 0.4188,
+      "recall_anomaly": 1.0,
+      "f1_anomaly": 0.5904,
+      "accuracy": 0.4188
+    },
+    "RandomForest": {
+      "model": "RandomForest",
+      "weighted_f1": 0.9126,
+      "roc_auc": 0.9383,
+      "precision_anomaly": 1.0,
+      "recall_anomaly": 0.7959,
+      "f1_anomaly": 0.8864,
+      "accuracy": 0.9145
+    },
+    "MLP": {
+      "model": "MLP",
+      "weighted_f1": 0.4988,
+      "roc_auc": 0.6588,
+      "precision_anomaly": 0.4699,
+      "recall_anomaly": 0.8776,
+      "f1_anomaly": 0.6121,
+      "accuracy": 0.5342
+    }
+  }
+}

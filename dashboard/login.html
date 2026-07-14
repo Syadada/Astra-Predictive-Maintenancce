@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Project ASTRA | Secure Sign In</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;700&amp;display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#003720",
+            "secondary": "#1c6b45",
+            "primary-container": "#1d4e35",
+            "surface": "#FFFFFF",
+            "on-surface": "#1b1c1a",
+            "on-surface-variant": "#414943",
+            "outline": "#717972"
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background: radial-gradient(circle at 10% 20%, #001f11 0%, #003720 90%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow-x: hidden;
+    }
+    
+    .glow-blob {
+      position: absolute;
+      width: 400px;
+      height: 400px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(163,240,191,0.15) 0%, rgba(0,0,0,0) 70%);
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .glass-panel {
+      background: rgba(255, 255, 255, 0.04);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 24px 64px rgba(0, 0, 0, 0.4);
+    }
+    
+    .input-field {
+      background: rgba(0, 0, 0, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: white;
+      transition: all 0.2s ease;
+    }
+    
+    .input-field:focus {
+      border-color: #a3f0bf;
+      box-shadow: 0 0 0 2px rgba(163,240,191,0.25);
+      outline: none;
+      background: rgba(0, 0, 0, 0.3);
+    }
+
+    .toast-animate {
+      animation: slideIn 0.3s ease-out forwards;
+    }
+
+    @keyframes slideIn {
+      from { transform: translateY(-20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+  </style>
+</head>
+<body class="p-6">
+
+  <!-- Glow shapes -->
+  <div class="glow-blob -top-20 -left-20" style="background: radial-gradient(circle, rgba(163,240,191,0.12) 0%, transparent 70%);"></div>
+  <div class="glow-blob -bottom-20 -right-20" style="background: radial-gradient(circle, rgba(28,107,69,0.2) 0%, transparent 70%);"></div>
+
+  <!-- Toast Container -->
+  <div id="toast-container" class="fixed top-6 left-1/2 -translate-x-1/2 z-50 flex flex-col gap-2 w-full max-w-sm px-4"></div>
+
+  <div class="relative z-10 w-full max-w-md glass-panel rounded-2xl p-8 md:p-10 text-white">
+    <!-- Header -->
+    <div class="text-center mb-8">
+      <div class="inline-flex items-center justify-center w-14 h-14 rounded-xl bg-[#1c6b45]/30 border border-[#a3f0bf]/20 mb-4 text-[#a3f0bf]">
+        <span class="material-symbols-outlined !text-3xl" style="font-variation-settings: 'opsz' 40;">shield_lock</span>
+      </div>
+      <h1 class="text-2xl font-bold tracking-tight mb-1 bg-gradient-to-r from-white via-white to-[#a3f0bf] bg-clip-text text-transparent">
+        Project ASTRA Gateway
+      </h1>
+      <p class="text-sm text-gray-400">Motor Predictive Maintenance Center</p>
+    </div>
+
+    <!-- Login Form -->
+    <form id="login-form" class="space-y-6">
+      <div>
+        <label for="email" class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">Security ID (Email)</label>
+        <div class="relative">
+          <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-sm">alternate_email</span>
+          <input type="email" id="email" required placeholder="name@ASTRA.com" 
+                 class="input-field w-full pl-10 pr-4 py-3 rounded-lg text-sm">
+        </div>
+      </div>
+
+      <div>
+        <label for="password" class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">Access Key (Password)</label>
+        <div class="relative">
+          <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-sm">lock</span>
+          <input type="password" id="password" required placeholder="••••••••" 
+                 class="input-field w-full pl-10 pr-4 py-3 rounded-lg text-sm">
+        </div>
+      </div>
+
+      <button type="submit" 
+              class="w-full py-3 rounded-lg bg-[#1c6b45] hover:bg-[#227049] active:scale-[0.98] transition-all font-bold text-sm text-[#a3f0bf] border border-[#a3f0bf]/20 hover:shadow-[0_0_20px_rgba(163,240,191,0.15)] flex items-center justify-center gap-2">
+        Verify Credentials
+        <span class="material-symbols-outlined text-sm">vpn_key</span>
+      </button>
+    </form>
+
+    <!-- Quick Fill / Testing Cards -->
+    <div class="mt-8 border-t border-white/10 pt-6">
+      <h3 class="text-xs font-semibold uppercase tracking-wider text-gray-400 mb-4 text-center">Demo Authorization Profiles</h3>
+      <div class="grid grid-cols-2 gap-2 text-xs">
+        <button onclick="quickFill('superadmin@ASTRA.com', 'admin123')"
+                class="p-2.5 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 text-left transition-colors flex flex-col justify-between">
+          <span class="font-bold text-[#a3f0bf]">Super Admin 1</span>
+          <span class="text-gray-400 mt-1">Justin Bieber (L4)</span>
+        </button>
+        <button onclick="quickFill('rasyaad@ASTRA.com', 'admin123')"
+                class="p-2.5 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 text-left transition-colors flex flex-col justify-between">
+          <span class="font-bold text-teal-400">Super Admin 2</span>
+          <span class="text-gray-400 mt-1">Rasyaad P.R. (L4)</span>
+        </button>
+        <button onclick="quickFill('admin@ASTRA.com', 'admin123')"
+                class="p-2.5 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 text-left transition-colors flex flex-col justify-between">
+          <span class="font-bold text-sky-300">Plant Admin</span>
+          <span class="text-gray-400 mt-1">Clearance L3</span>
+        </button>
+        <button onclick="quickFill('maint@ASTRA.com', 'maint123')"
+                class="p-2.5 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 text-left transition-colors flex flex-col justify-between">
+          <span class="font-bold text-amber-300">Maintenance</span>
+          <span class="text-gray-400 mt-1">Clearance L2</span>
+        </button>
+        <button onclick="quickFill('operator@ASTRA.com', 'op123')"
+                class="p-2.5 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 text-left transition-colors flex flex-col justify-between col-span-2">
+          <span class="font-bold text-gray-300 text-center w-full block">Operator (Clearance Level 1)</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function showToast(message, type = 'error') {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      
+      const isError = type === 'error';
+      const isInfo = type === 'info';
+      let bgColor = 'bg-green-500/10 border-green-500/30 text-green-200';
+      let icon = 'check_circle';
+
+      if (isError) {
+        bgColor = 'bg-red-500/10 border-red-500/30 text-red-200';
+        icon = 'error';
+      } else if (isInfo) {
+        bgColor = 'bg-blue-500/10 border-blue-500/30 text-blue-200';
+        icon = 'info';
+      }
+
+      toast.className = `toast-animate flex items-center gap-3 px-4 py-3 rounded-lg border ${bgColor} backdrop-blur-md shadow-lg text-sm`;
+      toast.innerHTML = `
+        <span class="material-symbols-outlined text-lg">${icon}</span>
+        <span class="font-medium">${message}</span>
+      `;
+      
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.style.transition = 'all 0.3s ease';
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(-10px)';
+        setTimeout(() => toast.remove(), 300);
+      }, 3500);
+    }
+
+    function quickFill(email, password) {
+      document.getElementById('email').value = email;
+      document.getElementById('password').value = password;
+      showToast(`Filled credentials for ${email.split('@')[0]}`, 'info');
+    }
+
+    document.getElementById('login-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+
+      const apiBase = window.location.protocol === 'file:' ? 'http://127.0.0.1:8000' : '';
+      const url = apiBase + '/api/auth/login';
+
+      try {
+        const response = await fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+
+        if (response.ok) {
+          const user = await response.json();
+          localStorage.setItem('currentUser', JSON.stringify(user));
+          showToast(`Verification Successful. Welcome, ${user.name}!`, 'success');
+          
+          setTimeout(() => {
+            window.location.href = 'overview.html';
+          }, 800);
+        } else {
+          const errData = await response.json();
+          showToast(errData.detail || 'Access Denied. Invalid credentials.', 'error');
+        }
+      } catch (err) {
+        console.error('Login request failed:', err);
+        showToast('Connection to authorization server failed.', 'error');
+      }
+    });
+
+    // Check if user is already logged in, redirect to dashboard
+    if (localStorage.getItem('currentUser')) {
+      window.location.href = 'overview.html';
+    }
+  </script>
+</body>
+</html>
