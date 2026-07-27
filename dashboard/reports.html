@@ -152,7 +152,7 @@
                     </p>
 </div>
 <div class="hidden lg:flex gap-md">
-<button class="bg-primary text-white px-lg py-sm rounded hover:bg-primary-container transition-colors flex items-center gap-sm font-data-label text-data-label uppercase" onclick="pgToast('Report scheduled — delivery via email every Monday at 06:00 IST', 'success')">
+<button class="bg-primary text-white px-lg py-sm rounded hover:bg-primary-container transition-colors flex items-center gap-sm font-data-label text-data-label uppercase" onclick="pgToast('Report scheduled  delivery via email every Monday at 06:00 IST', 'success')">
 <span class="material-symbols-outlined text-[18px]">schedule</span>
                         Schedule New Report
                     </button>
@@ -226,10 +226,10 @@
 <h4 class="font-body-md font-bold mb-xs">Weekly Health Summary</h4>
 <p class="font-body-sm text-on-surface-variant mb-xl">Cross-site sensor analysis and preventative maintenance prioritization.</p>
 <div class="flex gap-sm border-t border-border pt-md mt-auto">
-<button class="flex-grow bg-surface-container-low hover:bg-surface-container text-primary font-data-label text-[10px] py-sm flex items-center justify-center gap-xs transition-colors" onclick="pgMockDownload('Weekly_Health_Summary_W24_2026','pdf')">
+<button class="flex-grow bg-surface-container-low hover:bg-surface-container text-primary font-data-label text-[10px] py-sm flex items-center justify-center gap-xs transition-colors" onclick="pgDownloadReport('weekly','pdf')">
 <span class="material-symbols-outlined text-[14px]">picture_as_pdf</span> PDF
                             </button>
-<button class="flex-grow bg-surface-container-low hover:bg-surface-container text-primary font-data-label text-[10px] py-sm flex items-center justify-center gap-xs transition-colors" onclick="pgMockDownload('Weekly_Health_Summary_W24_2026','csv')">
+<button class="flex-grow bg-surface-container-low hover:bg-surface-container text-primary font-data-label text-[10px] py-sm flex items-center justify-center gap-xs transition-colors" onclick="pgDownloadReport('weekly','csv')">
 <span class="material-symbols-outlined text-[14px]">table_chart</span> CSV
                             </button>
 </div>
@@ -245,10 +245,10 @@
 <h4 class="font-body-md font-bold mb-xs">CMMS Compliance Log</h4>
 <p class="font-body-sm text-on-surface-variant mb-xl">Automated temperature and sanitation logs for food safety certification.</p>
 <div class="flex gap-sm border-t border-border pt-md mt-auto">
-<button class="flex-grow bg-surface-container-low hover:bg-surface-container text-primary font-data-label text-[10px] py-sm flex items-center justify-center gap-xs transition-colors" onclick="pgMockDownload('CMMS_Compliance_Log_Q2_2026','pdf')">
+<button class="flex-grow bg-surface-container-low hover:bg-surface-container text-primary font-data-label text-[10px] py-sm flex items-center justify-center gap-xs transition-colors" onclick="pgDownloadReport('cmms','pdf')">
 <span class="material-symbols-outlined text-[14px]">picture_as_pdf</span> PDF
                             </button>
-<button class="flex-grow bg-surface-container-low hover:bg-surface-container text-primary font-data-label text-[10px] py-sm flex items-center justify-center gap-xs transition-colors" onclick="pgToast('Digital signature requested — pending QA Manager approval (KG-QA-7721)', 'info')">
+<button class="flex-grow bg-surface-container-low hover:bg-surface-container text-primary font-data-label text-[10px] py-sm flex items-center justify-center gap-xs transition-colors" onclick="pgToast('Digital signature requested  pending QA Manager approval (KG-QA-7721)', 'info')">
 <span class="material-symbols-outlined text-[14px]">history_edu</span> SIGN
                             </button>
 </div>
@@ -264,10 +264,10 @@
 <h4 class="font-body-md font-bold mb-xs">Asset Downtime Analysis</h4>
 <p class="font-body-sm text-on-surface-variant mb-xl">Detailed breakdown of unplanned shutdowns and ROI on AI interventions.</p>
 <div class="flex gap-sm border-t border-border pt-md mt-auto">
-<button class="flex-grow bg-surface-container-low hover:bg-surface-container text-primary font-data-label text-[10px] py-sm flex items-center justify-center gap-xs transition-colors" onclick="pgMockDownload('Asset_Downtime_Analysis_Jun2026','pdf')">
+<button class="flex-grow bg-surface-container-low hover:bg-surface-container text-primary font-data-label text-[10px] py-sm flex items-center justify-center gap-xs transition-colors" onclick="pgDownloadReport('downtime','pdf')">
 <span class="material-symbols-outlined text-[14px]">picture_as_pdf</span> PDF
                             </button>
-<button class="flex-grow bg-surface-container-low hover:bg-surface-container text-primary font-data-label text-[10px] py-sm flex items-center justify-center gap-xs transition-colors" onclick="pgMockDownload('Asset_Downtime_Analysis_Jun2026','csv')">
+<button class="flex-grow bg-surface-container-low hover:bg-surface-container text-primary font-data-label text-[10px] py-sm flex items-center justify-center gap-xs transition-colors" onclick="pgDownloadReport('downtime','csv')">
 <span class="material-symbols-outlined text-[14px]">table_chart</span> CSV
                             </button>
 </div>
@@ -278,7 +278,7 @@
 <section class="bg-surface border border-border overflow-hidden">
 <div class="p-lg border-b border-border flex justify-between items-center">
 <h3 class="font-body-md font-bold">Report Generation History</h3>
-<button class="text-primary font-data-label text-data-label hover:underline" onclick="pgToast('Showing full report history — 127 records', 'info')">View All History</button>
+<button class="text-primary font-data-label text-data-label hover:underline" onclick="pgToast('Showing full report history  127 records', 'info')">View All History</button>
 </div>
 <div class="overflow-x-auto">
 <table class="w-full text-left pg-table">
@@ -300,7 +300,7 @@
 </td>
 <td class="px-lg py-md text-on-surface-variant">Jun 14, 2024</td>
 <td class="px-lg py-md text-right">
-<button class="material-symbols-outlined text-primary hover:scale-110 transition-transform" onclick="pgMockDownload('Q2_Facility_Wide_Compliance_V3','pdf')">download</button>
+<button class="material-symbols-outlined text-primary hover:scale-110 transition-transform" onclick="pgDownloadReport('weekly','pdf')">download</button>
 </td>
 </tr>
 <tr class="hover:bg-surface-container-lowest transition-colors">
@@ -311,7 +311,7 @@
 </td>
 <td class="px-lg py-md text-on-surface-variant">Jun 12, 2024</td>
 <td class="px-lg py-md text-right">
-<button class="material-symbols-outlined text-primary hover:scale-110 transition-transform" onclick="pgMockDownload('Critical_Asset_Health_Detailed','csv')">download</button>
+<button class="material-symbols-outlined text-primary hover:scale-110 transition-transform" onclick="pgDownloadReport('weekly','csv')">download</button>
 </td>
 </tr>
 <tr class="hover:bg-surface-container-lowest transition-colors">
@@ -346,6 +346,7 @@
 </section>
 </div>
 </main>
+<script src="js/api_client.js"></script>
 <script>
         // Micro-interaction for report cards
         document.querySelectorAll('.group').forEach(card => {
@@ -358,7 +359,21 @@
                 card.style.boxShadow = 'none';
             });
         });
-    </script>
+
+        function pgDownloadReport(type, format) {
+            if (pgApiAvailable()) {
+                if (type === 'weekly') {
+                    window.open('/api/reports/weekly', '_blank');
+                } else if (type === 'cmms') {
+                    window.open('/api/reports/cmms/all', '_blank');
+                } else if (type === 'downtime') {
+                    window.open('/api/reports/downtime', '_blank');
+                }
+            } else {
+                pgMockDownload(type === 'weekly' ? 'Weekly_Health_Summary_W24_2026' : (type === 'cmms' ? 'CMMS_Compliance_Log_Q2_2026' : 'Asset_Downtime_Analysis_Jun2026'), format);
+            }
+        }
+</script>
 <script src="js/sidebar.js"></script>
 <script>renderSidebar('reports');</script>
 </body></html>

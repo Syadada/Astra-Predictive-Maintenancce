@@ -29,6 +29,7 @@ TWILIO_WHATSAPP_FROM = os.getenv("ASTRA_TWILIO_WHATSAPP_FROM", "+14155238886")  
 RECIPIENT_WHATSAPP = os.getenv("ASTRA_RECIPIENT_WHATSAPP", "")    # User's phone number
 
 _last_notified = {}  # key: machine_id + alert_type, value: timestamp
+_last_whatsapp_sent_time = 0.0
 
 def get_active_settings():
     # Load defaults from environment variables (overridden by local_config.py)
@@ -67,8 +68,16 @@ def get_active_settings():
             for k, v in db_settings.items():
                 if k == 'id':
                     continue
-                # Overlay if not empty and not a placeholder
-                if v and str(v).strip() and "placeholder" not in str(v).lower() and "@example.com" not in str(v):
+                # Overlay if not empty and not a default placeholder
+                val_str = str(v).lower()
+                is_placeholder = (
+                    "placeholder" in val_str or 
+                    "your-app-password" in val_str or 
+                    "your_twilio_sid" in val_str or
+                    "your-app" in val_str or
+                    "@example.com" in val_str
+                )
+                if v and str(v).strip() and not is_placeholder:
                     settings[k] = v
     except Exception as e:
         print(f"[Notifier] Failed to load settings from DB, falling back to environment/defaults: {e}")
@@ -105,6 +114,7 @@ def send_email(subject: str, body: str):
         return False
 
 def send_whatsapp(body: str):
+    global _last_whatsapp_sent_time
     settings = get_active_settings()
     provider = settings.get("whatsapp_provider", "twilio")
     recipient_whatsapp = settings.get("recipient_whatsapp")
@@ -116,6 +126,13 @@ def send_whatsapp(body: str):
     recipient_whatsapp = str(recipient_whatsapp).strip()
     if recipient_whatsapp.startswith("08"):
         recipient_whatsapp = "+62" + recipient_whatsapp[1:]
+
+    # Apply global 2-second delay to avoid Twilio 429 rate limit errors
+    now = time.time()
+    elapsed = now - _last_whatsapp_sent_time
+    if elapsed < 2.0:
+        time.sleep(2.0 - elapsed)
+    _last_whatsapp_sent_time = time.time()
 
     if provider == "waha":
         waha_url = settings.get("waha_server_url", "http://localhost:3000")

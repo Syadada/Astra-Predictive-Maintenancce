@@ -603,12 +603,7 @@ Schedule predictive replacement within 48 hours.
 </button>
 </nav>
 <script>
-        // Micro-interaction for closing drawers when clicking outside
-        document.addEventListener('click', (e) => {
-            if (!e.target.closest('.xai-drawer') && !e.target.closest('button')) {
-                document.querySelectorAll('.xai-drawer').forEach(drawer => drawer.classList.remove('open'));
-            }
-        });
+
 
         // Simulating sensor wave animation (Technical Detail)
         // This is purely atmospheric as requested for premium UI feel
@@ -647,11 +642,28 @@ Schedule predictive replacement within 48 hours.
 </div>`).join('');
     }
 
+    let _openXaiDrawers = new Set();
+
+    function toggleXaiDrawer(xaiId) {
+        const drawer = document.getElementById(xaiId);
+        if (drawer) {
+            if (drawer.classList.contains('open')) {
+                drawer.classList.remove('open');
+                _openXaiDrawers.delete(xaiId);
+            } else {
+                drawer.classList.add('open');
+                _openXaiDrawers.add(xaiId);
+            }
+        }
+    }
+
     function _buildAlertCard(alert, idx) {
+        const user = JSON.parse(localStorage.getItem('currentUser')) || { role: 'Operator' };
         const sev  = alert.severity;
         const xaiId = 'xai-live-' + idx;
         const mins  = alert.minutes_ago === 1 ? '1 min ago' : alert.minutes_ago + ' mins ago';
         const confPct = Math.round(alert.confidence * 100);
+        const isOpen = _openXaiDrawers.has(xaiId);
 
         const recs = alert.recommendations
             .map(r => `<li class="flex gap-sm"><span class="material-symbols-outlined text-green-good text-[16px]">check_circle</span>${r}</li>`)
@@ -682,17 +694,17 @@ Schedule predictive replacement within 48 hours.
       </div>
       <div class="flex flex-col md:items-end justify-center gap-sm">
         <button class="w-full md:w-auto px-md py-2 border border-primary text-primary text-body-sm font-bold rounded-lg hover:bg-green-light transition-colors flex items-center justify-center gap-sm"
-                onclick="document.getElementById('${xaiId}').classList.toggle('open')">
+                onclick="toggleXaiDrawer('${xaiId}')">
           <span class="material-symbols-outlined text-[18px]">psychology</span>View XAI
         </button>
         <button class="w-full md:w-auto px-md py-2 bg-primary text-white text-body-sm font-bold rounded-lg hover:bg-primary-container transition-colors flex items-center justify-center gap-sm"
-                onclick="pgCreateWorkOrder('${alert.asset_id}', '${alert.asset_name}', 'Check anomalous condition: ${alert.title.replace(/'/g, "\\'")}')">
+                onclick="pgCreateWorkOrder('${alert.asset_id}', '${alert.asset_name}', 'Check anomalous condition: ${alert.title.replace(/'/g, "\'")}')">
           <span class="material-symbols-outlined text-[18px]">construction</span>Create Work Order
         </button>
       </div>
     </div>
   </div>
-  <div class="xai-drawer bg-surface-container-low border-t border-border" id="${xaiId}">
+  <div class="xai-drawer bg-surface-container-low border-t border-border ${isOpen ? 'open' : ''}" id="${xaiId}">
     <div class="p-lg">
       <h5 class="font-bold text-body-md text-primary mb-md flex items-center gap-sm">
         <span class="material-symbols-outlined">insight_spark</span>
@@ -779,12 +791,11 @@ Schedule predictive replacement within 48 hours.
             const container = document.querySelector('.space-y-md');
             if (!container || !data.alerts || data.alerts.length === 0) return;
 
-            // Replace static alert cards with live ones
-            // Preserve the bottom "End of Recent Critical Buffer" footer
             const footer = container.querySelector('.pt-xl');
             const liveHTML = data.alerts
                 .map((a, i) => _buildAlertCard(a, i))
-                .join('\n');
+                .join('
+');
             container.innerHTML = liveHTML + (footer ? footer.outerHTML : '');
         } catch (err) {
             console.warn('Alerts API load failed:', err.message);

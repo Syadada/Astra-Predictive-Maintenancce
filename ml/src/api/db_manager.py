@@ -18,9 +18,9 @@ class DBManager:
         return psycopg2.connect(
             host=os.getenv("ASTRA_DB_HOST", "localhost"),
             port=int(os.getenv("ASTRA_DB_PORT", "5432")),
-            database=os.getenv("ASTRA_DB_NAME", "postgres"),
-            user=os.getenv("ASTRA_DB_USER", "postgres"),
-            password=os.getenv("ASTRA_DB_PASSWORD", "")
+            database=os.getenv("ASTRA_DB_NAME", "astra_predictive_maintenance"),
+            user=os.getenv("ASTRA_DB_USER", "rasyaad"),
+            password=os.getenv("ASTRA_DB_PASSWORD", "Sellevolerei1")
         )
 
     def init_db(self):

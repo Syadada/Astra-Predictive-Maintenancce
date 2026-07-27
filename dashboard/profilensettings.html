@@ -561,15 +561,7 @@ Save Settings
                     body: JSON.stringify(payload)
                 });
                 if (!res.ok) throw new Error('HTTP ' + res.status);
-                
-                toast.classList.remove('translate-y-24', 'opacity-0');
-                toast.classList.add('translate-y-0', 'opacity-100');
-                
-                setTimeout(() => {
-                    toast.classList.add('translate-y-24', 'opacity-0');
-                    toast.classList.remove('translate-y-0', 'opacity-100');
-                }, 3000);
-                
+                pgToast('Notification settings saved successfully!', 'success');
                 await loadNotificationSettings();
             } catch (err) {
                 console.error('Error saving notification settings:', err);
