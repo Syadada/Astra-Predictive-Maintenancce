@@ -1,0 +1,243 @@
+/*
+ * PredictaGuard — Shared Visual Stylesheet
+ * ─────────────────────────────────────────────────────────────────
+ * Pure CSS supplement to the per-page Tailwind configuration.
+ * Loaded on all dashboard pages. Provides:
+ *   • Consistent rendering across browsers
+ *   • Accessible focus rings
+ *   • Unified component animation timings
+ *   • Table polish & card hover effects
+ *   • prefers-reduced-motion compliance
+ *
+ * Naming: pg-* prefix for semantic component classes to avoid
+ * collisions with Tailwind utilities.
+ */
+
+/* ── 1. Anti-FOUC: hide page until sidebar is ready ────────────── */
+/*
+ * sidebar.js adds .pg-ready to <html> immediately after inserting the
+ * sidebar. interactions.js adds it as a DOMContentLoaded fallback for
+ * pages that don't use a sidebar. This prevents the flash where page
+ * content appears without the sidebar during navigation.
+ */
+html { opacity: 0; }
+html.pg-ready { opacity: 1; transition: opacity 0.08s ease; }
+
+/* ── 2. Rendering base ──────────────────────────────────────────── */
+
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── 2. Material Symbols normalisation ──────────────────────────── */
+/*
+ * Google's font loads as inline-block by default, which causes a
+ * 4px descender gap when used inside flex containers. Force it to
+ * inline-flex so it centres correctly without magic margin hacks.
+ */
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  display: inline-flex;
+  align-items: center;
+  line-height: 1;
+  flex-shrink: 0;
+  vertical-align: middle;
+  user-select: none;
+}
+
+/* ── 3. Custom scrollbar ────────────────────────────────────────── */
+
+::-webkit-scrollbar         { width: 6px; height: 6px; }
+::-webkit-scrollbar-track   { background: transparent; }
+::-webkit-scrollbar-thumb   { background: #c0c9c1; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #717972; }
+
+/* ── 4. Focus rings ─────────────────────────────────────────────── */
+/*
+ * Browser default focus ring is either invisible (Chrome) or ugly.
+ * Replace with a branded 2px ring that passes WCAG 2.1 AA.
+ */
+:focus-visible {
+  outline: 2px solid #38684d;   /* surface-tint token */
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+:focus:not(:focus-visible) { outline: none; }
+
+/* ── 5. Status pulse — unified ──────────────────────────────────── */
+/*
+ * alerts.html and maintenance.html each had their own @keyframes.
+ * This file overrides them with a single definition so all pulse
+ * animations are visually in sync.
+ */
+.status-pulse {
+  animation: pg-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pg-pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.4; }
+}
+
+/* ── 6. Expandable drawers ──────────────────────────────────────── */
+/*
+ * alerts.html already defines .xai-drawer / .xai-drawer.open.
+ * These declarations override the per-page values and also add
+ * .drawer-content (used by overview.html equipment table rows).
+ * max-height transition gives a smooth open/close without JS.
+ */
+.xai-drawer {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-out;
+}
+
+.xai-drawer.open {
+  max-height: 680px;
+}
+
+.drawer-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.drawer-content.open {
+  max-height: 680px;
+}
+
+/* ── 7. Sidebar nav link transitions ────────────────────────────── */
+
+#app-sidebar a {
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+/* ── 8. Alert cards ─────────────────────────────────────────────── */
+
+.pg-alert-card {
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.pg-alert-card:hover {
+  box-shadow: 0 4px 16px rgba(0, 55, 32, 0.07);
+}
+
+/* ── 9. Table polish ────────────────────────────────────────────── */
+/*
+ * Added to all data tables. Only supplies what Tailwind classes on
+ * these tables don't: border-collapse normalisation, header nowrap,
+ * cell vertical alignment, and a smooth hover transition.
+ */
+.pg-table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.pg-table thead th {
+  white-space: nowrap;
+}
+
+.pg-table tbody tr {
+  transition: background-color 0.12s ease;
+}
+
+.pg-table tbody td {
+  vertical-align: middle;
+}
+
+/* ── 10. Log history items (maintenance.html) ───────────────────── */
+
+.pg-log-item {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left: 16px;
+  border-left: 2px solid #c0c9c1;
+  cursor: pointer;
+  transition: border-left-color 0.15s ease, background-color 0.15s ease;
+}
+
+.pg-log-item:hover {
+  border-left-color: #003720;
+  background-color: rgba(234, 242, 236, 0.35);
+}
+
+/* ── 11. Generic card hover ─────────────────────────────────────── */
+
+.pg-card {
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.pg-card:hover {
+  border-color: #c0c9c1;
+  box-shadow: 0 2px 8px rgba(0, 55, 32, 0.05);
+}
+
+/* ── 12. Feature importance bars (alerts.html XAI drawer) ───────── */
+
+.pg-feat-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 10px;
+}
+
+.pg-feat-group:last-child { margin-bottom: 0; }
+
+.pg-feat-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.pg-feat-track {
+  height: 5px;
+  border-radius: 3px;
+  overflow: hidden;
+  background: #efeeeb;
+  margin-top: 4px;
+}
+
+.pg-feat-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ── 13. Section divider rule ───────────────────────────────────── */
+
+.pg-rule {
+  height: 1px;
+  background: #E2DDD6;
+  border: none;
+  margin: 0;
+}
+
+/* ── 14. Topbar height fix — equipment.html uses h-24 vs h-16 ─── */
+/*
+ * This is enforced via the HTML class change below; the rule here
+ * is a safety net to document the canonical header height.
+ */
+header.pg-topbar {
+  height: 64px;
+}
+
+/* ── 15. Reduced motion ─────────────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  .status-pulse,
+  .animate-pulse,
+  .animate-ping,
+  .animate-spin,
+  .animate-bounce {
+    animation: none !important;
+  }
+
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration:  0.01ms !important;
+  }
+}

@@ -1,0 +1,59 @@
+{
+  "anomaly_detection": {
+    "task": "Anomaly Detection",
+    "dataset": "SKAB",
+    "model": "RandomForestClassifier",
+    "test_samples": 234,
+    "anomaly_prevalence_pct": 47.0,
+    "weighted_f1": 0.5202,
+    "macro_f1": 0.5225,
+    "roc_auc": 0.5391,
+    "recall_anomaly": 0.5613,
+    "precision_anomaly": 0.4965
+  },
+  "fault_classification": {
+    "task": "Fault Classification",
+    "dataset": "CWRU Bearing",
+    "model": "MLPClassifier",
+    "test_samples": 50,
+    "n_classes": 10,
+    "accuracy": 0.12,
+    "macro_f1": 0.1009,
+    "weighted_f1": 0.1144,
+    "per_class_f1": {
+      "Ball_007_1": 0.1176,
+      "Ball_014_1": 0.0,
+      "Ball_021_1": 0.0,
+      "IR_007_1": 0.0,
+      "IR_014_1": 0.2667,
+      "IR_021_1": 0.0,
+      "Normal_1": 0.0,
+      "OR_007_6_1": 0.125,
+      "OR_014_6_1": 0.5,
+      "OR_021_6_1": 0.0
+    },
+    "hardest_class": "Ball_014_1",
+    "easiest_class": "OR_014_6_1"
+  },
+  "rul_prediction": {
+    "task": "RUL Prediction",
+    "dataset": "CMAPSS FD001",
+    "model": "MLPRegressor",
+    "test_samples": 1000,
+    "rul_cap": 125,
+    "window_size": 30,
+    "rmse_cycles": 71.875,
+    "mae_cycles": 61.717,
+    "r2": -2.8052,
+    "nasa_score": 1533701.9,
+    "early_predictions_pct": 99.5,
+    "late_predictions_pct": 0.5
+  },
+  "pipeline_status": "complete",
+  "next_steps": [
+    "Integrate model inference into dashboard API",
+    "Add SHAP explainability for fault classification",
+    "Train on synthetic Kerry data for domain adaptation",
+    "Evaluate on remaining CMAPSS splits (FD002-FD004)"
+  ]
+}

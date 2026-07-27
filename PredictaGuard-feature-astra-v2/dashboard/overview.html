@@ -1,0 +1,1620 @@
+<!DOCTYPE html><html class="light" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Project ASTRA | On-Premise Induction Motor Predictive Maintenance</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Playfair+Display:wght@700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<!-- Theme Configuration -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                "on-primary-container": "#8bbe9e",
+                "on-tertiary-container": "#5cc784",
+                "error": "#ba1a1a",
+                "secondary-container": "#a3f0bf",
+                "on-tertiary-fixed": "#00210e",
+                "surface-variant": "#e3e2df",
+                "primary-fixed": "#baefcc",
+                "on-secondary-fixed-variant": "#005230",
+                "mono-data": "#2C3E50",
+                "secondary-fixed-dim": "#8ad7a7",
+                "inverse-surface": "#2f312f",
+                "outline": "#717972",
+                "secondary-fixed": "#a6f3c2",
+                "surface-container-high": "#e9e8e5",
+                "on-error": "#ffffff",
+                "surface-container-low": "#f4f3f0",
+                "on-tertiary-fixed-variant": "#00522b",
+                "ink": "#1A1A18",
+                "on-primary": "#ffffff",
+                "tertiary": "#00371b",
+                "tertiary-container": "#00502a",
+                "secondary": "#1c6b45",
+                "primary": "#003720",
+                "on-secondary-container": "#227049",
+                "ink-muted": "#6B6860",
+                "primary-container": "#1d4e35",
+                "on-surface-variant": "#414943",
+                "inverse-primary": "#9ed2b1",
+                "border": "#E2DDD6",
+                "on-surface": "#1b1c1a",
+                "amber-warn": "#E67E22",
+                "surface": "#FFFFFF",
+                "on-background": "#1b1c1a",
+                "surface-container": "#efeeeb",
+                "red-alert": "#C0392B",
+                "background": "#faf9f6",
+                "inverse-on-surface": "#f2f1ee",
+                "surface-dim": "#dbdad7",
+                "tertiary-fixed-dim": "#71dc96",
+                "on-error-container": "#93000a",
+                "surface-container-lowest": "#ffffff",
+                "green-light": "#EAF2EC",
+                "outline-variant": "#c0c9c1",
+                "green-good": "#27AE60",
+                "surface-bright": "#faf9f6",
+                "on-tertiary": "#ffffff",
+                "primary-fixed-dim": "#9ed2b1",
+                "error-container": "#ffdad6",
+                "on-secondary-fixed": "#002110",
+                "on-primary-fixed": "#002111",
+                "surface-tint": "#38684d",
+                "surface-container-highest": "#e3e2df",
+                "on-secondary": "#ffffff",
+                "tertiary-fixed": "#8df9b1",
+                "on-primary-fixed-variant": "#1f5036"
+            },
+            "borderRadius": {
+                "DEFAULT": "0.125rem",
+                "lg": "0.25rem",
+                "xl": "0.5rem",
+                "full": "0.75rem"
+            },
+            "spacing": {
+                "xl": "48px",
+                "base": "4px",
+                "lg": "24px",
+                "margin-desktop": "64px",
+                "xs": "4px",
+                "xxl": "96px",
+                "gutter": "24px",
+                "sm": "8px",
+                "md": "16px",
+                "margin-mobile": "16px"
+            },
+            "fontFamily": {
+                "hero-lg-mobile": ["Playfair Display"],
+                "data-display": ["JetBrains Mono"],
+                "body-sm": ["Inter"],
+                "headline-display": ["Playfair Display"],
+                "data-label": ["JetBrains Mono"],
+                "body-md": ["Inter"],
+                "body-lg": ["Inter"],
+                "data-value": ["JetBrains Mono"],
+                "hero-lg": ["Playfair Display"]
+            },
+            "fontSize": {
+                "headline-display": ["40px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                "data-label": ["11px", {"lineHeight": "1.0", "letterSpacing": "0.05em", "fontWeight": "400"}],
+                "body-sm": ["14px", {"lineHeight": "1.4", "fontWeight": "500"}],
+                "data-display": ["48px", {"lineHeight": "1.0", "letterSpacing": "-0.03em", "fontWeight": "500"}],
+                "data-value": ["14px", {"lineHeight": "1.0", "fontWeight": "500"}],
+                "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                "hero-lg": ["68px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                "hero-lg-mobile": ["42px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<link rel="stylesheet" href="css/styles.css">
+<script src="js/interactions.js?v=2"></script>
+</head>
+<body class="bg-background text-on-background font-body-md min-h-screen flex">
+<!-- MAIN CANVAS -->
+<main class="flex-1 md:ml-64 min-h-screen bg-background">
+<!-- TopNavBar -->
+<header class="flex justify-between items-center px-lg h-16 w-full z-[100] bg-surface/80 backdrop-blur-md border-b border-border sticky top-0">
+<div class="flex items-center gap-md">
+<span class="md:hidden material-symbols-outlined text-primary cursor-pointer" data-sidebar-toggle aria-label="Open navigation menu">menu</span>
+<h2 class="font-headline-display text-body-lg text-primary">Live Dashboard</h2>
+</div>
+<div class="flex items-center gap-lg">
+<div class="hidden md:flex items-center gap-sm bg-surface-container-low px-md py-xs rounded-full border border-outline/10">
+<span class="relative flex h-2 w-2">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-good opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2 w-2 bg-green-good"></span>
+</span>
+<span class="font-data-label text-data-label text-on-surface-variant">Simulation · Induction Motor Parameters</span>
+</div>
+<div class="flex items-center gap-md text-on-surface-variant">
+<span class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors cursor-pointer" onclick="location.href='profilensettings.html'" title="Settings">settings</span>
+<span class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors cursor-pointer" onclick="location.href='support.html'" title="Help">help</span>
+<span class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors cursor-pointer text-[28px]" onclick="location.href='profilensettings.html'" title="Account">account_circle</span>
+</div>
+</div>
+</header>
+<div class="p-lg">
+<!-- SECTION: OVERVIEW -->
+<section class="max-w-[1200px] mx-auto space-y-xl animate-fade-in" id="section-overview">
+<!-- KPI Row -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-md">
+<div class="bg-surface border border-border p-lg rounded-lg shadow-sm pg-card">
+<span class="font-data-label text-data-label text-on-surface-variant uppercase mb-xs block">Overall Health</span>
+<div class="flex items-baseline gap-xs">
+<span class="font-data-display text-data-display text-primary" data-count="74">74</span>
+<span class="font-body-md font-bold text-primary">%</span>
+</div>
+<div class="mt-md h-1.5 w-full bg-surface-container-low rounded-full overflow-hidden">
+<div class="h-full bg-green-good w-[74%]"></div>
+</div>
+</div>
+<div class="bg-surface border border-border p-lg rounded-lg shadow-sm pg-card">
+<span class="font-data-label text-data-label text-on-surface-variant uppercase mb-xs block">At Risk</span>
+<div class="flex items-baseline gap-xs">
+<span class="font-data-display text-data-display text-amber-warn" data-count="2">2</span>
+<span class="font-data-label text-[12px] text-amber-warn">Critical CCP</span>
+</div>
+<div class="mt-md flex gap-xs">
+<div class="h-1.5 flex-1 bg-amber-warn rounded-full"></div>
+<div class="h-1.5 flex-1 bg-amber-warn rounded-full"></div>
+<div class="h-1.5 flex-1 bg-surface-container-low rounded-full"></div>
+<div class="h-1.5 flex-1 bg-surface-container-low rounded-full"></div>
+</div>
+</div>
+<div class="bg-surface border border-border p-lg rounded-lg shadow-sm pg-card">
+<span class="font-data-label text-data-label text-on-surface-variant uppercase mb-xs block">Predicted Failures</span>
+<div class="flex items-baseline gap-xs">
+<span class="font-data-display text-data-display text-red-alert" data-count="3">3</span>
+<span class="font-data-label text-[12px] text-red-alert">Next 48h</span>
+</div>
+<div class="mt-md">
+<span class="text-[12px] font-body-sm text-on-surface-variant">Impact: Production Line A</span>
+</div>
+</div>
+<div class="bg-surface border border-border p-lg rounded-lg shadow-sm pg-card">
+<span class="font-data-label text-data-label text-on-surface-variant uppercase mb-xs block">Downtime Avoided</span>
+<div class="flex items-baseline gap-xs">
+<span class="font-data-display text-data-display text-green-good" data-count="32">32</span>
+<span class="font-data-display text-[24px] text-green-good">.4</span>
+<span class="font-body-md font-bold text-green-good ml-xs">h</span>
+</div>
+<div class="mt-md">
+<span class="text-[12px] font-body-sm text-green-good">Estimated ROI: €124,500</span>
+</div>
+</div>
+</div>
+<!-- ── Model Performance Band ─────────────────────────────────────────────── -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-md">
+
+  <!-- Card 1: Anomaly Detection -->
+  <div class="bg-surface border border-border rounded-lg p-lg shadow-sm space-y-md">
+    <div class="flex items-start justify-between">
+      <div>
+        <span class="font-data-label text-[10px] uppercase text-on-surface-variant block mb-xs">Track 1 — Anomaly Detection</span>
+        <h3 class="font-bold text-sm text-on-surface">LSTM Autoencoder · Paderborn</h3>
+        <p class="text-[11px] text-on-surface-variant">Conveyor sensor data (MTR-01) · 15.6 ms</p>
+      </div>
+      <span class="px-sm py-xs bg-green-light text-green-good text-[10px] font-bold rounded-full">DEPLOYED</span>
+    </div>
+    <div class="space-y-sm">
+      <div>
+        <div class="flex justify-between text-[11px] mb-1">
+          <span class="text-on-surface-variant">Avg Reconstruction Error</span>
+          <span class="font-bold text-green-good">1.077</span>
+        </div>
+        <div class="h-1.5 w-full bg-surface-container-low rounded-full">
+          <div class="h-full bg-green-good rounded-full w-full"></div>
+        </div>
+      </div>
+      <div>
+        <div class="flex justify-between text-[11px] mb-1">
+          <span class="text-on-surface-variant">Anomaly Threshold</span>
+          <span class="font-bold text-on-surface">1.005</span>
+        </div>
+        <div class="h-1.5 w-full bg-surface-container-low rounded-full">
+          <div class="h-full bg-primary rounded-full" style="width:90%"></div>
+        </div>
+      </div>
+      <div>
+        <div class="flex justify-between text-[11px] mb-1">
+          <span class="text-on-surface-variant">Test FPR</span>
+          <span class="font-bold text-on-surface">25.0%</span>
+        </div>
+        <div class="h-1.5 w-full bg-surface-container-low rounded-full">
+          <div class="h-full bg-primary rounded-full" style="width:25.0%"></div>
+        </div>
+      </div>
+    </div>
+    <p class="text-[10px] text-on-surface-variant italic border-t border-border pt-sm">Unsupervised LSTM Autoencoder evaluates reconstruction loss on 25-feature sliding windows.</p>
+  </div>
+
+  <!-- Card 2: Fault Classification -->
+  <div class="bg-surface border border-border rounded-lg p-lg shadow-sm space-y-md">
+    <div class="flex items-start justify-between">
+      <div>
+        <span class="font-data-label text-[10px] uppercase text-on-surface-variant block mb-xs">Track 2 — Fault Classification</span>
+        <h3 class="font-bold text-sm text-on-surface">Gradient Boosting · Paderborn</h3>
+        <p class="text-[11px] text-on-surface-variant">Bearing vibration data · 4 fault classes</p>
+      </div>
+      <span class="px-sm py-xs bg-green-light text-green-good text-[10px] font-bold rounded-full">DEPLOYED</span>
+    </div>
+    <div class="space-y-xs">
+      <div class="flex justify-between text-[11px]">
+        <span class="text-on-surface-variant">Test Accuracy</span>
+        <span class="font-bold text-on-surface">100.0%</span>
+      </div>
+      <div class="flex justify-between text-[11px]">
+        <span class="text-on-surface-variant">Weighted F1</span>
+        <span class="font-bold text-on-surface">1.000</span>
+      </div>
+      <div class="mt-sm space-y-xs border-t border-border pt-sm">
+        <p class="font-data-label text-[9px] uppercase text-on-surface-variant mb-xs">Per-Class F1 (key fault types)</p>
+        <div class="grid grid-cols-2 gap-xs text-[10px]">
+          <div class="flex justify-between"><span class="text-on-surface-variant">Healthy</span><span class="font-bold text-green-good">1.000</span></div>
+          <div class="flex justify-between"><span class="text-on-surface-variant">Inner Race</span><span class="font-bold text-green-good">1.000</span></div>
+          <div class="flex justify-between"><span class="text-on-surface-variant">Outer Race</span><span class="font-bold text-green-good">1.000</span></div>
+          <div class="flex justify-between"><span class="text-on-surface-variant">Roller</span><span class="font-bold text-green-good">1.000</span></div>
+        </div>
+      </div>
+    </div>
+    <p class="text-[10px] text-on-surface-variant italic border-t border-border pt-sm">Supervised Gradient Boosting Classifier categorizes inner race, outer race, and roller faults.</p>
+  </div>
+
+  <!-- Card 3: RUL Prediction -->
+  <div class="bg-surface border border-border rounded-lg p-lg shadow-sm space-y-md">
+    <div class="flex items-start justify-between">
+      <div>
+        <span class="font-data-label text-[10px] uppercase text-on-surface-variant block mb-xs">Track 3 — RUL Prediction</span>
+        <h3 class="font-bold text-sm text-on-surface">LSTM Regressor · CMAPSS</h3>
+        <p class="text-[11px] text-on-surface-variant">Mixer degradation dataset (MTR-05)</p>
+      </div>
+      <span class="px-sm py-xs bg-green-light text-green-good text-[10px] font-bold rounded-full">DEPLOYED</span>
+    </div>
+    <div class="space-y-xs">
+      <div class="flex justify-between text-[11px]">
+        <span class="text-on-surface-variant">Test MAE</span>
+        <span class="font-bold text-on-surface">10.34 cycles</span>
+      </div>
+      <div class="flex justify-between text-[11px]">
+        <span class="text-on-surface-variant">Test RMSE</span>
+        <span class="font-bold text-on-surface">14.82 cycles</span>
+      </div>
+      <div class="flex justify-between text-[11px]">
+        <span class="text-on-surface-variant">NASA Score</span>
+        <span class="font-bold text-on-surface">235.68</span>
+      </div>
+      <div class="mt-sm border-t border-border pt-sm">
+        <p class="font-data-label text-[9px] uppercase text-on-surface-variant mb-xs">Prediction Bias (Asymmetric Scoring)</p>
+        <div class="flex gap-sm text-[11px]">
+          <div class="flex-1 p-xs bg-green-light rounded text-center">
+            <p class="font-bold text-green-good">65.5%</p>
+            <p class="text-[9px] text-on-surface-variant">Early ✓</p>
+          </div>
+          <div class="flex-1 p-xs bg-error-container rounded text-center">
+            <p class="font-bold text-red-alert">34.5%</p>
+            <p class="text-[9px] text-on-surface-variant">Late ✗</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="text-[10px] text-on-surface-variant italic border-t border-border pt-sm">LSTM Regressor trained with custom asymmetric loss to predict remaining useful life safely.</p>
+  </div>
+
+</div>
+
+<!-- ── Data Ingestion & Cleaning Pipeline Status ────────────────────── -->
+<div class="bg-surface border border-border rounded-lg p-lg shadow-sm space-y-md">
+  <div class="flex items-center justify-between">
+    <div class="flex items-center gap-md">
+      <span class="material-symbols-outlined text-primary text-[28px] animate-pulse">database_sync</span>
+      <div>
+        <h3 class="font-headline-display text-body-lg text-primary">On-Premise Ingestion & Autonomous Preprocessing</h3>
+        <p class="text-[11px] text-on-surface-variant">Real-time telemetry stream from TimescaleDB • Zero manual processing required</p>
+      </div>
+    </div>
+    <span class="px-md py-1 bg-green-light text-green-good text-[10px] font-bold rounded-full uppercase flex items-center gap-xs">
+      <span class="w-1.5 h-1.5 rounded-full bg-green-good animate-ping"></span>
+      Active Stream
+    </span>
+  </div>
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-md pt-sm">
+    <div class="p-md bg-surface-container-low rounded-lg border border-border/40 space-y-xs">
+      <p class="font-data-label text-[10px] uppercase text-on-surface-variant">Ingestion Protocol</p>
+      <p class="font-bold text-sm text-primary">OPC-UA / MQTT</p>
+      <div class="flex items-center gap-xs text-[10px] text-green-good font-semibold">
+        <span class="material-symbols-outlined text-xs">check_circle</span>
+        Connected (1 Hz)
+      </div>
+    </div>
+    <div class="p-md bg-surface-container-low rounded-lg border border-border/40 space-y-xs">
+      <p class="font-data-label text-[10px] uppercase text-on-surface-variant">Schema Validation</p>
+      <p class="font-bold text-sm text-primary">JSON Schema v2.1</p>
+      <div class="flex items-center gap-xs text-[10px] text-green-good font-semibold">
+        <span class="material-symbols-outlined text-xs">check_circle</span>
+        Valid (100% compliant)
+      </div>
+    </div>
+    <div class="p-md bg-surface-container-low rounded-lg border border-border/40 space-y-xs">
+      <p class="font-data-label text-[10px] uppercase text-on-surface-variant">Cleaning Pipeline</p>
+      <p class="font-bold text-sm text-primary">Resample & Align</p>
+      <div class="flex items-center gap-xs text-[10px] text-green-good font-semibold">
+        <span class="material-symbols-outlined text-xs">check_circle</span>
+        Imputed & Resampled
+      </div>
+    </div>
+    <div class="p-md bg-surface-container-low rounded-lg border border-border/40 space-y-xs">
+      <p class="font-data-label text-[10px] uppercase text-on-surface-variant">Self-Learning Baseline</p>
+      <p class="font-bold text-sm text-primary">Active Shift Profile</p>
+      <div class="flex items-center gap-xs text-[10px] text-green-good font-semibold">
+        <span class="material-symbols-outlined text-xs">check_circle</span>
+        Baseline verified
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Equipment Table -->
+<div class="bg-surface border border-border rounded-lg overflow-hidden shadow-sm">
+<div class="px-lg py-md border-b border-border flex justify-between items-center bg-surface-container-lowest">
+<h2 class="font-headline-display text-[20px] text-primary">Live Equipment Monitoring</h2>
+<div class="flex gap-sm">
+<span class="font-data-label text-[11px] text-on-surface-variant px-md py-xs border border-outline/20 rounded-lg">Real-time Sensor Stream (ASTRA / Paderborn)</span>
+</div>
+</div>
+<div class="w-full">
+<table class="w-full border-collapse pg-table">
+<thead class="bg-surface-container-low border-b border-border">
+<tr class="text-left font-data-label text-[11px] text-on-surface-variant uppercase">
+<th class="px-lg py-md">Asset ID</th>
+<th class="px-lg py-md">Location</th>
+<th class="px-lg py-md">Status · Freq</th>
+<th class="px-lg py-md">RUL (Hours)</th>
+<th class="px-lg py-md">Health Index</th>
+<th class="px-lg py-md text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-border" id="equipment-table-body">
+<!-- Row 1 -->
+<tr class="hover:bg-green-light/30 transition-colors cursor-pointer" onclick="toggleXAI('row-1')">
+<td class="px-lg py-lg font-bold text-primary">Motor M-101 (Conveyor Drive)</td>
+<td class="px-lg py-lg text-on-surface-variant">Liquid Processing</td>
+<td class="px-lg py-lg">
+<div class="space-y-xs">
+  <span class="px-md py-1 bg-green-good text-white text-[10px] font-bold rounded-full uppercase">Optimal</span>
+  <div class="flex gap-xs mt-xs">
+    <span class="text-[9px] font-bold px-xs py-0.5 bg-primary/10 text-primary rounded">⚡ 5 s</span>
+    <span class="text-[9px] text-on-surface-variant">sliding</span>
+  </div>
+</div>
+</td>
+<td class="px-lg py-lg font-data-value">2,140h</td>
+<td class="px-lg py-lg">
+<div class="w-24 h-1.5 bg-surface-container-low rounded-full overflow-hidden">
+<div class="h-full bg-green-good w-[92%]"></div>
+</div>
+</td>
+<td class="px-lg py-lg text-right">
+<span class="material-symbols-outlined text-on-surface-variant">expand_more</span>
+</td>
+</tr>
+<tr class="drawer-content" id="row-1-drawer">
+<td class="bg-surface-container-lowest border-t border-border/50" colspan="6">
+<div class="px-lg py-sm border-b border-border/30 flex flex-wrap items-center gap-lg text-[11px] bg-surface-container-lowest">
+  <span class="material-symbols-outlined text-primary text-sm align-middle">sensors</span>
+  <span class="font-data-label text-[10px] uppercase text-on-surface-variant">Real-Time Monitoring</span>
+  <span class="text-on-surface-variant">Window <strong>60 s</strong></span>
+  <span class="font-bold text-primary">⚡ Predict every 5 s</span>
+  <span class="text-on-surface-variant">Sliding</span>
+  <span class="text-on-surface-variant italic ml-auto text-[10px]">Bearing fault risk → fast stride</span>
+</div>
+<div class="p-lg grid grid-cols-1 md:grid-cols-3 gap-xl">
+<div class="space-y-md">
+  <h4 class="font-data-label text-on-surface-variant uppercase text-[10px]">Live Sensor — vibration_rms_mm_s (Conveyor Motor)</h4>
+  <canvas class="w-full h-32 border border-outline/10 rounded-lg bg-surface" id="canvas-p101"></canvas>
+</div>
+<div class="space-y-md">
+  <h4 class="font-data-label text-on-surface-variant uppercase text-[10px]">Anomaly Detection Model (SKAB · Random Forest)</h4>
+  <div class="space-y-xs text-[11px]">
+    <div class="flex justify-between"><span class="text-on-surface-variant">Precision</span><span class="font-bold text-green-good">1.00 — zero false alarms</span></div>
+    <div class="flex justify-between"><span class="text-on-surface-variant">Recall</span><span class="font-bold">0.886</span></div>
+    <div class="flex justify-between"><span class="text-on-surface-variant">ROC-AUC</span><span class="font-bold">0.938</span></div>
+    <div class="flex justify-between"><span class="text-on-surface-variant">Weighted F1</span><span class="font-bold">0.913</span></div>
+  </div>
+  <div class="mt-sm pt-sm border-t border-border space-y-xs">
+    <h4 class="font-data-label text-on-surface-variant uppercase text-[10px]">Fault ID Model (CWRU · MLP)</h4>
+    <div class="space-y-xs text-[11px]">
+      <div class="flex justify-between"><span class="text-on-surface-variant">Test Accuracy</span><span class="font-bold">93.4%</span></div>
+      <div class="flex justify-between"><span class="text-on-surface-variant">10 fault classes · Macro F1</span><span class="font-bold">0.933</span></div>
+    </div>
+  </div>
+</div>
+<div class="flex flex-col gap-sm">
+  <h4 class="font-data-label text-on-surface-variant uppercase text-[10px]">Critical Actions</h4>
+  <button class="w-full py-2 bg-primary text-white text-sm font-bold rounded-lg hover:bg-tertiary transition-colors" onclick="pgConfirm('Dispatch automated alert to the maintenance team for Motor M-101?', function(){ pgDispatchAlert('ASTRA-MTR-101', 'Motor M-101 (Conveyor Drive)', 'Conveyor Motor M-101 requires immediate inspection due to anomalous telemetry readings.'); })">Send Alert</button>
+  <button class="w-full py-2 border border-primary text-primary text-sm font-bold rounded-lg hover:bg-green-light transition-colors" onclick="location.href='maintenance.html'">Create Work Order</button>
+  <button class="w-full py-2 text-on-surface-variant text-xs font-medium hover:underline" onclick="pgMockDownload('CMMS_Log_M101_2026','pdf')">Download Maintenance Log</button>
+</div>
+</div>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-green-light/30 transition-colors cursor-pointer" onclick="toggleXAI('row-2')">
+<td class="px-lg py-lg font-bold text-primary">Motor M-204 (Cooling Fan)</td>
+<td class="px-lg py-lg text-on-surface-variant">Powder Blending</td>
+<td class="px-lg py-lg">
+<div class="space-y-xs">
+  <span class="px-md py-1 bg-amber-warn text-white text-[10px] font-bold rounded-full uppercase">Warning</span>
+  <div class="flex gap-xs mt-xs">
+    <span class="text-[9px] font-bold px-xs py-0.5 bg-red-alert/10 text-red-alert rounded">★ Critical</span>
+    <span class="text-[9px] font-bold px-xs py-0.5 bg-primary/10 text-primary rounded">⚡ 5 s</span>
+  </div>
+</div>
+</td>
+<td class="px-lg py-lg font-data-value">124h</td>
+<td class="px-lg py-lg">
+<div class="w-24 h-1.5 bg-surface-container-low rounded-full overflow-hidden">
+<div class="h-full bg-amber-warn w-[38%]"></div>
+</div>
+</td>
+<td class="px-lg py-lg text-right">
+<span class="material-symbols-outlined text-on-surface-variant">expand_more</span>
+</td>
+</tr>
+<tr class="drawer-content" id="row-2-drawer">
+<td class="bg-surface-container-lowest border-t border-border/50" colspan="6">
+<div class="px-lg py-sm border-b border-border/30 flex flex-wrap items-center gap-lg text-[11px] bg-red-alert/5">
+  <span class="material-symbols-outlined text-red-alert text-sm align-middle">emergency</span>
+  <span class="font-data-label text-[10px] uppercase text-red-alert font-bold">★ Critical — Motor Monitoring</span>
+  <span class="text-on-surface-variant">Window <strong>60 s</strong></span>
+  <span class="font-bold text-red-alert">⚡ Predict every 5 s</span>
+  <span class="text-on-surface-variant">Sliding</span>
+  <span class="text-on-surface-variant italic ml-auto text-[10px]">Critical stage — underpowered motor affects product safety</span>
+</div>
+<div class="p-lg grid grid-cols-1 md:grid-cols-4 gap-xl">
+<div class="space-y-md">
+  <h4 class="font-data-label text-on-surface-variant uppercase text-[10px]">Live Sensor — vibration_rms_x_mm_s (Cooling Fan Motor)</h4>
+  <canvas class="w-full h-32 border border-outline/10 rounded-lg bg-surface" id="canvas-m204"></canvas>
+  <div class="p-sm bg-red-alert/10 rounded border border-red-alert/30">
+    <p class="font-data-label text-[9px] uppercase text-red-alert mb-xs font-bold">★ Critical: Motor Monitoring</p>
+    <p class="text-[10px] text-on-surface-variant mt-xs">Maintenance log auto-generated on anomaly trigger</p>
+  </div>
+</div>
+<div class="space-y-md">
+  <h4 class="font-data-label text-on-surface-variant uppercase text-[10px]">Anomaly Detection Model (SKAB · Random Forest)</h4>
+  <div class="space-y-xs text-[11px]">
+    <div class="flex justify-between"><span class="text-on-surface-variant">Precision</span><span class="font-bold text-green-good">1.00 — zero false alarms</span></div>
+    <div class="flex justify-between"><span class="text-on-surface-variant">Recall</span><span class="font-bold">0.886</span></div>
+    <div class="flex justify-between"><span class="text-on-surface-variant">ROC-AUC</span><span class="font-bold">0.938</span></div>
+    <div class="flex justify-between"><span class="text-on-surface-variant">Weighted F1</span><span class="font-bold">0.913</span></div>
+  </div>
+  <div class="mt-sm pt-sm border-t border-border space-y-xs">
+    <h4 class="font-data-label text-on-surface-variant uppercase text-[10px]">Fault ID Model (CWRU · MLP)</h4>
+    <div class="space-y-xs text-[11px]">
+      <div class="flex justify-between"><span class="text-on-surface-variant">Test Accuracy</span><span class="font-bold">93.4%</span></div>
+      <div class="flex justify-between"><span class="text-on-surface-variant">10 fault classes · Macro F1</span><span class="font-bold">0.933</span></div>
+    </div>
+  </div>
+</div>
+<div class="space-y-md">
+<h4 class="font-data-label text-on-surface-variant uppercase text-[10px]">Historical Pattern Match</h4>
+<div class="p-md bg-primary/4 rounded-lg border border-primary/10 flex gap-md items-start">
+<span class="material-symbols-outlined text-primary text-[18px] shrink-0 mt-xs">history_edu</span>
+<div>
+<p class="font-bold text-[12px] text-on-surface">Ball element spalling</p>
+<div class="flex flex-wrap gap-sm text-[10px] font-data-label text-ink-muted mt-xs">
+<span>Date: <strong class="text-on-surface">2023-08-20</strong></span>
+<span>Match: <strong class="text-primary">81%</strong></span>
+<span>TTF: <strong class="text-on-surface">60h</strong></span>
+</div>
+</div>
+</div>
+<div class="p-md rounded border border-amber-warn/30 bg-amber-warn/5 space-y-sm mt-sm">
+<p class="font-data-label text-[9px] uppercase text-amber-warn">Recommended Action</p>
+<p class="font-semibold text-[12px] text-on-surface">Replace ball element bearing set</p>
+<div class="grid grid-cols-2 gap-xs text-[10px] mt-xs">
+<div class="p-xs bg-surface rounded"><p class="font-data-label text-[9px] text-ink-muted">Part</p><p class="font-bold font-data-value text-on-surface">MTR-001-BLT14</p></div>
+<div class="p-xs bg-surface rounded"><p class="font-data-label text-[9px] text-ink-muted">Cost if ignored</p><p class="font-bold font-data-value text-amber-warn">$7,500</p></div>
+<div class="p-xs bg-surface rounded"><p class="font-data-label text-[9px] text-ink-muted">Downtime</p><p class="font-bold font-data-value text-on-surface">6h</p></div>
+<div class="p-xs bg-surface rounded"><p class="font-data-label text-[9px] text-ink-muted">Window</p><p class="font-bold font-data-value text-primary text-[9px]">Within 60h</p></div>
+</div>
+</div>
+</div>
+<div class="flex flex-col gap-sm">
+<h4 class="font-data-label text-on-surface-variant uppercase text-[10px]">Actions</h4>
+<button class="w-full py-2 bg-amber-warn text-white text-sm font-bold rounded-lg hover:opacity-90 transition-colors" onclick="pgConfirm('Dispatch maintenance team to Motor M-204?', function(){ pgDispatchAlert('ASTRA-MTR-204', 'Motor M-204 (Cooling Fan)', 'Cooling Fan Motor M-204 requires lubrication and alignment check.'); })">Assign Maintenance Team</button>
+<button class="w-full py-2 border border-primary text-primary text-sm font-bold rounded-lg hover:bg-green-light transition-colors" onclick="location.href='maintenance.html'">Create Work Order</button>
+<button class="w-full py-2 text-on-surface-variant text-xs font-medium hover:underline" onclick="pgMockDownload('Maintenance_M204_2026','pdf')">Download Maintenance Log</button>
+</div>
+</div>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-green-light/30 transition-colors cursor-pointer" onclick="toggleXAI('row-3')">
+<td class="px-lg py-lg font-bold text-primary">Motor M-305 (Air Compressor)</td>
+<td class="px-lg py-lg text-on-surface-variant">Dehydration</td>
+<td class="px-lg py-lg">
+<div class="space-y-xs">
+  <span class="px-md py-1 bg-green-good text-white text-[10px] font-bold rounded-full uppercase">Optimal</span>
+  <div class="flex gap-xs mt-xs">
+    <span class="text-[9px] font-bold px-xs py-0.5 bg-surface-container text-on-surface-variant rounded">⚡ 30 s</span>
+    <span class="text-[9px] text-on-surface-variant">sliding</span>
+  </div>
+</div>
+</td>
+<td class="px-lg py-lg font-data-value">4,822h</td>
+<td class="px-lg py-lg">
+<div class="w-24 h-1.5 bg-surface-container-low rounded-full overflow-hidden">
+<div class="h-full bg-green-good w-[98%]"></div>
+</div>
+</td>
+<td class="px-lg py-lg text-right">
+<span class="material-symbols-outlined text-on-surface-variant">expand_more</span>
+</td>
+</tr>
+<tr class="drawer-content" id="row-3-drawer">
+<td class="bg-surface-container-lowest border-t border-border/50" colspan="6">
+<div class="px-lg py-sm border-b border-border/30 flex flex-wrap items-center gap-lg text-[11px] bg-surface-container-lowest">
+  <span class="material-symbols-outlined text-on-surface-variant text-sm align-middle">sensors</span>
+  <span class="font-data-label text-[10px] uppercase text-on-surface-variant">Real-Time Monitoring</span>
+  <span class="text-on-surface-variant">Window <strong>60 s</strong></span>
+  <span class="font-bold text-on-surface-variant">⚡ Predict every 30 s</span>
+  <span class="text-on-surface-variant">Sliding</span>
+  <span class="text-on-surface-variant italic ml-auto text-[10px]">Standard motor — thermal inertia slows fault onset</span>
+</div>
+<div class="p-lg grid grid-cols-1 md:grid-cols-3 gap-xl">
+<div class="space-y-md">
+  <h4 class="font-data-label text-on-surface-variant uppercase text-[10px]">Live Sensor — winding_temperature_C (Compressor Motor)</h4>
+  <canvas class="w-full h-32 border border-outline/10 rounded-lg bg-surface" id="canvas-sd305"></canvas>
+</div>
+<div class="space-y-md">
+  <h4 class="font-data-label text-on-surface-variant uppercase text-[10px]">RUL Prediction Model (CMAPSS FD001 · MLP)</h4>
+  <div class="space-y-xs text-[11px]">
+    <div class="flex justify-between"><span class="text-on-surface-variant">Test RMSE</span><span class="font-bold">14.15 cycles</span></div>
+    <div class="flex justify-between"><span class="text-on-surface-variant">R²</span><span class="font-bold">0.773</span></div>
+    <div class="flex justify-between"><span class="text-on-surface-variant">NASA Score</span><span class="font-bold">46,481</span></div>
+    <div class="flex justify-between"><span class="text-on-surface-variant">Early predictions</span><span class="font-bold text-green-good">65.5%</span></div>
+  </div>
+  <div class="mt-sm pt-sm border-t border-border space-y-xs">
+    <h4 class="font-data-label text-on-surface-variant uppercase text-[10px]">Fault ID Model (CWRU · MLP)</h4>
+    <div class="space-y-xs text-[11px]">
+      <div class="flex justify-between"><span class="text-on-surface-variant">Test Accuracy</span><span class="font-bold">93.4%</span></div>
+      <div class="flex justify-between"><span class="text-on-surface-variant">10 fault classes · Macro F1</span><span class="font-bold">0.933</span></div>
+    </div>
+  </div>
+</div>
+<div class="flex flex-col gap-sm">
+  <h4 class="font-data-label text-on-surface-variant uppercase text-[10px]">Actions</h4>
+  <button class="w-full py-2 border border-primary text-primary text-sm font-bold rounded-lg" onclick="location.href='maintenance.html'">View History</button>
+</div>
+</div>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-green-light/30 transition-colors cursor-pointer" onclick="toggleXAI('row-4')">
+<td class="px-lg py-lg font-bold text-primary">Motor M-300 (Water Pump)</td>
+<td class="px-lg py-lg text-on-surface-variant">Utility Station</td>
+<td class="px-lg py-lg">
+<div class="space-y-xs">
+  <span class="px-md py-1 bg-red-alert text-white text-[10px] font-bold rounded-full uppercase">Action Required</span>
+  <div class="flex gap-xs mt-xs">
+    <span class="text-[9px] font-bold px-xs py-0.5 bg-surface-container text-on-surface-variant rounded">⚡ 30 s</span>
+    <span class="text-[9px] text-on-surface-variant">sliding</span>
+  </div>
+</div>
+</td>
+<td class="px-lg py-lg font-data-value">18h</td>
+<td class="px-lg py-lg">
+<div class="w-24 h-1.5 bg-surface-container-low rounded-full overflow-hidden">
+<div class="h-full bg-red-alert w-[8%]"></div>
+</div>
+</td>
+<td class="px-lg py-lg text-right">
+<span class="material-symbols-outlined text-on-surface-variant">expand_more</span>
+</td>
+</tr>
+<tr class="drawer-content" id="row-4-drawer">
+<td class="bg-surface-container-lowest border-t border-border/50" colspan="6">
+<div class="px-lg py-sm border-b border-border/30 flex flex-wrap items-center gap-lg text-[11px] bg-surface-container-lowest">
+  <span class="material-symbols-outlined text-on-surface-variant text-sm align-middle">sensors</span>
+  <span class="font-data-label text-[10px] uppercase text-on-surface-variant">Real-Time Monitoring</span>
+  <span class="text-on-surface-variant">Window <strong>60 s</strong></span>
+  <span class="font-bold text-on-surface-variant">⚡ Predict every 30 s</span>
+  <span class="text-on-surface-variant">Sliding</span>
+  <span class="text-on-surface-variant italic ml-auto text-[10px]">Standard motor — gradual wear, 30-s stride sufficient</span>
+</div>
+<div class="p-lg grid grid-cols-1 md:grid-cols-4 gap-xl">
+<div class="space-y-md">
+  <h4 class="font-data-label text-on-surface-variant uppercase text-[10px]">Live Sensor — vibration_DE_rms_mm_s (Water Pump Motor)</h4>
+  <canvas class="w-full h-32 border border-outline/10 rounded-lg bg-surface" id="canvas-c300"></canvas>
+  <div class="p-sm bg-error-container rounded border border-error/20 flex items-center gap-sm">
+    <span class="material-symbols-outlined text-red-alert text-[16px]" style="font-variation-settings:'FILL' 1;">emergency</span>
+    <div>
+      <p class="font-data-label text-[9px] uppercase text-red-alert font-bold">Supports Monitoring: Pasteurization line</p>
+      <p class="text-[10px] text-on-error-container font-semibold">Priority: CRITICAL</p>
+    </div>
+  </div>
+</div>
+<div class="space-y-md">
+  <h4 class="font-data-label text-on-surface-variant uppercase text-[10px]">RUL Prediction Model (CMAPSS FD001 · MLP)</h4>
+  <div class="space-y-xs text-[11px]">
+    <div class="flex justify-between"><span class="text-on-surface-variant">Test RMSE</span><span class="font-bold">14.15 cycles</span></div>
+    <div class="flex justify-between"><span class="text-on-surface-variant">R²</span><span class="font-bold">0.773</span></div>
+    <div class="flex justify-between"><span class="text-on-surface-variant">NASA Score</span><span class="font-bold">46,481</span></div>
+    <div class="flex justify-between"><span class="text-on-surface-variant">Early predictions</span><span class="font-bold text-green-good">65.5% → conservative</span></div>
+  </div>
+  <div class="mt-sm pt-sm border-t border-border space-y-xs">
+    <h4 class="font-data-label text-on-surface-variant uppercase text-[10px]">SHAP — Failure Attribution (CWRU · Random Forest)</h4>
+    <div class="space-y-sm">
+      <div>
+        <div class="flex justify-between text-[11px] mb-1"><span>Vibration (RMS)</span><span class="font-bold text-red-alert">41.1%</span></div>
+        <div class="h-1.5 w-full bg-surface-container-low rounded-full"><div class="h-full bg-red-alert rounded-full w-[41%]"></div></div>
+      </div>
+      <div>
+        <div class="flex justify-between text-[11px] mb-1"><span>Motor Current</span><span class="font-bold text-red-alert">48.3%</span></div>
+        <div class="h-1.5 w-full bg-surface-container-low rounded-full"><div class="h-full bg-red-alert rounded-full w-[48%]"></div></div>
+      </div>
+      <div>
+        <div class="flex justify-between text-[11px] mb-1"><span>Temperature</span><span class="font-bold text-amber-warn">7.0%</span></div>
+        <div class="h-1.5 w-full bg-surface-container-low rounded-full"><div class="h-full bg-amber-warn rounded-full w-[7%]"></div></div>
+      </div>
+    </div>
+    <p class="text-[10px] text-on-surface-variant italic mt-xs">Real SHAP values from TreeExplainer — not approximation</p>
+  </div>
+</div>
+<div class="space-y-md">
+<h4 class="font-data-label text-on-surface-variant uppercase text-[10px]">Historical Pattern Match</h4>
+<div class="p-md bg-primary/4 rounded-lg border border-primary/10 flex gap-md items-start">
+<span class="material-symbols-outlined text-primary text-[18px] shrink-0 mt-xs">history_edu</span>
+<div>
+<p class="font-bold text-[12px] text-on-surface">Severe outer race damage</p>
+<div class="flex flex-wrap gap-sm text-[10px] font-data-label text-ink-muted mt-xs">
+<span>Date: <strong class="text-on-surface">2023-11-15</strong></span>
+<span>Match: <strong class="text-primary">91%</strong></span>
+<span>TTF: <strong class="text-red-alert font-bold">18h</strong></span>
+</div>
+</div>
+</div>
+<div class="p-md rounded border border-red-alert/30 bg-red-alert/5 space-y-sm mt-sm">
+<p class="font-data-label text-[9px] uppercase text-red-alert">CRITICAL — Immediate Action Required</p>
+<p class="font-semibold text-[12px] text-on-surface">IMMEDIATE shutdown — severe outer race damage</p>
+<div class="grid grid-cols-2 gap-xs text-[10px] mt-xs">
+<div class="p-xs bg-surface rounded"><p class="font-data-label text-[9px] text-ink-muted">Part</p><p class="font-bold font-data-value text-on-surface">MTR-001-OR21</p></div>
+<div class="p-xs bg-surface rounded"><p class="font-data-label text-[9px] text-ink-muted">Cost if ignored</p><p class="font-bold font-data-value text-red-alert">$35,000</p></div>
+<div class="p-xs bg-surface rounded"><p class="font-data-label text-[9px] text-ink-muted">Downtime</p><p class="font-bold font-data-value text-on-surface">24h</p></div>
+<div class="p-xs bg-surface rounded"><p class="font-data-label text-[9px] text-ink-muted">Window</p><p class="font-bold font-data-value text-red-alert text-[9px]">NOW</p></div>
+</div>
+</div>
+</div>
+<div class="flex flex-col gap-sm">
+<h4 class="font-data-label text-on-surface-variant uppercase text-[10px]">Emergency Protocols</h4>
+<button class="w-full py-2 bg-red-alert text-white text-sm font-bold rounded-lg animate-pulse" onclick="pgConfirm('Trigger automatic shutdown of Motor M-300? The equipment will stop immediately.', function(){ pgDispatchAlert('ASTRA-MTR-300', 'Motor M-300 (Water Pump)', 'Emergency automatic shutdown triggered for Water Pump Motor M-300.'); }, {destructive:true})">Trigger Auto-Shutdown</button>
+<button class="w-full py-2 bg-primary text-white text-sm font-bold rounded-lg" onclick="pgToast('Area Manager paged via ASTRASecure — response expected within 5 min', 'info')">Call Area Manager</button>
+<button class="w-full py-2 border border-red-alert text-red-alert text-sm font-bold rounded-lg hover:bg-error-container transition-colors" onclick="pgMockDownload('Maintenance_M300_Emergency_2026','pdf')">Download Maintenance Log</button>
+</div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<!-- ── Real-Time Stream Monitoring Panel ───────────────────────────────── -->
+<div class="bg-surface border border-border rounded-xl shadow-sm overflow-hidden" id="stream-panel">
+  <div class="flex items-center justify-between px-xl py-lg border-b border-border bg-surface-container-low">
+    <div class="flex items-center gap-md">
+      <span class="material-symbols-outlined text-primary">sensors</span>
+      <div>
+        <h3 class="font-bold text-base text-on-surface">Real-Time Stream Monitoring</h3>
+        <p class="text-[11px] text-on-surface-variant" id="stream-subtitle">1-Hz sensor data · rolling window · sliding mode</p>
+      </div>
+    </div>
+    <div class="flex items-center gap-sm">
+      <select class="text-xs border border-border rounded px-sm py-1 bg-surface text-on-surface" id="stream-machine-select" onchange="streamMachineChanged()">
+        <option value="MTR-01">MTR-01 (Conveyor Drive)</option>
+        <option value="MTR-02">MTR-02 (Compressor)</option>
+        <option value="MTR-03">MTR-03 (Fan/Blower)</option>
+        <option value="MTR-04">MTR-04 (Pump) ★ CCP</option>
+        <option value="MTR-05">MTR-05 (Mixer) ★ CCP</option>
+        <option value="MTR-06">MTR-06 (Spindle)</option>
+      </select>
+      <button class="px-md py-1 text-xs font-bold bg-primary text-white rounded-lg hover:bg-tertiary transition-colors" id="stream-start-btn" onclick="streamToggle()">▶ Start Stream</button>
+    </div>
+  </div>
+  <!-- Per-machine config bar -->
+  <div class="flex items-center gap-xl px-xl py-sm bg-surface-container-lowest border-b border-border/40 text-[11px]" id="stream-config-bar">
+    <span class="text-on-surface-variant">Loading config…</span>
+  </div>
+
+  <div class="p-xl grid grid-cols-1 md:grid-cols-3 gap-xl">
+
+    <!-- Buffer fill -->
+    <div class="space-y-md">
+      <h4 class="font-data-label text-[10px] uppercase text-on-surface-variant">Window Buffer</h4>
+      <div class="flex items-baseline gap-xs">
+        <span class="font-data-display text-3xl text-primary" id="stream-buf-fill">0</span>
+        <span class="text-on-surface-variant text-sm">/ 60 readings</span>
+      </div>
+      <div class="h-2 w-full bg-surface-container-low rounded-full overflow-hidden">
+        <div class="h-full bg-primary transition-all duration-300 rounded-full" id="stream-buf-bar" style="width:0%"></div>
+      </div>
+      <div class="text-[11px] text-on-surface-variant" id="stream-next-pred">Next prediction in — readings</div>
+      <div class="mt-md space-y-xs">
+        <p class="font-data-label text-[10px] uppercase text-on-surface-variant">Prediction Trend</p>
+        <div class="flex gap-xs flex-wrap" id="stream-trend-dots">
+          <span class="text-[11px] text-on-surface-variant italic">Waiting for first prediction…</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Aggregation table -->
+    <div class="space-y-md">
+      <h4 class="font-data-label text-[10px] uppercase text-on-surface-variant">Live Aggregation (avg / max / min)</h4>
+      <table class="w-full text-[11px]">
+        <thead>
+          <tr class="text-on-surface-variant font-data-label uppercase text-[9px]">
+            <th class="text-left pb-xs">Sensor</th>
+            <th class="text-right pb-xs">avg</th>
+            <th class="text-right pb-xs">max</th>
+            <th class="text-right pb-xs">min</th>
+          </tr>
+        </thead>
+        <tbody id="stream-agg-table">
+          <tr><td class="text-on-surface-variant py-1 italic" colspan="4">No data yet</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Latest prediction -->
+    <div class="space-y-md">
+      <h4 class="font-data-label text-[10px] uppercase text-on-surface-variant">Latest Prediction</h4>
+      <div id="stream-pred-card" class="rounded-lg border border-border p-md space-y-xs bg-surface-container-low">
+        <p class="text-[11px] text-on-surface-variant italic">Waiting for prediction…</p>
+      </div>
+      <p class="text-[10px] text-on-surface-variant" id="stream-pred-age"></p>
+      <div class="mt-sm p-sm rounded bg-green-light/60 text-[10px] text-on-surface-variant leading-relaxed">
+        <strong>Option 1 (Batch):</strong> send all 60 readings then predict once.<br>
+        <strong>Option 2 (Sliding):</strong> predict every 5 new readings — active here.
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</section>
+<!-- SECTION: PREDICTIONS (Sensor Simulator) -->
+<section class="max-w-[1200px] mx-auto space-y-xl animate-fade-in hidden" id="section-predictions">
+<div class="flex flex-col gap-md mb-xl">
+<h1 class="font-headline-display text-headline-display text-primary">Interactive Sensor Simulator</h1>
+<p class="text-on-surface-variant max-w-2xl">Manipulate sensor inputs to see how Project ASTRA's AI models react in real-time. This environment uses the same logic weights as our factory production models.</p>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-xl">
+<!-- Sliders Column -->
+<div class="bg-surface border border-border p-xl rounded-xl space-y-lg shadow-md">
+<h3 class="font-data-label text-on-surface-variant uppercase text-[12px] border-b pb-md">Parameter Adjustment</h3>
+<div class="space-y-sm">
+<div class="flex justify-between items-end">
+<label class="font-bold text-sm text-primary">Vibration RMS (g)</label>
+<span class="font-data-display text-lg" id="val-vibration">0.20</span>
+</div>
+<input class="accent-primary" id="sim-vibration" max="0.70" min="0.10" step="0.01" type="range" value="0.20">
+<p class="text-[10px] text-on-surface-variant">CWRU bearing range: 0.19–0.60 g</p>
+</div>
+<div class="space-y-sm">
+<div class="flex justify-between items-end">
+<label class="font-bold text-sm text-primary">Motor Current (A)</label>
+<span class="font-data-display text-lg" id="val-current">1.50</span>
+</div>
+<input class="accent-primary" id="sim-current" max="4.00" min="0.85" step="0.05" type="range" value="1.50">
+<p class="text-[10px] text-on-surface-variant">Normal operating range: 0.85–4.00 A</p>
+</div>
+<div class="space-y-sm">
+<div class="flex justify-between items-end">
+<label class="font-bold text-sm text-primary">Temperature (°C)</label>
+<span class="font-data-display text-lg" id="val-temp">85.0</span>
+</div>
+<input class="accent-primary" id="sim-temp" max="110" min="75" step="0.5" type="range" value="85.0">
+<p class="text-[10px] text-on-surface-variant">Process range: 75–110 °C</p>
+</div>
+<div class="space-y-sm">
+<div class="flex justify-between items-end">
+<label class="font-bold text-sm text-primary">Shaft Speed (RPM)</label>
+<span class="font-data-display text-lg" id="val-flow">115</span>
+</div>
+<input class="accent-primary" id="sim-flow" max="130" min="100" step="1" type="range" value="115">
+<p class="text-[10px] text-on-surface-variant">Logged to buffer — not a CWRU/CMAPSS input</p>
+</div>
+</div>
+<!-- AI Outputs Column -->
+<div class="lg:col-span-2 space-y-lg">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-lg">
+<div class="bg-primary text-on-primary p-xl rounded-xl shadow-lg flex flex-col justify-between">
+<div class="flex justify-between items-start">
+<span class="font-data-label uppercase text-[10px] opacity-70">Fault Severity Score (CWRU)</span>
+<span class="material-symbols-outlined text-secondary-fixed">psychology</span>
+</div>
+<div class="my-md">
+<span class="font-data-display text-[56px] leading-none" id="out-anomaly">4.0%</span>
+<div class="mt-md h-2 w-full bg-white/20 rounded-full overflow-hidden">
+<div class="h-full bg-secondary-fixed transition-all duration-300" id="bar-anomaly" style="width: 4%;"></div>
+</div>
+</div>
+<span class="font-bold text-sm text-secondary-fixed uppercase" id="label-status">Status: Nominal</span>
+</div>
+<div class="bg-surface border border-border p-xl rounded-xl shadow-md flex flex-col justify-between">
+<div class="flex justify-between items-start">
+<span class="font-data-label uppercase text-[10px] text-on-surface-variant">Remaining Useful Life (RUL)</span>
+<span class="material-symbols-outlined text-primary">hourglass_empty</span>
+</div>
+<div class="my-md">
+<span class="font-data-display text-[56px] leading-none text-primary" id="out-rul">—</span>
+<span class="font-bold text-primary text-xl ml-xs">h</span>
+</div>
+<div class="flex flex-col gap-xs">
+  <span class="text-on-surface-variant text-xs font-medium">Fault class: <span class="font-bold text-on-surface" id="sim-fault-class">—</span></span>
+  <span class="text-on-surface-variant text-xs font-medium">Classifier confidence: <span class="font-bold text-on-surface" id="sim-fault-conf">—</span></span>
+</div>
+</div>
+</div>
+<!-- Live Waveform -->
+<div class="bg-ink p-xl rounded-xl shadow-lg">
+<div class="flex justify-between items-center mb-md">
+<h3 class="font-data-label text-white/50 uppercase text-[10px]">Real-time Waveform Decomposition</h3>
+<span class="text-green-good font-data-label text-[10px] animate-pulse">STREAMING LIVE DATA</span>
+</div>
+<canvas class="w-full h-48 bg-ink/50" id="canvas-sim" width="0" height="180"></canvas>
+</div>
+<!-- SHAP Feature Attribution Card -->
+<div class="bg-surface border border-border p-lg rounded-xl shadow-sm">
+  <div class="flex items-center justify-between mb-md">
+    <h4 class="font-data-label text-on-surface-variant uppercase text-[10px]">Feature Attribution (SHAP · CWRU Random Forest)</h4>
+    <span class="font-data-label text-[9px] text-on-surface-variant" id="shap-status-label">Waiting for prediction…</span>
+  </div>
+  <div class="space-y-sm">
+    <div>
+      <div class="flex justify-between text-[11px] mb-1">
+        <span class="text-on-surface-variant">Vibration (RMS)</span>
+        <span class="font-bold text-on-surface" id="shap-vib-pct">—</span>
+      </div>
+      <div class="h-1.5 w-full bg-surface-container-low rounded-full overflow-hidden">
+        <div class="h-full bg-primary rounded-full transition-all duration-300" id="shap-vib-bar" style="width:0%"></div>
+      </div>
+    </div>
+    <div>
+      <div class="flex justify-between text-[11px] mb-1">
+        <span class="text-on-surface-variant">Motor Current</span>
+        <span class="font-bold text-on-surface" id="shap-cur-pct">—</span>
+      </div>
+      <div class="h-1.5 w-full bg-surface-container-low rounded-full overflow-hidden">
+        <div class="h-full bg-primary rounded-full transition-all duration-300" id="shap-cur-bar" style="width:0%"></div>
+      </div>
+    </div>
+    <div>
+      <div class="flex justify-between text-[11px] mb-1">
+        <span class="text-on-surface-variant">Temperature</span>
+        <span class="font-bold text-on-surface" id="shap-tmp-pct">—</span>
+      </div>
+      <div class="h-1.5 w-full bg-surface-container-low rounded-full overflow-hidden">
+        <div class="h-full bg-primary rounded-full transition-all duration-300" id="shap-tmp-bar" style="width:0%"></div>
+      </div>
+    </div>
+  </div>
+  <p class="text-[10px] text-on-surface-variant italic mt-sm">Live SHAP from TreeExplainer — updates every prediction</p>
+</div>
+<!-- Recommendations Card -->
+<div class="bg-green-light border border-secondary/20 p-lg rounded-xl flex gap-lg items-center">
+<div class="bg-primary text-white p-md rounded-lg">
+<span class="material-symbols-outlined">info</span>
+</div>
+<div>
+<h4 class="font-bold text-primary mb-1">AI Recommendation</h4>
+<p class="text-sm text-secondary leading-relaxed" id="rec-text">Continue normal operations. Next scheduled maintenance in 14 days is sufficient.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+</div>
+</main>
+<!-- SCRIPT LOGIC -->
+<script>
+        const FAULT_CLASS_NAMES = {
+            'Normal_1': 'Normal Operation',
+            'Normal': 'Normal Operation',
+            'OR_007_6_1': 'Outer Race Fault (0.007")',
+            'OR_014_6_1': 'Outer Race Fault (0.014")',
+            'OR_021_6_1': 'Severe Outer Race Fault (0.021")',
+            'IR_007_1': 'Inner Race Fault (0.007")',
+            'IR_014_1': 'Inner Race Fault (0.014")',
+            'IR_021_1': 'Severe Inner Race Fault (0.021")',
+            'Ball_007_1': 'Ball Element Micro-Pitting (0.007")',
+            'Ball_014_1': 'Ball Element Spalling (0.014")',
+            'Ball_021_1': 'Severe Ball Element Damage (0.021")',
+            'API_OFFLINE': 'Local Fallback State'
+        };
+        function pgFriendlyFaultClass(code) {
+            if (!code) return '—';
+            return FAULT_CLASS_NAMES[code] || code.replace(/_/g, ' ');
+        }
+        // DATA SETS (SKAB_DATA)
+        const skab_data_normal = [0.4, 0.42, 0.39, 0.41, 0.45, 0.43, 0.4, 0.38, 0.42, 0.44, 0.46, 0.41, 0.4, 0.39, 0.42, 0.43, 0.4, 0.41, 0.44, 0.42, 0.4, 0.41, 0.39, 0.4, 0.42, 0.41, 0.4, 0.38, 0.42, 0.43];
+        const skab_data_anomaly = [0.4, 0.45, 0.52, 0.68, 0.82, 0.95, 1.2, 1.45, 1.3, 1.15, 0.9, 1.1, 1.35, 1.55, 1.8, 1.6, 1.4, 1.5, 1.75, 1.9, 1.4, 1.2, 1.5, 1.7, 1.85, 1.5, 1.3, 1.6, 1.4, 1.2];
+
+        // COUNTER ANIMATION
+        document.querySelectorAll('[data-count]').forEach(counter => {
+            const target = +counter.getAttribute('data-count');
+            let count = 0;
+            const inc = target / 50;
+            const updateCount = () => {
+                if(count < target) {
+                    count += inc;
+                    counter.innerText = Math.ceil(count);
+                    setTimeout(updateCount, 30);
+                } else {
+                    counter.innerText = target;
+                }
+            };
+            updateCount();
+        });
+
+        // SECTION NAVIGATION
+        function showSection(id) {
+            document.querySelectorAll('main > section').forEach(s => s.classList.add('hidden'));
+            document.getElementById(`section-${id}`).classList.remove('hidden');
+            
+            // Sidebar UI update
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('bg-secondary-container', 'text-on-secondary-container', 'font-bold');
+                item.classList.add('text-on-primary/70', 'hover:text-on-primary', 'hover:bg-primary-fixed-dim/10');
+                if(item.getAttribute('data-tab') === id) {
+                    item.classList.add('bg-secondary-container', 'text-on-secondary-container', 'font-bold');
+                    item.classList.remove('text-on-primary/70', 'hover:text-on-primary', 'hover:bg-primary-fixed-dim/10');
+                }
+            });
+        }
+
+        // XAI DRAWER TOGGLE
+        function toggleXAI(rowId) {
+            const drawer = document.getElementById(`${rowId}-drawer`);
+            const isOpen = drawer.classList.contains('open');
+            
+            // Close others
+            document.querySelectorAll('.drawer-content').forEach(d => d.classList.remove('open'));
+            
+            if(!isOpen) {
+                drawer.classList.add('open');
+                // Trigger canvas draws
+                const canvasId = `canvas-${rowId.replace('row-', '').toLowerCase() === '1' ? 'p101' : rowId.replace('row-', '').toLowerCase() === '2' ? 'm204' : rowId.replace('row-', '').toLowerCase() === '3' ? 'sd305' : 'c300'}`;
+                const isAnomaly = rowId === 'row-2' || rowId === 'row-4';
+                drawSparkline(canvasId, isAnomaly ? skab_data_anomaly : skab_data_normal, isAnomaly ? '#C0392B' : '#27AE60');
+            }
+        }
+
+        function drawSparkline(id, data, color) {
+            const canvas = document.getElementById(id);
+            if(!canvas) return;
+            const ctx = canvas.getContext('2d');
+            const w = canvas.width = canvas.parentElement.clientWidth;
+            const h = canvas.height = canvas.parentElement.clientHeight;
+            
+            ctx.clearRect(0,0,w,h);
+            ctx.beginPath();
+            ctx.strokeStyle = color;
+            ctx.lineWidth = 2;
+            
+            const step = w / (data.length - 1);
+            const max = 2.0; // Fixed scale for comparison
+            
+            data.forEach((val, i) => {
+                const x = i * step;
+                const y = h - (val / max) * h;
+                if(i === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            });
+            ctx.stroke();
+            
+            // Fill area
+            ctx.lineTo(w, h);
+            ctx.lineTo(0, h);
+            ctx.fillStyle = color + '22';
+            ctx.fill();
+        }
+
+        // SENSOR SIMULATOR LOGIC
+        const simInputs = {
+            vibration: document.getElementById('sim-vibration'),
+            current: document.getElementById('sim-current'),
+            temp: document.getElementById('sim-temp'),
+            flow: document.getElementById('sim-flow')
+        };
+
+        const simOutputs = {
+            anomaly: document.getElementById('out-anomaly'),
+            bar: document.getElementById('bar-anomaly'),
+            rul: document.getElementById('out-rul'),
+            label: document.getElementById('label-status'),
+            rec: document.getElementById('rec-text')
+        };
+
+        const _RISK_STYLE = {
+            minimal:  { text: 'text-secondary-fixed', bar: 'bg-secondary-fixed', label: 'Status: Nominal' },
+            elevated: { text: 'text-amber-warn',      bar: 'bg-amber-warn',      label: 'Status: Trending Concern' },
+            critical: { text: 'text-red-alert',       bar: 'bg-red-alert',       label: 'Status: Critical Failure Imminent' },
+        };
+
+        function _renderSimOutputs(r) {
+            const score = Math.round((r.anomaly_score || 0) * 100);
+            simOutputs.anomaly.innerText = score.toFixed(1) + '%';
+            simOutputs.bar.style.width = score + '%';
+            simOutputs.rul.innerText = (r.rul_hours !== undefined ? r.rul_hours.toLocaleString() : '—');
+
+            const fc = r.fault_class || '—';
+            const conf = r.fault_confidence !== undefined ? (r.fault_confidence * 100).toFixed(1) + '%' : '—';
+            document.getElementById('sim-fault-class').innerText = pgFriendlyFaultClass(fc);
+            document.getElementById('sim-fault-conf').innerText = conf;
+
+            const style = _RISK_STYLE[r.risk_level] || _RISK_STYLE.minimal;
+            simOutputs.label.className = `font-bold text-sm ${style.text} uppercase`;
+            simOutputs.bar.className   = `h-full ${style.bar} transition-all duration-300`;
+            simOutputs.label.innerText = style.label;
+            simOutputs.rec.innerText   = r.recommendation || '';
+
+            // SHAP attribution — only when API returns real values
+            const shapStatus = document.getElementById('shap-status-label');
+            if (r.shap_values) {
+                const sv = r.shap_values;
+                const pairs = [
+                    ['shap-vib', sv.vibration],
+                    ['shap-cur', sv.current],
+                    ['shap-tmp', sv.temperature],
+                ];
+                pairs.forEach(([id, val]) => {
+                    const pct = (val * 100).toFixed(1) + '%';
+                    const w   = (val * 100).toFixed(1) + '%';
+                    document.getElementById(id + '-pct').innerText   = pct;
+                    document.getElementById(id + '-bar').style.width = w;
+                });
+                if (shapStatus) shapStatus.innerText = 'Live · CWRU RF TreeExplainer';
+            } else {
+                if (shapStatus) shapStatus.innerText = 'Needs server — start localhost:8000';
+            }
+        }
+
+        let _simDebounce = null;
+        async function updateSimulation() {
+            const v = parseFloat(simInputs.vibration.value);
+            const c = parseFloat(simInputs.current.value);
+            const t = parseFloat(simInputs.temp.value);
+            const f = parseFloat(simInputs.flow.value);
+
+            document.getElementById('val-vibration').innerText = v.toFixed(3);
+            document.getElementById('val-current').innerText   = c.toFixed(2);
+            document.getElementById('val-temp').innerText      = t.toFixed(1);
+            document.getElementById('val-flow').innerText      = f.toFixed(0);
+
+            drawLiveSim(v);
+
+            if (typeof pgApiAvailable === 'undefined' || !pgApiAvailable()) {
+                // Graceful fallback when running via file:// or before api_client.js loads
+                const deg = Math.max(0, Math.min(1, (v - 0.188) / (0.60 - 0.188)));
+                _renderSimOutputs({
+                    anomaly_score: deg * 0.95,
+                    risk_level: deg < 0.30 ? 'minimal' : deg < 0.65 ? 'elevated' : 'critical',
+                    rul_hours: Math.round(3000 * (1 - deg)),
+                    fault_class: 'API_OFFLINE',
+                    fault_confidence: 0,
+                    recommendation: 'API offline — start server at localhost:8000 for live model inference.',
+                });
+                return;
+            }
+
+            clearTimeout(_simDebounce);
+            _simDebounce = setTimeout(async () => {
+                try {
+                    const result = await pgFetch('/api/predict/inference', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ vibration_rms: v, motor_current: c, temperature: t, flow_rate: f / 20 }),
+                    });
+                    _renderSimOutputs(result);
+                } catch (e) {
+                    console.warn('Inference API error:', e.message);
+                }
+            }, 40);
+        }
+
+        let simTime = 0;
+        function drawLiveSim(vibFactor) {
+            const canvas = document.getElementById('canvas-sim');
+            const ctx = canvas.getContext('2d');
+            const w = canvas.width = canvas.parentElement.clientWidth;
+            const h = canvas.height = 180;
+            
+            ctx.clearRect(0,0,w,h);
+            
+            // Grid lines
+            ctx.strokeStyle = '#FFFFFF11';
+            ctx.lineWidth = 1;
+            for(let i=0; i<w; i+=40) { ctx.beginPath(); ctx.moveTo(i,0); ctx.lineTo(i,h); ctx.stroke(); }
+            for(let i=0; i<h; i+=40) { ctx.beginPath(); ctx.moveTo(0,i); ctx.lineTo(w,i); ctx.stroke(); }
+
+            // Waveform
+            ctx.beginPath();
+            ctx.strokeStyle = vibFactor > 0.50 ? '#C0392B' : '#27AE60';
+            ctx.lineWidth = 2;
+            
+            // Normalize g values (0.10–0.70) to canvas amplitude
+            const amp = ((vibFactor - 0.10) / 0.60) * 70 + 10;
+            for(let x=0; x<w; x++) {
+                const noise = (Math.random() - 0.5) * amp * 0.3;
+                const wave = Math.sin((x + simTime) * 0.05) * amp;
+                const y = h/2 + wave + noise;
+                if(x===0) ctx.moveTo(x,y);
+                else ctx.lineTo(x,y);
+            }
+            ctx.stroke();
+            simTime += 2;
+        }
+
+        // Initialize Sim Inputs
+        Object.values(simInputs).forEach(input => input.addEventListener('input', updateSimulation));
+        
+        // Start animation loop for simulation
+        function animate() {
+            if(!document.getElementById('section-predictions').classList.contains('hidden')) {
+                const v = parseFloat(simInputs.vibration.value);
+                drawLiveSim(v);
+            }
+            requestAnimationFrame(animate);
+        }
+        animate();
+
+        // Draw initial waveform immediately; full inference runs after api_client.js loads
+        drawLiveSim(0.20);
+
+    </script>
+<script src="js/api_client.js"></script>
+<script>
+    // -----------------------------------------------------------------------
+    // Project ASTRA Live Dashboard — API integration for KPIs + equipment table
+    // Runs only when served via http://localhost:8000 (FastAPI).
+    // Falls back gracefully to the hardcoded HTML when opened via file://.
+    // -----------------------------------------------------------------------
+
+    const _STATUS_BADGE = {
+        optimal:  '<span class="px-md py-1 bg-green-good text-white text-[10px] font-bold rounded-full uppercase">Optimal</span>',
+        warning:  '<span class="px-md py-1 bg-amber-warn text-white text-[10px] font-bold rounded-full uppercase">Warning</span>',
+        critical: '<span class="px-md py-1 bg-red-alert text-white text-[10px] font-bold rounded-full uppercase">Action Required</span>',
+    };
+
+    const _HEALTH_BAR_COLOR = { optimal: 'bg-green-good', warning: 'bg-amber-warn', critical: 'bg-red-alert' };
+
+    function _buildEquipmentRow(eq, rowNum) {
+        const user = JSON.parse(localStorage.getItem('currentUser')) || { role: 'Operator' };
+        const canSendAlert = (user.role === 'Super Admin' || user.role === 'Admin');
+        const canCreateWorkOrder = (user.role === 'Super Admin' || user.role === 'Admin' || user.role === 'Maintenance');
+
+        const badge    = _STATUS_BADGE[eq.status] || _STATUS_BADGE.optimal;
+        const barColor = _HEALTH_BAR_COLOR[eq.status] || 'bg-green-good';
+        const healthPct = Math.round(eq.health_index * 100);
+        const rulDisplay = eq.rul_hours.toLocaleString() + 'h';
+        const drawerId   = 'row-' + rowNum;
+
+        // Pull hybrid streaming config (loaded from /api/stream/config)
+        const cfg = _streamConfig[eq.id] || { prediction_stride: 5, is_ccp: false, ccp_type: 'N/A', window_size: 60, mode: 'sliding', reason: '' };
+        const isCCP    = cfg.is_ccp;
+        const stride   = cfg.prediction_stride;
+        const isFast   = stride <= 5;
+
+        // Status cell: badge + CCP chip + freq chip
+        const ccpChip  = isCCP
+            ? `<span class="text-[9px] font-bold px-xs py-0.5 bg-red-alert/10 text-red-alert rounded">★ CCP</span>`
+            : '';
+        const freqColor = isFast ? 'bg-primary/10 text-primary' : 'bg-surface-container text-on-surface-variant';
+        const freqChip  = `<span class="text-[9px] font-bold px-xs py-0.5 ${freqColor} rounded">⚡ ${stride} s</span>`;
+        const statusCell = `<div class="space-y-xs">${badge}<div class="flex gap-xs mt-xs">${ccpChip}${freqChip}</div></div>`;
+
+        // Drawer streaming banner
+        const bannerBg  = isCCP ? 'bg-red-alert/5' : 'bg-surface-container-lowest';
+        const iconColor = isCCP ? 'text-red-alert' : 'text-on-surface-variant';
+        const icon      = isCCP ? 'emergency' : 'sensors';
+        const ccpLabel  = isCCP ? `<span class="font-bold text-red-alert">★ CCP — ${cfg.ccp_type}</span>` : '';
+        const freqLabel = `<span class="font-bold ${isFast ? 'text-primary' : 'text-on-surface-variant'}">⚡ Predict every ${stride} s</span>`;
+        const streamBanner = `
+    <div class="px-lg py-sm border-b border-border/30 flex flex-wrap items-center gap-lg text-[11px] ${bannerBg}">
+      <span class="material-symbols-outlined ${iconColor} text-sm">${icon}</span>
+      <span class="font-data-label text-[10px] uppercase text-on-surface-variant">Real-Time Monitoring</span>
+      <span class="text-on-surface-variant">Window <strong>${cfg.window_size} s</strong></span>
+      ${freqLabel}
+      <span class="text-on-surface-variant">${cfg.mode}</span>
+      ${ccpLabel}
+      <span class="text-on-surface-variant italic ml-auto text-[10px]">${cfg.reason}</span>
+    </div>`;
+
+        return `
+<tr class="hover:bg-green-light/30 transition-colors cursor-pointer" onclick="toggleXAI('${drawerId}')">
+  <td class="px-lg py-lg font-bold text-primary">${eq.name}</td>
+  <td class="px-lg py-lg text-on-surface-variant">${eq.location}</td>
+  <td class="px-lg py-lg">${statusCell}</td>
+  <td class="px-lg py-lg font-data-value">${rulDisplay}</td>
+  <td class="px-lg py-lg">
+    <div class="w-24 h-1.5 bg-surface-container-low rounded-full overflow-hidden">
+      <div class="h-full ${barColor}" style="width:${healthPct}%"></div>
+    </div>
+  </td>
+  <td class="px-lg py-lg text-right">
+    <span class="material-symbols-outlined text-on-surface-variant">expand_more</span>
+  </td>
+</tr>
+<tr class="drawer-content" id="${drawerId}-drawer">
+  <td class="bg-surface-container-lowest border-t border-border/50" colspan="6">
+    ${streamBanner}
+    <div class="p-lg grid grid-cols-1 md:grid-cols-3 gap-xl">
+      <div class="space-y-md">
+        <h4 class="font-data-label text-on-surface-variant uppercase text-[10px]">Live Sensor Sparkline</h4>
+        <canvas class="w-full h-32 border border-outline/10 rounded-lg bg-surface" id="canvas-live-${rowNum}"></canvas>
+      </div>
+      <div class="space-y-md">
+        <h4 class="font-data-label text-on-surface-variant uppercase text-[10px]">AI Prediction</h4>
+        <div class="text-[12px] text-on-surface-variant leading-relaxed">
+          Status: <strong>${eq.status.charAt(0).toUpperCase() + eq.status.slice(1)}</strong> &mdash;
+          Anomaly score: <strong>${Math.round(eq.anomaly_score * 100)}%</strong><br>
+          Fault class: <strong>${pgFriendlyFaultClass(eq.fault_class)}</strong><br>
+          RUL estimate: <strong>${rulDisplay}</strong>
+        </div>
+      </div>
+      <div class="flex flex-col gap-sm">
+        <h4 class="font-data-label text-on-surface-variant uppercase text-[10px]">Actions</h4>
+        ${canSendAlert ? `
+          <button class="w-full py-2 bg-primary text-white text-sm font-bold rounded-lg hover:bg-tertiary transition-colors"
+                  onclick="event.stopPropagation(); pgConfirm('Dispatch automated alert to the maintenance team for ${eq.name}?', function(){ pgDispatchAlert('${eq.id}', '${eq.name}', 'Critical alert dispatched for ${eq.name} due to anomalous sensor telemetry. Current Health Index: ${Math.round(eq.health_index*100)}%.'); })">
+            Send Alert
+          </button>
+        ` : `
+          <button class="w-full py-2 bg-gray-200 text-gray-400 text-sm font-bold rounded-lg cursor-not-allowed flex items-center justify-center gap-1" disabled onclick="event.stopPropagation();">
+            <span class="material-symbols-outlined text-sm">lock</span>
+            Send Alert
+          </button>
+        `}
+        ${canCreateWorkOrder ? `
+          <button class="w-full py-2 border border-primary text-primary text-sm font-bold rounded-lg hover:bg-green-light transition-colors"
+                  onclick="event.stopPropagation(); pgCreateWorkOrder('${eq.id}', '${eq.name.replace(/'/g, "\\'")}', '${eq.status}', ${eq.anomaly_score}, '${pgFriendlyFaultClass(eq.fault_class).replace(/'/g, "\\'")}', '${rulDisplay}')">Create Work Order</button>
+        ` : `
+          <button class="w-full py-2 border border-gray-200 text-gray-400 text-sm font-bold rounded-lg cursor-not-allowed flex items-center justify-center gap-1" disabled onclick="event.stopPropagation();">
+            <span class="material-symbols-outlined text-sm">lock</span>
+            Create Work Order
+          </button>
+        `}
+        <button class="w-full py-2 text-on-surface-variant text-xs font-medium hover:underline"
+                onclick="pgMockDownload('CMMS_Log_${eq.id}_2026','pdf')">Download CMMS Log</button>
+      </div>
+    </div>
+  </td>
+</tr>`;
+    }
+
+    function _drawSparklineFromData(canvasId, data) {
+        const canvas = document.getElementById(canvasId);
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        const w = canvas.width = canvas.parentElement.clientWidth;
+        const h = canvas.height = canvas.parentElement.clientHeight || 128;
+        ctx.clearRect(0, 0, w, h);
+
+        const max = Math.max(...data) * 1.05;
+        const min = Math.min(...data) * 0.95;
+        const range = max - min || 1;
+
+        ctx.beginPath();
+        ctx.strokeStyle = '#27AE60';
+        ctx.lineWidth = 2;
+        data.forEach((val, i) => {
+            const x = (i / (data.length - 1)) * w;
+            const y = h - ((val - min) / range) * h;
+            if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+        });
+        ctx.stroke();
+        ctx.lineTo(w, h); ctx.lineTo(0, h);
+        ctx.fillStyle = '#27AE6022';
+        ctx.fill();
+    }
+
+    // Override toggleXAI to also draw API sparklines
+    const _origToggleXAI = typeof toggleXAI === 'function' ? toggleXAI : null;
+    function toggleXAI(rowId) {
+        const drawer = document.getElementById(`${rowId}-drawer`);
+        const isOpen = drawer && drawer.classList.contains('open');
+        document.querySelectorAll('.drawer-content').forEach(d => d.classList.remove('open'));
+        if (!isOpen && drawer) {
+            drawer.classList.add('open');
+            // Draw sparkline if live data is available
+            const rowNum = parseInt(rowId.replace('row-', ''));
+            const eq = _lastEquipmentData && _lastEquipmentData[rowNum - 1];
+            if (eq && eq.sensor_sparkline) {
+                setTimeout(() => _drawSparklineFromData('canvas-live-' + rowNum, eq.sensor_sparkline), 50);
+            } else if (_origToggleXAI) {
+                // Fall back to original sparkline logic for static HTML rows
+                const isAnomaly = rowId === 'row-2' || rowId === 'row-4';
+                const data = isAnomaly ? skab_data_anomaly : skab_data_normal;
+                const color = isAnomaly ? '#C0392B' : '#27AE60';
+                setTimeout(() => {
+                    const canvasId = `canvas-${rowId.replace('row-','').toLowerCase() === '1' ? 'p101' : rowId.replace('row-','').toLowerCase() === '2' ? 'm204' : rowId.replace('row-','').toLowerCase() === '3' ? 'sd305' : 'c300'}`;
+                    drawSparkline(canvasId, data, color);
+                }, 50);
+            }
+        }
+    }
+
+    let _lastEquipmentData = null;
+
+    async function loadDashboard() {
+        if (!pgApiAvailable()) return;
+        try {
+            await pgSimStep();
+            const data = await pgFetch('/api/equipment/status');
+
+            // Update KPI cards
+            const kpi = data.kpis;
+            const kpiEls = document.querySelectorAll('[data-count]');
+            if (kpiEls[0]) kpiEls[0].innerText = kpi.overall_health;
+            if (kpiEls[1]) kpiEls[1].innerText = kpi.at_risk;
+            if (kpiEls[2]) kpiEls[2].innerText = kpi.predicted_failures;
+            if (kpiEls[3]) kpiEls[3].innerText = kpi.downtime_avoided_h.toFixed(1);
+
+            // Update health bar width for overall health
+            const healthBar = document.querySelector('[data-count="74"] ~ div .h-full');
+            if (healthBar) healthBar.style.width = kpi.overall_health + '%';
+
+            // Replace equipment table body with live rows
+            _lastEquipmentData = data.equipment;
+            const tbody = document.getElementById('equipment-table-body');
+            if (tbody) {
+                tbody.innerHTML = data.equipment
+                    .map((eq, idx) => _buildEquipmentRow(eq, idx + 1))
+                    .join('');
+            }
+        } catch (err) {
+            console.warn('Dashboard API load failed:', err.message);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        pgStartPolling(loadDashboard, 6000);
+        _loadStreamConfig();
+        // Start real-time stream naturally on page load
+        setTimeout(() => {
+            streamToggle();
+        }, 800);
+    });
+
+    // -----------------------------------------------------------------------
+    // Real-Time Streaming Panel — Hybrid: CCP=5s stride, non-CCP=30s stride
+    // Sends one synthetic reading per second to POST /api/stream/ingest,
+    // then renders buffer fill, aggregations, prediction trend, and latest result.
+    // -----------------------------------------------------------------------
+    let _streamInterval = null;
+    let _streamTick = 0;
+    let _streamPhase = 'normal';   // 'normal' | 'degrading' | 'critical'
+    let _streamConfig = {};        // machine_id → StreamConfigItem
+
+    // Load per-equipment config from API on page load
+    async function _loadStreamConfig() {
+        if (!pgApiAvailable()) return;
+        try {
+            const data = await pgFetch('/api/stream/config');
+            data.equipment.forEach(item => { _streamConfig[item.machine_id] = item; });
+            streamMachineChanged();  // apply config for the initially selected machine
+        } catch (e) {
+            console.warn('Could not load stream config:', e.message);
+        }
+    }
+
+    function streamMachineChanged() {
+        const machineId = document.getElementById('stream-machine-select').value;
+        const cfg = _streamConfig[machineId];
+        const bar  = document.getElementById('stream-config-bar');
+        const sub  = document.getElementById('stream-subtitle');
+
+        if (!cfg) {
+            if (bar) bar.innerHTML = '<span class="text-on-surface-variant italic">Config not loaded — start API first</span>';
+            return;
+        }
+
+        const ccpBadge = cfg.is_ccp
+            ? `<span class="px-sm py-0.5 bg-red-alert text-white text-[9px] font-bold rounded-full uppercase">★ CCP — ${cfg.ccp_type}</span>`
+            : `<span class="px-sm py-0.5 bg-surface-container text-on-surface-variant text-[9px] font-bold rounded-full uppercase">Non-CCP</span>`;
+
+        const modeColor = cfg.prediction_stride <= 5 ? 'text-red-alert font-bold' : 'text-amber-warn font-bold';
+
+        if (bar) bar.innerHTML = `
+            ${ccpBadge}
+            <span class="text-on-surface-variant">Window: <strong>${cfg.window_size} s</strong></span>
+            <span class="text-on-surface-variant">Predict every: <strong class="${modeColor}">${cfg.prediction_stride} s</strong></span>
+            <span class="text-on-surface-variant">Mode: <strong>${cfg.mode}</strong></span>
+            <span class="text-on-surface-variant italic truncate max-w-xs">${cfg.reason}</span>
+        `;
+        if (sub) sub.innerText = `1-Hz sensor data · rolling ${cfg.window_size}-s window · predict every ${cfg.prediction_stride} s`;
+
+        // Reset stream state when machine changes
+        if (_streamInterval) { streamToggle(); }  // stop if running
+        _streamTick = 0;
+        _streamPhase = 'normal';
+        const dotsEl = document.getElementById('stream-trend-dots');
+        if (dotsEl) dotsEl.innerHTML = '<span class="text-[11px] text-on-surface-variant italic trend-dot">Waiting for first prediction…</span>';
+        const fillEl = document.getElementById('stream-buf-fill');
+        const barEl  = document.getElementById('stream-buf-bar');
+        const nextEl = document.getElementById('stream-next-pred');
+        if (fillEl) fillEl.innerText = '0';
+        if (barEl)  barEl.style.width = '0%';
+        if (nextEl) nextEl.innerText = 'Next prediction in — readings';
+        const tbl = document.getElementById('stream-agg-table');
+        if (tbl) tbl.innerHTML = '<tr><td class="text-on-surface-variant py-1 italic" colspan="4">No data yet</td></tr>';
+        const card = document.getElementById('stream-pred-card');
+        if (card) { card.className = 'rounded-lg border border-border p-md space-y-xs bg-surface-container-low'; card.innerHTML = '<p class="text-[11px] text-on-surface-variant italic">Waiting for prediction…</p>'; }
+    }
+
+    const _TREND_STYLE = {
+        normal:   { bg: 'bg-green-good',   label: '● N',  title: 'Normal'   },
+        minimal:  { bg: 'bg-green-good',   label: '● N',  title: 'Normal'   },
+        elevated: { bg: 'bg-amber-warn',   label: '▲ W',  title: 'Warning'  },
+        critical: { bg: 'bg-red-alert',    label: '✖ C',  title: 'Critical' },
+    };
+
+    function _streamReading() {
+        // Simulate gradual degradation: 0–39 s normal, 40–79 s degrading, 80+ critical
+        _streamTick++;
+        if      (_streamTick < 40) _streamPhase = 'normal';
+        else if (_streamTick < 80) _streamPhase = 'degrading';
+        else                       _streamPhase = 'critical';
+
+        const noise = () => (Math.random() - 0.5) * 0.04;
+        let vib, cur, tmp, flw;
+        if (_streamPhase === 'normal') {
+            vib = 0.22 + noise(); cur = 1.25 + noise() * 2; tmp = 68.0 + noise() * 50; flw = 120 + noise() * 50;
+        } else if (_streamPhase === 'degrading') {
+            vib = 0.38 + noise(); cur = 2.10 + noise() * 3; tmp = 76.0 + noise() * 50; flw = 112 + noise() * 75;
+        } else {
+            vib = 0.52 + noise(); cur = 3.20 + noise() * 5; tmp = 145.0 + noise() * 75; flw = 103 + noise() * 100;
+        }
+
+        const machineId = document.getElementById('stream-machine-select').value;
+        return { machine_id: machineId, vibration_rms: +vib.toFixed(3), motor_current: +cur.toFixed(3), temperature: +tmp.toFixed(1), flow_rate: +flw.toFixed(1) };
+    }
+
+    function _updateStreamUI(resp) {
+        // Buffer progress bar
+        const pct = Math.round((resp.buffer_fill / resp.window_size) * 100);
+        const fillEl = document.getElementById('stream-buf-fill');
+        const barEl  = document.getElementById('stream-buf-bar');
+        const nextEl = document.getElementById('stream-next-pred');
+        if (fillEl) fillEl.innerText = resp.buffer_fill;
+        if (barEl)  barEl.style.width = pct + '%';
+        if (nextEl) nextEl.innerText = resp.readings_until_next_prediction > 0
+            ? `Next prediction in ${resp.readings_until_next_prediction} readings`
+            : '⚡ Prediction triggered!';
+
+        // Aggregation table
+        const agg = resp.aggregation;
+        const tbl = document.getElementById('stream-agg-table');
+        if (tbl && agg) {
+            const rows = [
+                ['Vibration (g)',    agg.vibration_rms.avg.toFixed(3), agg.vibration_rms.max.toFixed(3), agg.vibration_rms.min.toFixed(3)],
+                ['Current (A)',      agg.motor_current.avg.toFixed(2),  agg.motor_current.max.toFixed(2),  agg.motor_current.min.toFixed(2)],
+                ['Temperature (°C)', agg.temperature.avg.toFixed(1),   agg.temperature.max.toFixed(1),   agg.temperature.min.toFixed(1)],
+                ['Shaft Speed (RPM)', agg.flow_rate.avg.toFixed(1),      agg.flow_rate.max.toFixed(1),      agg.flow_rate.min.toFixed(1)],
+            ];
+            tbl.innerHTML = rows.map(([label, avg, max, min]) =>
+                `<tr class="border-t border-border/30">
+                   <td class="py-1 text-on-surface-variant">${label}</td>
+                   <td class="text-right font-data-value">${avg}</td>
+                   <td class="text-right text-red-alert/80">${max}</td>
+                   <td class="text-right text-primary/80">${min}</td>
+                 </tr>`
+            ).join('');
+        }
+
+        // Latest prediction (only when triggered)
+        if (resp.prediction_triggered && resp.prediction) {
+            const p = resp.prediction;
+            const risk = p.risk_level;
+            
+            // Show toast message to audibly alert user with synthesized chime sound
+            pgToast(`Stream Prediction: ${pgFriendlyFaultClass(p.fault_class)} (Score: ${Math.round(p.anomaly_score * 100)}%)`, risk === 'critical' ? 'error' : (risk === 'elevated' ? 'warning' : 'success'), 4000);
+
+            const rStyle = _TREND_STYLE[risk] || _TREND_STYLE.normal;
+            const card = document.getElementById('stream-pred-card');
+            if (card) {
+                const bgMap = { normal: 'bg-green-light', minimal: 'bg-green-light', elevated: 'bg-amber-warn/10', critical: 'bg-error-container' };
+                card.className = `rounded-lg border border-border p-md space-y-xs ${bgMap[risk] || 'bg-surface-container-low'}`;
+                card.innerHTML = `
+                  <p class="font-bold text-sm">${pgFriendlyFaultClass(p.fault_class)}</p>
+                  <div class="flex gap-md text-[11px]">
+                    <span>Score: <strong>${Math.round(p.anomaly_score * 100)}%</strong></span>
+                    <span>RUL: <strong>${p.rul_hours}h</strong></span>
+                  </div>
+                  <p class="text-[11px] text-on-surface-variant">${p.recommendation}</p>`;
+            }
+            const ageEl = document.getElementById('stream-pred-age');
+            if (ageEl) ageEl.innerText = `Tick ${_streamTick} · Phase: ${_streamPhase}`;
+
+            // Append trend dot
+            const dotsEl = document.getElementById('stream-trend-dots');
+            if (dotsEl) {
+                const existing = dotsEl.querySelectorAll('span.trend-dot');
+                if (existing.length === 1 && existing[0].classList.contains('italic')) dotsEl.innerHTML = '';
+                const dot = document.createElement('span');
+                dot.className = `trend-dot inline-flex items-center justify-center w-6 h-6 rounded-full text-white text-[9px] font-bold ${rStyle.bg}`;
+                dot.title = `${rStyle.title} — tick ${_streamTick}`;
+                dot.innerText = rStyle.label.slice(0, 1);
+                dotsEl.appendChild(dot);
+                if (dotsEl.children.length > 12) dotsEl.removeChild(dotsEl.firstChild);
+            }
+        }
+    }
+
+    // Fire initial inference call now that api_client.js is loaded
+    updateSimulation();
+
+    async function streamToggle() {
+        const btn = document.getElementById('stream-start-btn');
+        if (_streamInterval) {
+            clearInterval(_streamInterval);
+            _streamInterval = null;
+            _streamTick = 0;
+            _streamPhase = 'normal';
+            if (btn) btn.innerText = '▶ Start Stream';
+            return;
+        }
+        if (!pgApiAvailable()) {
+            pgToast('API not available — start the FastAPI server first', 'error');
+            return;
+        }
+        if (btn) btn.innerText = '■ Stop Stream';
+        _streamInterval = setInterval(async () => {
+            try {
+                const reading = _streamReading();
+                const resp = await pgFetch('/api/stream/ingest', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(reading) });
+                _updateStreamUI(resp);
+            } catch (e) {
+                console.warn('Stream ingest error:', e.message);
+            }
+        }, 1000);  // 1 reading per second
+    }
+</script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const user = JSON.parse(localStorage.getItem('currentUser')) || { role: 'Operator' };
+    const canSendAlert = (user.role === 'Super Admin' || user.role === 'Admin');
+    const canCreateWorkOrder = (user.role === 'Super Admin' || user.role === 'Admin' || user.role === 'Maintenance');
+    
+    if (!canSendAlert) {
+      document.querySelectorAll('button[onclick*="pgDispatchAlert"]').forEach(btn => {
+        btn.disabled = true;
+        btn.classList.remove('bg-primary', 'hover:bg-tertiary', 'bg-amber-warn', 'bg-red-alert', 'animate-pulse');
+        btn.classList.add('bg-gray-200', 'text-gray-400', 'cursor-not-allowed', 'flex', 'items-center', 'justify-center', 'gap-1');
+        btn.innerHTML = '<span class="material-symbols-outlined text-sm">lock</span> Send Alert';
+        btn.removeAttribute('onclick');
+      });
+    }
+    
+    if (!canCreateWorkOrder) {
+      document.querySelectorAll('button[onclick*="pgCreateWorkOrder"]').forEach(btn => {
+        btn.disabled = true;
+        btn.classList.remove('border-primary', 'text-primary', 'hover:bg-green-light');
+        btn.classList.add('border-gray-200', 'text-gray-400', 'cursor-not-allowed', 'flex', 'items-center', 'justify-center', 'gap-1');
+        btn.innerHTML = '<span class="material-symbols-outlined text-sm">lock</span> Create Work Order';
+        btn.removeAttribute('onclick');
+      });
+    }
+  });
+</script>
+<script src="js/sidebar.js"></script>
+<script>renderSidebar('overview');</script>
+</body></html>

@@ -1,0 +1,394 @@
+<!DOCTYPE html><html class="light" lang="en" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Project ASTRA | Support &amp; Documentation</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Playfair+Display:wght@700&amp;display=swap" rel="stylesheet">
+<!-- Icons -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<!-- Tailwind -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                "inverse-primary": "#9ed2b1",
+                "on-primary-fixed": "#002111",
+                "on-error": "#ffffff",
+                "error-container": "#ffdad6",
+                "on-secondary-fixed": "#002110",
+                "on-primary": "#ffffff",
+                "primary-fixed": "#baefcc",
+                "surface-tint": "#38684d",
+                "on-primary-container": "#8bbe9e",
+                "surface-variant": "#e3e2df",
+                "on-secondary-container": "#227049",
+                "secondary-container": "#a3f0bf",
+                "on-tertiary-fixed-variant": "#00522b",
+                "amber-warn": "#E67E22",
+                "green-good": "#27AE60",
+                "on-background": "#1b1c1a",
+                "on-primary-fixed-variant": "#1f5036",
+                "tertiary-fixed-dim": "#71dc96",
+                "outline-variant": "#c0c9c1",
+                "surface-container": "#efeeeb",
+                "tertiary": "#00371b",
+                "surface": "#FFFFFF",
+                "red-alert": "#C0392B",
+                "surface-container-highest": "#e3e2df",
+                "surface-bright": "#faf9f6",
+                "on-secondary-fixed-variant": "#005230",
+                "primary": "#003720",
+                "surface-dim": "#dbdad7",
+                "primary-container": "#1d4e35",
+                "on-tertiary-fixed": "#00210e",
+                "on-tertiary-container": "#5cc784",
+                "secondary-fixed-dim": "#8ad7a7",
+                "border": "#E2DDD6",
+                "tertiary-fixed": "#8df9b1",
+                "on-tertiary": "#ffffff",
+                "on-surface-variant": "#414943",
+                "surface-container-high": "#e9e8e5",
+                "inverse-on-surface": "#f2f1ee",
+                "secondary": "#1c6b45",
+                "on-surface": "#1b1c1a",
+                "on-secondary": "#ffffff",
+                "surface-container-lowest": "#ffffff",
+                "primary-fixed-dim": "#9ed2b1",
+                "ink": "#1A1A18",
+                "tertiary-container": "#00502a",
+                "green-light": "#EAF2EC",
+                "surface-container-low": "#f4f3f0",
+                "secondary-fixed": "#a6f3c2",
+                "outline": "#717972",
+                "inverse-surface": "#2f312f",
+                "error": "#ba1a1a",
+                "background": "#faf9f6",
+                "on-error-container": "#93000a",
+                "ink-muted": "#6B6860",
+                "mono-data": "#2C3E50"
+            },
+            "borderRadius": {
+                "DEFAULT": "0.125rem",
+                "lg": "0.25rem",
+                "xl": "0.5rem",
+                "full": "0.75rem"
+            },
+            "spacing": {
+                "margin-desktop": "64px",
+                "xl": "48px",
+                "xxl": "96px",
+                "md": "16px",
+                "lg": "24px",
+                "base": "4px",
+                "sm": "8px",
+                "gutter": "24px",
+                "xs": "4px",
+                "margin-mobile": "16px"
+            },
+            "fontFamily": {
+                "hero-lg-mobile": ["Playfair Display"],
+                "body-sm": ["Inter"],
+                "headline-display": ["Playfair Display"],
+                "body-md": ["Inter"],
+                "data-value": ["JetBrains Mono"],
+                "data-display": ["JetBrains Mono"],
+                "hero-lg": ["Playfair Display"],
+                "data-label": ["JetBrains Mono"],
+                "body-lg": ["Inter"]
+            },
+            "fontSize": {
+                "hero-lg-mobile": ["42px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                "body-sm": ["14px", {"lineHeight": "1.4", "fontWeight": "500"}],
+                "headline-display": ["40px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                "data-value": ["14px", {"lineHeight": "1.0", "fontWeight": "500"}],
+                "data-display": ["48px", {"lineHeight": "1.0", "letterSpacing": "-0.03em", "fontWeight": "500"}],
+                "hero-lg": ["68px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                "data-label": ["11px", {"lineHeight": "1.0", "letterSpacing": "0.05em", "fontWeight": "400"}],
+                "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+      .bento-card {
+        transition: transform 0.2s ease, border-color 0.2s ease;
+      }
+      .bento-card:hover {
+        border-color: #003720;
+      }
+      .code-block {
+        background: #1b1c1a;
+        color: #9ed2b1;
+        padding: 1rem;
+        border-radius: 4px;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 13px;
+        overflow-x: auto;
+      }
+    </style>
+<link rel="stylesheet" href="css/styles.css">
+<script src="js/interactions.js"></script>
+</head>
+<body class="bg-background text-on-background font-body-md min-h-screen flex selection:bg-primary selection:text-white">
+<!-- Main Content Canvas -->
+<main class="flex-1 md:ml-64 min-h-screen bg-background">
+<!-- TopAppBar -->
+<header class="flex justify-between items-center px-lg h-16 w-full sticky top-0 z-[100] bg-surface/80 backdrop-blur-md border-b border-border">
+<div class="flex items-center gap-md">
+<span class="md:hidden material-symbols-outlined text-primary cursor-pointer" data-sidebar-toggle aria-label="Open navigation menu">menu</span>
+<h2 class="font-headline-display text-body-lg text-primary">Support &amp; Documentation</h2>
+</div>
+<div class="flex items-center gap-lg">
+<div class="relative group">
+<input class="bg-surface-container-low border-border rounded-lg pl-10 pr-md py-sm font-body-sm text-on-surface-variant focus:ring-primary focus:border-primary transition-all w-64" placeholder="Search documentation..." type="text">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline" data-icon="search">search</span>
+</div>
+<div class="flex items-center gap-sm">
+<button class="p-base text-on-surface-variant hover:text-primary transition-colors cursor-pointer active:opacity-70" onclick="location.href='profilensettings.html'">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+<button class="p-base text-on-surface-variant hover:text-primary transition-colors cursor-pointer active:opacity-70" onclick="location.href='profilensettings.html'">
+<span class="material-symbols-outlined" data-icon="account_circle">account_circle</span>
+</button>
+</div>
+</div>
+</header>
+<div class="p-xl max-w-[1400px] mx-auto space-y-xl">
+<!-- Hero Documentation Section -->
+<section class="grid grid-cols-1 md:grid-cols-12 gap-gutter">
+<div class="md:col-span-8 space-y-lg">
+<div class="bg-surface border border-border p-lg rounded-lg bento-card relative overflow-hidden h-full flex flex-col justify-end">
+<div class="absolute top-0 right-0 p-lg opacity-10">
+<span class="material-symbols-outlined text-[120px]" data-icon="menu_book">menu_book</span>
+</div>
+<div class="relative z-10">
+<span class="inline-block px-sm py-xs bg-green-light text-primary font-data-label text-data-label rounded mb-md uppercase tracking-wider">Reference Guide</span>
+<h3 class="font-headline-display text-primary text-[32px] mb-md leading-tight">Project ASTRA AI Architecture &amp; Core Logic</h3>
+<p class="font-body-lg text-on-surface-variant max-w-2xl mb-lg">
+                                Deep dive into the neural networks monitoring the factory floor. Understand how our sensor fusion technology identifies anomalies before they impact production safety.
+                            </p>
+<div class="flex gap-md">
+<button class="bg-primary text-white font-data-label text-data-label px-lg py-sm rounded-lg hover:bg-tertiary transition-colors flex items-center gap-sm uppercase" onclick="pgToast('Opening technical documentation portal…', 'info')">
+                                    Read Technical Docs <span class="material-symbols-outlined text-[18px]" data-icon="arrow_forward">arrow_forward</span>
+</button>
+<button class="border border-primary text-primary font-data-label text-data-label px-lg py-sm rounded-lg hover:bg-green-light transition-colors flex items-center gap-sm uppercase" onclick="pgMockDownload('Project ASTRA_Architecture_Guide_v3','pdf')">
+                                    Download PDF
+                                </button>
+</div>
+</div>
+</div>
+</div>
+<div class="md:col-span-4 space-y-gutter">
+<div class="bg-surface border border-border p-lg rounded-lg bento-card">
+<div class="flex items-center gap-md mb-md">
+<span class="material-symbols-outlined text-primary" data-icon="api">api</span>
+<h4 class="font-data-label text-body-md font-bold uppercase text-primary">API Integration</h4>
+</div>
+<p class="font-body-sm text-on-surface-variant mb-md">Connect your SCADA systems directly to our predictive endpoints via REST or gRPC.</p>
+<div class="code-block text-[11px]">
+                            GET /v2/sensor-stream/{line_id}<br>
+                            Auth: Bearer {ASTRA_AUTH_TOKEN}
+                        </div>
+</div>
+<div class="bg-primary text-on-primary p-lg rounded-lg bento-card">
+<div class="flex items-center gap-md mb-md">
+<span class="material-symbols-outlined" data-icon="hub">hub</span>
+<h4 class="font-data-label text-body-md font-bold uppercase">System Topology</h4>
+</div>
+<p class="font-body-sm text-on-primary/80 mb-md">Visual mapping of all 450+ IoT nodes across the EMEA production facilities.</p>
+<a class="text-white font-data-label text-[12px] underline underline-offset-4 hover:text-secondary-fixed transition-colors" href="#">EXPLORE TOPOLOGY MAP</a>
+</div>
+</div>
+</section>
+<!-- Knowledge Base & Anomalies -->
+<section class="space-y-lg">
+<div class="flex justify-between items-end border-b border-border pb-sm">
+<div>
+<h3 class="font-headline-display text-primary text-[28px]">Anomalies Knowledge Base</h3>
+<p class="font-body-sm text-on-surface-variant">Common sensor patterns and recommended operational responses.</p>
+</div>
+<a class="text-primary font-data-label text-data-label hover:underline" href="#">VIEW ALL CATEGORIES</a>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+<!-- Card 1 -->
+<div class="bg-white border border-border rounded-lg overflow-hidden flex flex-col pg-card">
+<div class="h-40 bg-surface-container overflow-hidden">
+<img class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-500" data-alt="A high-precision industrial vibration sensor mounted on a stainless steel dairy motor. The lighting is crisp and cool, highlighting the metallic textures and the clean, sterile environment of a modern food manufacturing plant. Cinematic photography, shallow depth of field focusing on the sensor's status LED which is glowing orange. Professional and technical mood." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD9Rez0t8ZfBGvgDUrBiyvyZmao3oxm59YJYpqtvdD_4okrDOa-lHa6E-X5Gw8RJB0YHhI4VVC3ieTnUniyLxlDc8Ta6F5PoBHDB-HZgu0055eQAOo76VxeKAjCxLqlg9XBTfbAz-a7sfjiiBY1W6prE2BjVzKQMW9WChjyuJHX5IWBpWmEtM32DqBK1FVDEXtx7dsnnmmvG9j2bKWRIP5_IcySnF8ezYxb98TJRXdgO4N9iBrGIoMLNCRuOxCXLhzsSJWZMg3tmoY">
+</div>
+<div class="p-lg space-y-md">
+<div class="flex justify-between items-start">
+<h5 class="font-body-lg font-bold text-primary">Bearing Harmonic Flux</h5>
+<span class="bg-amber-warn/10 text-amber-warn font-data-label text-[10px] px-sm py-xs rounded">MEDIUM RISK</span>
+</div>
+<p class="font-body-sm text-on-surface-variant leading-relaxed">Characterized by high-frequency oscillation in the 12-15kHz range. Usually indicates early-stage lubrication failure in conveyor drives.</p>
+<div class="pt-sm border-t border-border flex items-center justify-between">
+<span class="font-data-label text-[10px] text-outline uppercase">Last Updated: Oct 12</span>
+<button class="text-primary hover:translate-x-1 transition-transform" onclick="pgToast('Opening article: Bearing Harmonic Flux Analysis…', 'info')">
+<span class="material-symbols-outlined" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="bg-white border border-border rounded-lg overflow-hidden flex flex-col pg-card">
+<div class="h-40 bg-surface-container overflow-hidden">
+<img class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-500" data-alt="Technical digital visualization of thermal data overlaid on a production line manifold. The image shows a heat map ranging from cool blue to intense red, indicating thermal variance. The style is advanced data visualization with wireframe overlays, reflecting a high-tech industrial AI environment. The lighting is dark and moody, punctuated by the glowing heat map colors." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDNCOFKUH7sg1hVZEtcNFYkQlkQ8Q3W9gEl7sAGi0S0TXnNWGKQ4rIx8UtL6weucg1dwywhvrwSX70jokWTPLR48oOx2TVULdtCWamdoph7VAQGF-MjoeylcDFbbBTdIfIntoBVN8Tc8jyhmuKHauomjSb0zJcbl7LfhF0Ijoywiw6xwiIid-8ErgB6Qz7FzvyxPt9XwoRR3F0NNhFa0F7o2bT16Kgniw2m7JLh-uoyVXM6zn0VuXBst2DwcbVW2TmszY-92VqM24Y">
+</div>
+<div class="p-lg space-y-md">
+<div class="flex justify-between items-start">
+<h5 class="font-body-lg font-bold text-primary">Thermal Manifold Drift</h5>
+<span class="bg-red-alert/10 text-red-alert font-data-label text-[10px] px-sm py-xs rounded">CRITICAL</span>
+</div>
+<p class="font-body-sm text-on-surface-variant leading-relaxed">Sudden drop in casing temperature despite constant load. Potential thermocouple decalibration or fluid bypass in the cooling jacket.</p>
+<div class="pt-sm border-t border-border flex items-center justify-between">
+<span class="font-data-label text-[10px] text-outline uppercase">Last Updated: Nov 05</span>
+<button class="text-primary hover:translate-x-1 transition-transform" onclick="pgToast('Opening article: Thermal Manifold Drift…', 'info')">
+<span class="material-symbols-outlined" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="bg-white border border-border rounded-lg overflow-hidden flex flex-col pg-card">
+<div class="h-40 bg-surface-container overflow-hidden">
+<img class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-500" data-alt="Macro photography of complex electronic circuit boards with glowing data tracers. The lighting is low-key with neon green accents flowing through the circuits, representing the Project ASTRA neural processing units. The aesthetic is ultra-modern, professional, and slightly futuristic. Focus is sharp on a central microprocessor, with artistic blur in the background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBYtSRj_MtC0dX7-dVC_86WjFbE8OCWRIK_WdSYxi0NFiVTbivDieX8SOeW1h-bpVdu8xPDtdbTEVLsvvILQYYhxvmjV4npWjlHWCXWIINmFxvm24hmdDY_rzzX3Q4iF7llNNzKHc_om4cFdYQJpxnkNeNwAdiWQOaot61Snud4dH6UOU92jYfV35l3disiUItO2ETbYCBJ2gJ2yvjXUlrWuh5itPa0VA7BXDyeIb1jKC0n99nlbDgwqvEUq77KSPeflY1vuED-8j0">
+</div>
+<div class="p-lg space-y-md">
+<div class="flex justify-between items-start">
+<h5 class="font-body-lg font-bold text-primary">Neural Inference Lag</h5>
+<span class="bg-green-good/10 text-green-good font-data-label text-[10px] px-sm py-xs rounded">SYSTEMIC</span>
+</div>
+<p class="font-body-sm text-on-surface-variant leading-relaxed">Processing latency exceeding 450ms. Often linked to high network packet loss or edge-node buffer saturation during peak cycles.</p>
+<div class="pt-sm border-t border-border flex items-center justify-between">
+<span class="font-data-label text-[10px] text-outline uppercase">Last Updated: Nov 14</span>
+<button class="text-primary hover:translate-x-1 transition-transform" onclick="pgToast('Opening article: Neural Inference Lag…', 'info')">
+<span class="material-symbols-outlined" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Contact Technical Lead Section -->
+<section class="grid grid-cols-1 lg:grid-cols-2 gap-xxl py-xl">
+<div class="space-y-lg">
+<h3 class="font-headline-display text-primary text-[36px]">Human Intervention</h3>
+<p class="font-body-lg text-on-surface-variant">
+                        Our AI models are precise, but complex operational contexts sometimes require a human expert. Connect with our Technical Lead or On-site Engineer for immediate assistance.
+                    </p>
+<div class="space-y-md">
+<div class="flex items-center gap-lg p-md bg-white border border-border rounded-lg">
+<img class="w-16 h-16 rounded-full object-cover border-2 border-primary-fixed" data-alt="Professional headshot of a senior industrial engineer. The setting is a bright, modern office with soft architectural lighting. The person is wearing a professional button-down shirt and looking confident and approachable. Minimalist corporate portrait style with a clean background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCgf9WhAF953IyaTiQdP2q5JAoRJAeUswiC3p-_utkV1HquscAFpKA7-2aOkR91K3wP6dXSlfNnhLOtk1QoJBy-e9ndAFS0OwH9mwQ23mb_LzDLDx8gFOGsTR5hDEiOzq_Y47G5RfO68R5ziehTv0NDnI5uqqoz2l4ZNhoYXKEgUpRKQUBiI0k1F8Q_FqcGplqDFZXT9eBzvWFpTO_snIRUDmw5nYbzbOabtrGI-cAOVJ88IMkt0KlisGsAmdw1eVTczjz7hdTRn_Q">
+<div>
+<h6 class="font-body-md font-bold text-primary">Dr. Elias Thorne</h6>
+<p class="font-data-label text-[12px] text-outline uppercase">Lead AI Solutions Architect</p>
+<p class="font-body-sm text-on-surface-variant mt-1">Specialization: Predictive Maintenance &amp; IoT Security</p>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-md">
+<div class="p-md bg-surface-container-low rounded-lg border border-border">
+<span class="material-symbols-outlined text-primary mb-2" data-icon="mail">mail</span>
+<p class="font-data-label text-[11px] text-outline uppercase">Technical Support</p>
+<p class="font-body-sm font-medium text-primary">support.emea@Project ASTRA.ai</p>
+</div>
+<div class="p-md bg-surface-container-low rounded-lg border border-border">
+<span class="material-symbols-outlined text-primary mb-2" data-icon="call">call</span>
+<p class="font-data-label text-[11px] text-outline uppercase">Priority Hot-Line</p>
+<p class="font-body-sm font-medium text-primary">+353 (0) 1 678 9000</p>
+</div>
+</div>
+</div>
+</div>
+<div class="bg-white border border-border p-xl rounded-lg shadow-sm">
+<h4 class="font-data-label text-body-md font-bold uppercase text-primary mb-lg">Submit Technical Inquiry</h4>
+<form class="space-y-lg" onsubmit="event.preventDefault(); pgToast('Ticket submitted — our technical team will respond within 2 hours', 'success')">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-md">
+<div class="space-y-xs">
+<label class="font-data-label text-[11px] text-outline uppercase">Full Name</label>
+<input class="w-full bg-surface-container-low border border-border rounded-lg px-md py-sm focus:ring-primary focus:border-primary font-body-sm" placeholder="John Doe" type="text">
+</div>
+<div class="space-y-xs">
+<label class="font-data-label text-[11px] text-outline uppercase">Facility / Line ID</label>
+<input class="w-full bg-surface-container-low border border-border rounded-lg px-md py-sm focus:ring-primary focus:border-primary font-body-sm" placeholder="EMEA-DUB-L4" type="text">
+</div>
+</div>
+<div class="space-y-xs">
+<label class="font-data-label text-[11px] text-outline uppercase">Category</label>
+<select class="w-full bg-surface-container-low border border-border rounded-lg px-md py-sm focus:ring-primary focus:border-primary font-body-sm">
+<option>Sensor Calibration Error</option>
+<option>AI Prediction Validation</option>
+<option>API / Integration Issue</option>
+<option>Maintenance Scheduling Conflict</option>
+<option>Other</option>
+</select>
+</div>
+<div class="space-y-xs">
+<label class="font-data-label text-[11px] text-outline uppercase">Detailed Description</label>
+<textarea class="w-full bg-surface-container-low border border-border rounded-lg px-md py-sm focus:ring-primary focus:border-primary font-body-sm" placeholder="Describe the anomaly or technical challenge..." rows="4"></textarea>
+</div>
+<button class="w-full bg-primary text-white font-data-label text-data-label px-lg py-md rounded-lg hover:bg-tertiary transition-all active:scale-[0.98] uppercase tracking-widest shadow-md" type="submit">
+                            Send Ticket to Technical Lead
+                        </button>
+</form>
+</div>
+</section>
+<!-- Footer Stats (Technical Content) -->
+<footer class="pt-xl border-t border-border flex flex-col md:flex-row justify-between items-center gap-lg">
+<div class="flex items-center gap-xl">
+<div class="text-center md:text-left">
+<p class="font-data-label text-[10px] text-outline uppercase">Docs Coverage</p>
+<p class="font-data-value text-body-lg text-primary">98.4%</p>
+</div>
+<div class="text-center md:text-left">
+<p class="font-data-label text-[10px] text-outline uppercase">Mean Response Time</p>
+<p class="font-data-value text-body-lg text-primary">12m 45s</p>
+</div>
+<div class="text-center md:text-left">
+<p class="font-data-label text-[10px] text-outline uppercase">API Uptime</p>
+<p class="font-data-value text-body-lg text-green-good">99.99%</p>
+</div>
+</div>
+<p class="font-body-sm text-on-surface-variant/60">© 2024 Project ASTRA. Confidential Industrial Information.</p>
+</footer>
+</div>
+</main>
+<!-- Micro-interaction Script -->
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Form submission micro-interaction
+            const form = document.querySelector('form');
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const btn = form.querySelector('button');
+                const originalText = btn.innerHTML;
+                btn.innerHTML = '<span class="material-symbols-outlined animate-spin" data-icon="progress_activity">progress_activity</span> Sending...';
+                btn.classList.add('opacity-80');
+                
+                setTimeout(() => {
+                    btn.innerHTML = '<span class="material-symbols-outlined" data-icon="check_circle">check_circle</span> Inquiry Received';
+                    btn.classList.remove('bg-primary');
+                    btn.classList.add('bg-green-good');
+                    
+                    setTimeout(() => {
+                        btn.innerHTML = originalText;
+                        btn.classList.add('bg-primary');
+                        btn.classList.remove('bg-green-good', 'opacity-80');
+                        form.reset();
+                    }, 3000);
+                }, 1500);
+            });
+
+            // Navigation Active State Logic is already applied in the HTML via classes
+        });
+    </script>
+<script src="js/sidebar.js"></script>
+<script>renderSidebar('support');</script>
+</body></html>

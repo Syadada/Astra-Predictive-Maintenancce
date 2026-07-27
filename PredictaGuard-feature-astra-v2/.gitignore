@@ -1,0 +1,34 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+env/
+
+# Raw datasets (third-party, licensed separately — see README for sources)
+/dataset/
+
+# Generated ML artifacts (reproducible via ml/src scripts — see ml/README.md)
+/ml/data/processed/*.npz
+/ml/data/processed/*.joblib
+/ml/data/synthetic/
+/ml/models/*.joblib
+
+# Backup files
+*.bak
+*.bak-*
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+ml/get-pip.py
+
+# Database files
+*.db
+*.sqlite
+
+# Local secrets overrides
+ml/src/api/local_config.py

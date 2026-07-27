@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Project ASTRA | Work Orders Management (CRUD)</title>
+  
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&amp;family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;700&amp;display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+  
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#003720",
+            "secondary": "#1c6b45",
+            "secondary-container": "#a3f0bf",
+            "primary-container": "#1d4e35",
+            "on-primary-container": "#8bbe9e",
+            "surface": "#FFFFFF",
+            "surface-container-low": "#f4f3f0",
+            "surface-container": "#efeeeb",
+            "surface-container-high": "#e9e8e5",
+            "border": "#E2DDD6",
+            "background": "#faf9f6",
+            "on-background": "#1b1c1a",
+            "on-surface-variant": "#414943",
+            "on-surface": "#1b1c1a",
+            "ink-muted": "#6B6860",
+            "ink": "#1A1A18",
+            "green-good": "#27AE60",
+            "green-light": "#EAF2EC",
+            "amber-warn": "#E67E22",
+            "red-alert": "#C0392B"
+          },
+          borderRadius: {
+            "DEFAULT": "0.125rem",
+            "lg": "0.25rem",
+            "xl": "0.5rem",
+            "full": "0.75rem"
+          },
+          spacing: {
+            "xxl": "96px",
+            "md": "16px",
+            "margin-mobile": "16px",
+            "xs": "4px",
+            "base": "4px",
+            "sm": "8px",
+            "xl": "48px",
+            "margin-desktop": "64px",
+            "lg": "24px",
+            "gutter": "24px"
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      background-color: #faf9f6;
+      color: #1b1c1a;
+      -webkit-font-smoothing: antialiased;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 4px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #717972;
+      border-radius: 10px;
+    }
+    .modal-backdrop {
+      background: rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(2px);
+    }
+  </style>
+  <link rel="stylesheet" href="css/styles.css">
+  <script src="js/interactions.js"></script>
+</head>
+<body class="bg-background text-on-background font-body-md flex min-h-screen overflow-hidden">
+
+  <!-- Main Canvas -->
+  <main class="flex-1 md:ml-64 min-h-screen bg-background overflow-y-auto custom-scrollbar">
+    
+    <!-- TopAppBar -->
+    <header class="flex justify-between items-center px-lg h-16 w-full z-[100] backdrop-blur-md border-b border-border bg-surface/80 sticky top-0">
+      <div class="flex items-center gap-md md:hidden">
+        <span class="material-symbols-outlined text-primary cursor-pointer" data-sidebar-toggle aria-label="Open navigation menu">menu</span>
+        <span class="font-hero-lg text-body-lg text-primary font-bold">Project ASTRA</span>
+      </div>
+      <div class="hidden md:flex items-center gap-md">
+        <h2 class="font-hero-lg text-body-lg text-primary font-bold">Maintenance Center</h2>
+        <div class="h-4 w-[1px] bg-outline-variant mx-sm"></div>
+        <p class="font-body-sm text-body-sm text-on-surface-variant italic">Work Order Management Console</p>
+      </div>
+      <div class="flex items-center gap-md">
+        <button onclick="location.href='maintenance.html'" class="px-md py-1.5 border border-primary text-primary font-data-label text-[10px] uppercase font-bold rounded hover:bg-green-light transition-all flex items-center gap-1">
+          <span class="material-symbols-outlined text-sm">arrow_back</span> Return to Planning
+        </button>
+      </div>
+    </header>
+
+    <!-- Page Content -->
+    <div class="p-margin-desktop space-y-xl max-w-[1200px] mx-auto">
+      
+      <!-- Page Header -->
+      <section class="flex flex-col md:flex-row justify-between items-start md:items-center gap-lg">
+        <div>
+          <h2 class="font-headline-display text-headline-display text-primary">Work Orders Control Panel</h2>
+          <p class="font-body-md text-on-surface-variant max-w-2xl mt-2">Perform creation, updates, and cancellations on the live Postgres record queue.</p>
+        </div>
+      </section>
+
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-gutter">
+        
+        <!-- CRUD Left Card: Creation Form -->
+        <div class="bg-surface border border-border p-lg rounded-xl flex flex-col gap-lg h-fit">
+          <div class="flex items-center gap-sm">
+            <span class="material-symbols-outlined text-primary">add_circle</span>
+            <h3 class="font-body-lg font-bold text-primary">Create Work Order</h3>
+          </div>
+
+          <form id="createWorkOrderForm" class="space-y-md">
+            <div>
+              <label class="block font-data-label text-[10px] text-on-surface-variant mb-1 uppercase">Select Machine Asset</label>
+              <select id="asset_select" class="w-full bg-surface-container-low border-border rounded-lg text-ink font-body-sm focus:ring-primary focus:border-primary px-md py-sm">
+                <option value="MTR-01|Conveyor Drive">MTR-01 (Conveyor Drive)</option>
+                <option value="MTR-02|Compressor">MTR-02 (Compressor)</option>
+                <option value="MTR-03|Fan/Blower">MTR-03 (Fan/Blower)</option>
+                <option value="MTR-04|Pump">MTR-04 (Pump)</option>
+                <option value="MTR-05|Mixer">MTR-05 (Mixer)</option>
+                <option value="MTR-06|Spindle">MTR-06 (Spindle)</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block font-data-label text-[10px] text-on-surface-variant mb-1 uppercase">Assign Technician</label>
+              <select id="assigned_tech_select" class="w-full bg-surface-container-low border-border rounded-lg text-ink font-body-sm focus:ring-primary focus:border-primary px-md py-sm">
+                <option value="J. Sutherland">J. Sutherland (Senior Analyst)</option>
+                <option value="M. Rossi">M. Rossi (Electrical Systems)</option>
+                <option value="S. O'Brien">S. O'Brien (Mechanical Reliability)</option>
+                <option value="H. Tanaka">H. Tanaka (Automation Specialist)</option>
+                <option value="Unassigned">Unassigned</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block font-data-label text-[10px] text-on-surface-variant mb-1 uppercase">Maintenance Description</label>
+              <textarea id="wo_description" required rows="4" placeholder="Describe the inspection, bearing swaps, or calibration tasks required..." 
+                        class="w-full bg-surface-container-low border-border rounded-lg text-ink font-body-sm focus:ring-primary focus:border-primary px-md py-sm"></textarea>
+            </div>
+
+            <button type="submit" class="w-full py-3 bg-primary text-white font-body-sm font-bold rounded-lg hover:bg-opacity-95 transition-all flex items-center justify-center gap-2">
+              <span class="material-symbols-outlined text-sm">assignment_turned_in</span>
+              Dispatch Work Order
+            </button>
+          </form>
+        </div>
+
+        <!-- CRUD Right List: Manage Work Orders Table -->
+        <div class="lg:col-span-2 bg-surface border border-border p-lg rounded-xl flex flex-col gap-lg overflow-hidden">
+          <div class="flex justify-between items-center">
+            <div class="flex items-center gap-sm">
+              <span class="material-symbols-outlined text-primary">view_list</span>
+              <h3 class="font-body-lg font-bold text-primary">Active Database Queue</h3>
+            </div>
+            <button onclick="loadWorkOrders()" class="p-1 text-primary hover:bg-green-light rounded-lg transition-colors">
+              <span class="material-symbols-outlined">refresh</span>
+            </button>
+          </div>
+
+          <!-- Table Container -->
+          <div class="w-full overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+              <thead>
+                <tr class="border-b border-border/80 text-[11px] font-data-label text-ink-muted uppercase">
+                  <th class="py-sm px-md">ID</th>
+                  <th class="py-sm px-md">Asset &amp; Task Description</th>
+                  <th class="py-sm px-md">Assigned Tech</th>
+                  <th class="py-sm px-md">Status</th>
+                  <th class="py-sm px-md text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="work-orders-tbody" class="text-sm">
+                <!-- Loaded dynamically -->
+                <tr>
+                  <td colspan="5" class="p-md text-center text-ink-muted italic">Loading live records...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Edit Work Order Modal -->
+  <div id="editModal" class="fixed inset-0 z-[200] hidden items-center justify-center p-md modal-backdrop">
+    <div class="bg-white border border-border rounded-xl p-lg max-w-md w-full shadow-2xl flex flex-col gap-lg text-on-background">
+      <div class="flex justify-between items-center border-b border-border pb-md">
+        <h4 class="font-body-lg font-bold text-primary flex items-center gap-sm">
+          <span class="material-symbols-outlined text-primary">edit_note</span>
+          Edit Work Order Details
+        </h4>
+        <span class="material-symbols-outlined cursor-pointer hover:text-red-alert" onclick="closeEditModal()">close</span>
+      </div>
+
+      <form id="editWorkOrderForm" class="space-y-md">
+        <input type="hidden" id="edit_wo_id">
+        <div>
+          <label class="block font-data-label text-[10px] text-on-surface-variant mb-1 uppercase">Asset</label>
+          <input type="text" id="edit_wo_asset" disabled class="w-full bg-surface-container-high border-border rounded-lg text-ink-muted font-body-sm px-md py-sm cursor-not-allowed">
+        </div>
+
+        <div>
+          <label class="block font-data-label text-[10px] text-on-surface-variant mb-1 uppercase">Task Description</label>
+          <textarea id="edit_wo_description" required rows="3" class="w-full bg-surface-container-low border-border rounded-lg text-ink font-body-sm focus:ring-primary focus:border-primary px-md py-sm"></textarea>
+        </div>
+
+        <div>
+          <label class="block font-data-label text-[10px] text-on-surface-variant mb-1 uppercase">Assign Technician</label>
+          <select id="edit_wo_tech" class="w-full bg-surface-container-low border-border rounded-lg text-ink font-body-sm focus:ring-primary focus:border-primary px-md py-sm">
+            <option value="J. Sutherland">J. Sutherland (Senior Analyst)</option>
+            <option value="M. Rossi">M. Rossi (Electrical Systems)</option>
+            <option value="S. O'Brien">S. O'Brien (Mechanical Reliability)</option>
+            <option value="H. Tanaka">H. Tanaka (Automation Specialist)</option>
+            <option value="Unassigned">Unassigned</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block font-data-label text-[10px] text-on-surface-variant mb-1 uppercase">Task Status</label>
+          <select id="edit_wo_status" class="w-full bg-surface-container-low border-border rounded-lg text-ink font-body-sm focus:ring-primary focus:border-primary px-md py-sm">
+            <option value="Pending">Pending</option>
+            <option value="In Progress">In Progress</option>
+            <option value="Completed">Completed</option>
+          </select>
+        </div>
+
+        <div class="flex justify-end gap-sm pt-md border-t border-border">
+          <button type="button" onclick="closeEditModal()" class="px-lg py-sm bg-white border border-border text-primary font-body-sm font-bold rounded hover:bg-surface-container-low transition-all">Cancel</button>
+          <button type="submit" class="px-lg py-sm bg-primary text-white font-body-sm font-bold rounded hover:bg-opacity-90 transition-all">Save Changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="js/api_client.js"></script>
+  <script>
+    const apiBase = window.location.protocol === 'file:' ? 'http://127.0.0.1:8000' : '';
+
+    const techAvatars = {
+      "J. Sutherland": "https://lh3.googleusercontent.com/aida-public/AB6AXuC0fnVbVzCtrz_Td3kG-_Q0VXR4yDDY6FdCkkmBIaBFJ0u4TLMxNKpK3bhM4KQ1PAToqgb_VB85STToSweG9g-KBrct4wuJDnuru0eDFMOcmp_D0Pxx_UqSrk0sYCfqKm3Nh5fNiUtk1xiYu9iDH8naW3jaoowT9FdXnNpTJf6YNXxRTVd6_k-s_t8PiL7hpmS9FquBEngd7m4P9C7Qu4P_gRag6SCapwbyYS_fWvS8OesBRKf448vyV9MQ7O_dg5hsokwVfmKC_no",
+      "M. Rossi": "https://lh3.googleusercontent.com/aida-public/AB6AXu_IGn_uOujdee89SjR-E9S2OpWrgUxfzN96P8eaWiSNE_1nX_h98zIrf_b9Z9tSCdnUXvt8cRCjd5uTW6r0Z_memym7IDsm1I_6xf89a4lUzssgMgP1QSvTjI95vdk4clXcfh6cSS6rRjJj-pvEbqfREIRdvuWtAKqPBU1CxUOfQ1bMPKM5BxaqXfVzdW8uoqo6LpOqShl0AlrEzLmljFiKLrET8w9P9PT3TDshcAJQk4_gCCic2iaPVRHdjDx-F4R7JzGHY7pcOU",
+      "S. O'Brien": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=256&h=256",
+      "H. Tanaka": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=256&h=256",
+      "Unassigned": "https://lh3.googleusercontent.com/aida-public/AB6AXuAJB3nF963ZDZN5AzByGsqb2MxVyIvYYJZPDV3NOPF900ug_3y-d7MEHM9IcmdVDLg62EThO7ZZgtVfPH2qBLypFdU6CntX3pU3T1JaCfwVtgGdlrtJC5dzHHTfJxSNG-UN1NvfxKBe1DzYgQaD3aqaZg3Xxnt5j4CGxyaLfpyjHJO3tUUkGQIBvHZZAZPScXVH5c1S1afsZtZtXFKb6SEtVWsYVchjtnhJNUrqnmceziBRB5_XQGZV4hDOih0mFzLsvnv-I80nDtU"
+    };
+
+    // Load active records
+    async function loadWorkOrders() {
+      const tbody = document.getElementById('work-orders-tbody');
+      if (!tbody) return;
+
+      try {
+        let apiWOs = [];
+      if (typeof pgApiAvailable !== 'undefined' && pgApiAvailable()) {
+        try {
+          const data = await pgFetch('/api/workorders');
+          if (data && data.work_orders) {
+            apiWOs = data.work_orders;
+          }
+        } catch (err) {
+          console.warn('Failed to load work orders from API:', err.message);
+        }
+      }
+
+      // Merge with local storage work orders
+      let localWOs = [];
+      try {
+        localWOs = JSON.parse(localStorage.getItem('localWorkOrders') || '[]');
+        if (!Array.isArray(localWOs)) localWOs = [];
+      } catch (e) {
+        console.error('Error parsing localWorkOrders:', e);
+        localWOs = [];
+      }
+      const mergedWOs = [...localWOs];
+
+      // Append API work orders if not already in local storage list (by ID)
+      apiWOs.forEach(function(wo) {
+        if (!mergedWOs.some(item => String(item.id || '') === String(wo.id || ''))) {
+          mergedWOs.push(wo);
+        }
+      });
+
+      if (mergedWOs.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" class="p-md text-ink-muted italic text-center">No active work orders</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = mergedWOs.map(wo => {
+        let statusLabel = "";
+        if (wo.status === "In Progress") {
+            statusLabel = `<span class="inline-flex items-center gap-xs text-[11px] font-bold text-amber-warn px-sm py-xs bg-amber-warn/10 rounded-full"><span class="w-1.5 h-1.5 rounded-full bg-amber-warn animate-pulse"></span>In Progress</span>`;
+          } else if (wo.status === "Completed") {
+            statusLabel = `<span class="inline-flex items-center gap-xs text-[11px] font-bold text-green-good px-sm py-xs bg-green-good/10 rounded-full"><span class="w-1.5 h-1.5 rounded-full bg-green-good"></span>Completed</span>`;
+          } else {
+            statusLabel = `<span class="inline-flex items-center gap-xs text-[11px] font-bold text-ink-muted px-sm py-xs bg-surface-container rounded-full"><span class="w-1.5 h-1.5 rounded-full bg-outline"></span>Pending</span>`;
+          }
+
+          const techName = wo.assigned_tech || 'Unassigned';
+          const avatar = techAvatars[techName] || techAvatars["Unassigned"];
+
+          return `
+            <tr class="border-b border-border/40 hover:bg-green-light/20 transition-colors">
+              <td class="p-md font-data-value text-data-value text-primary font-bold">#${wo.id}</td>
+              <td class="p-md">
+                <span class="font-bold text-primary block">${wo.asset_name || 'Induction Motor'}</span>
+                <span class="text-xs text-on-surface-variant">${wo.description || ''}</span>
+                <span class="block text-[10px] text-ink-muted mt-1">Dispatched: ${wo.created_at || ''}</span>
+              </td>
+              <td class="p-md flex items-center gap-sm mt-3 border-none">
+                <img alt="Tech" class="w-6 h-6 rounded-full" src="${avatar}">
+                <span>${techName}</span>
+              </td>
+              <td class="p-md">${statusLabel}</td>
+              <td class="p-md text-right">
+                <div class="flex gap-2 justify-end">
+                  <button onclick="openEditModal('${wo.id}', '${(wo.asset_name || 'Induction Motor').replace(/'/g, "\\'")}', '${(wo.description || '').replace(/'/g, "\\'")}', '${(techName || 'Unassigned').replace(/'/g, "\\'")}', '${wo.status || 'Pending'}')" 
+                          class="p-1 hover:bg-green-light text-secondary rounded transition-colors" title="Edit">
+                    <span class="material-symbols-outlined text-sm">edit</span>
+                  </button>
+                  <button onclick="deleteWorkOrder('${wo.id}')" 
+                          class="p-1 hover:bg-red-500/10 text-red-alert rounded transition-colors" title="Delete">
+                    <span class="material-symbols-outlined text-sm">delete</span>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          `;
+        }).join('\n');
+      } catch (err) {
+        console.error('Failed to load work orders:', err);
+        pgToast('Error loading work orders: ' + err.message, 'error');
+      }
+    }
+
+    // Create a new work order
+    document.getElementById('createWorkOrderForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const assetVal = document.getElementById('asset_select').value.split('|');
+      const assetId = assetVal[0];
+      const assetName = assetVal[1];
+      const assignedTech = document.getElementById('assigned_tech_select').value;
+      const description = document.getElementById('wo_description').value.trim();
+
+      pgToast('Submitting work order...', 'info', 1500);
+
+      try {
+        const res = await fetch(apiBase + '/api/workorders', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ asset_id: assetId, asset_name: assetName, description: description, assigned_tech: assignedTech })
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          // Save to local storage for robust cross-page instant loading
+          var localWOs = JSON.parse(localStorage.getItem('localWorkOrders') || '[]');
+          localWOs.unshift({
+            id: data.id || 'WO-' + Date.now().toString().slice(-4),
+            asset_id: assetId,
+            equipment_id: assetId,
+            asset_name: assetName,
+            description: description,
+            assigned_tech: assignedTech,
+            assigned_to: assignedTech,
+            status: 'Pending',
+            created_at: new Date().toISOString()
+          });
+          localStorage.setItem('localWorkOrders', JSON.stringify(localWOs));
+
+          pgToast('Work order created and dispatched successfully!', 'success');
+          document.getElementById('wo_description').value = '';
+          loadWorkOrders();
+        } else {
+          throw new Error('HTTP ' + res.status);
+        }
+      } catch (err) {
+        console.error('Failed to create work order:', err);
+        
+        // Local offline fallback
+        var mockId = 'WO-' + Math.floor(1000 + Math.random() * 9000);
+        var localWOs = JSON.parse(localStorage.getItem('localWorkOrders') || '[]');
+        localWOs.unshift({
+          id: mockId,
+          asset_id: assetId,
+          equipment_id: assetId,
+          asset_name: assetName,
+          description: description,
+          assigned_tech: assignedTech,
+          assigned_to: assignedTech,
+          status: 'Pending',
+          created_at: new Date().toISOString()
+        });
+        localStorage.setItem('localWorkOrders', JSON.stringify(localWOs));
+
+        pgToast(`Server offline. Saved local work order #${mockId}!`, 'info');
+        document.getElementById('wo_description').value = '';
+        loadWorkOrders();
+      }
+    });
+
+    // Edit modal management
+    function openEditModal(id, assetName, description, assignedTech, status) {
+      document.getElementById('edit_wo_id').value = id;
+      document.getElementById('edit_wo_asset').value = assetName;
+      document.getElementById('edit_wo_description').value = description;
+      document.getElementById('edit_wo_tech').value = assignedTech;
+      document.getElementById('edit_wo_status').value = status;
+      
+      const modal = document.getElementById('editModal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closeEditModal() {
+      const modal = document.getElementById('editModal');
+      modal.classList.remove('flex');
+      modal.classList.add('hidden');
+    }
+
+    // Save edited changes
+    document.getElementById('editWorkOrderForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const id = document.getElementById('edit_wo_id').value;
+      const description = document.getElementById('edit_wo_description').value.trim();
+      const assignedTech = document.getElementById('edit_wo_tech').value;
+      const status = document.getElementById('edit_wo_status').value;
+
+      pgToast('Saving work order changes...', 'info', 1500);
+
+      try {
+        const res = await fetch(apiBase + `/api/workorders/${id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ status: status, description: description, assigned_tech: assignedTech })
+        });
+
+        if (res.ok) {
+          pgToast('Changes saved successfully!', 'success');
+          closeEditModal();
+          loadWorkOrders();
+        } else {
+          throw new Error('HTTP ' + res.status);
+        }
+      } catch (err) {
+        pgToast('Failed to save changes: ' + err.message, 'error');
+      }
+    });
+
+    // Delete work order
+    function deleteWorkOrder(id) {
+      pgConfirm(`Are you sure you want to cancel and delete Work Order #${id}?`, async () => {
+        pgToast(`Deleting work order #${id}...`, 'info', 1500);
+        try {
+          const res = await fetch(apiBase + `/api/workorders/${id}`, {
+            method: 'DELETE'
+          });
+
+          if (res.ok) {
+            pgToast('Work order deleted successfully!', 'success');
+            loadWorkOrders();
+          } else {
+            throw new Error('HTTP ' + res.status);
+          }
+        } catch (err) {
+          pgToast('Failed to delete work order: ' + err.message, 'error');
+        }
+      }, { destructive: true });
+    }
+
+    // Initial triggers
+    loadWorkOrders();
+  </script>
+
+  <script src="js/sidebar.js"></script>
+  <script>renderSidebar('maintenance_crud');</script>
+</body>
+</html>

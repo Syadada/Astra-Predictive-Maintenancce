@@ -1,0 +1,216 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+:root {
+  --bg-main: #faf9f6;
+  --bg-sidebar: #003720;
+  --bg-card: #ffffff;
+  --bg-card-hover: #f4f3f0;
+  --border-color: #E2DDD6;
+  --border-glow: #38684d;
+  
+  --text-main: #1A1A18;
+  --text-muted: #6B6860;
+  --text-bright: #003720;
+  
+  --primary: #1c6b45;
+  --primary-glow: rgba(28, 107, 69, 0.2);
+  --success: #27AE60;
+  --success-glow: rgba(39, 174, 96, 0.1);
+  --warning: #E67E22;
+  --warning-glow: rgba(230, 126, 34, 0.1);
+  --danger: #C0392B;
+  --danger-glow: rgba(192, 57, 43, 0.1);
+  
+  font-family: 'Inter', sans-serif;
+  color-scheme: light;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(28, 107, 69, 0.3) transparent;
+}
+
+/* Custom Scrollbars */
+*::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+*::-webkit-scrollbar-thumb {
+  background: rgba(28, 107, 69, 0.3);
+  border-radius: 4px;
+}
+*::-webkit-scrollbar-thumb:hover {
+  background: rgba(28, 107, 69, 0.6);
+}
+
+body {
+  background-color: var(--bg-main);
+  color: var(--text-main);
+  overflow-x: hidden;
+}
+
+/* Glassmorphism panel replacement for light theme cards */
+.glass-panel {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  transition: all 0.2s ease-in-out;
+}
+
+.glass-panel:hover {
+  border-color: var(--border-glow);
+  background: var(--bg-card-hover);
+  box-shadow: 0 4px 12px rgba(28, 107, 69, 0.08);
+}
+
+.glow-card-success {
+  box-shadow: 0 0 10px rgba(39, 174, 96, 0.05);
+  border-left: 4px solid var(--success);
+}
+.glow-card-warning {
+  box-shadow: 0 0 10px rgba(230, 126, 34, 0.05);
+  border-left: 4px solid var(--warning);
+}
+.glow-card-danger {
+  box-shadow: 0 0 10px rgba(192, 57, 43, 0.05);
+  border-left: 4px solid var(--danger);
+}
+
+/* Flexbox layouts */
+.app-container {
+  display: flex;
+  min-height: 100vh;
+}
+
+.sidebar {
+  width: 260px;
+  background-color: var(--bg-sidebar);
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  position: sticky;
+  top: 0;
+  color: #FFFFFF;
+}
+
+.main-content {
+  flex: 1;
+  padding: 30px;
+  overflow-y: auto;
+}
+
+/* Buttons */
+.btn {
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: #FFFFFF;
+}
+.btn-primary:hover {
+  background: #155034;
+  box-shadow: 0 0 8px var(--primary-glow);
+}
+
+.btn-secondary {
+  background: #FFFFFF;
+  border-color: var(--border-color);
+  color: var(--text-main);
+}
+.btn-secondary:hover {
+  background: #efeeeb;
+}
+
+.btn-danger {
+  background: var(--danger);
+  color: #FFFFFF;
+}
+.btn-danger:hover {
+  background: #9D291D;
+  box-shadow: 0 0 8px rgba(192, 57, 43, 0.3);
+}
+
+/* Badges */
+.badge {
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.badge-normal {
+  background: rgba(39, 174, 96, 0.1);
+  color: #27AE60;
+  border: 1px solid rgba(39, 174, 96, 0.2);
+}
+
+.badge-warning {
+  background: rgba(230, 126, 34, 0.1);
+  color: #E67E22;
+  border: 1px solid rgba(230, 126, 34, 0.2);
+}
+
+.badge-critical {
+  background: rgba(192, 57, 43, 0.1);
+  color: #C0392B;
+  border: 1px solid rgba(192, 57, 43, 0.2);
+}
+
+/* SVG Chart styles */
+.chart-line {
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 0;
+  animation: drawLine 2.5s ease-out forwards;
+}
+
+@keyframes drawLine {
+  from {
+    stroke-dashoffset: 1000;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* Sidebar Custom Buttons */
+.sidebar .btn-secondary {
+  background: transparent;
+  border-color: transparent;
+  color: rgba(255, 255, 255, 0.75);
+}
+.sidebar .btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #FFFFFF;
+}
+.sidebar .btn-primary {
+  background: rgba(255, 255, 255, 0.15) !important;
+  color: #FFFFFF !important;
+  border-color: rgba(255, 255, 255, 0.2) !important;
+  box-shadow: none !important;
+}
+.sidebar .btn-primary:hover {
+  background: rgba(255, 255, 255, 0.25) !important;
+}
+

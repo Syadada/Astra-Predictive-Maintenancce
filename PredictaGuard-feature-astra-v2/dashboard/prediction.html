@@ -1,0 +1,738 @@
+<!DOCTYPE html><html class="light" lang="en" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Project ASTRA | Predictions</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Playfair+Display:wght@700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "tertiary-fixed": "#8df9b1",
+                    "error": "#ba1a1a",
+                    "on-secondary": "#ffffff",
+                    "surface": "#FFFFFF",
+                    "on-error-container": "#93000a",
+                    "surface-container-lowest": "#ffffff",
+                    "ink-muted": "#6B6860",
+                    "amber-warn": "#E67E22",
+                    "tertiary-container": "#00502a",
+                    "primary": "#003720",
+                    "on-surface-variant": "#414943",
+                    "surface-container": "#efeeeb",
+                    "surface-container-highest": "#e3e2df",
+                    "inverse-surface": "#2f312f",
+                    "mono-data": "#2C3E50",
+                    "inverse-primary": "#9ed2b1",
+                    "background": "#faf9f6",
+                    "green-light": "#EAF2EC",
+                    "error-container": "#ffdad6",
+                    "on-primary-fixed": "#002111",
+                    "secondary": "#1c6b45",
+                    "surface-container-low": "#f4f3f0",
+                    "surface-variant": "#e3e2df",
+                    "surface-container-high": "#e9e8e5",
+                    "tertiary-fixed-dim": "#71dc96",
+                    "surface-bright": "#faf9f6",
+                    "on-tertiary": "#ffffff",
+                    "border": "#E2DDD6",
+                    "tertiary": "#00371b",
+                    "red-alert": "#C0392B",
+                    "on-secondary-fixed": "#002110",
+                    "green-good": "#27AE60",
+                    "on-error": "#ffffff",
+                    "on-surface": "#1b1c1a",
+                    "on-background": "#1b1c1a",
+                    "on-secondary-fixed-variant": "#005230",
+                    "on-tertiary-fixed-variant": "#00522b",
+                    "on-primary-container": "#8bbe9e",
+                    "secondary-fixed-dim": "#8ad7a7",
+                    "primary-fixed-dim": "#9ed2b1",
+                    "outline-variant": "#c0c9c1",
+                    "primary-fixed": "#baefcc",
+                    "outline": "#717972",
+                    "secondary-container": "#a3f0bf",
+                    "secondary-fixed": "#a6f3c2",
+                    "inverse-on-surface": "#f2f1ee",
+                    "ink": "#1A1A18",
+                    "surface-tint": "#38684d",
+                    "on-tertiary-fixed": "#00210e",
+                    "on-secondary-container": "#227049",
+                    "on-tertiary-container": "#5cc784",
+                    "on-primary": "#ffffff",
+                    "on-primary-fixed-variant": "#1f5036",
+                    "surface-dim": "#dbdad7",
+                    "primary-container": "#1d4e35"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "margin-desktop": "64px",
+                    "xl": "48px",
+                    "base": "4px",
+                    "sm": "8px",
+                    "md": "16px",
+                    "margin-mobile": "16px",
+                    "lg": "24px",
+                    "xxl": "96px",
+                    "xs": "4px",
+                    "gutter": "24px"
+            },
+            "fontFamily": {
+                    "headline-display": ["Playfair Display"],
+                    "data-label": ["JetBrains Mono"],
+                    "body-sm": ["Inter"],
+                    "data-display": ["JetBrains Mono"],
+                    "data-value": ["JetBrains Mono"],
+                    "body-lg": ["Inter"],
+                    "hero-lg": ["Playfair Display"],
+                    "hero-lg-mobile": ["Playfair Display"],
+                    "body-md": ["Inter"]
+            },
+            "fontSize": {
+                    "headline-display": ["40px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                    "data-label": ["11px", {"lineHeight": "1.0", "letterSpacing": "0.05em", "fontWeight": "400"}],
+                    "body-sm": ["14px", {"lineHeight": "1.4", "fontWeight": "500"}],
+                    "data-display": ["48px", {"lineHeight": "1.0", "letterSpacing": "-0.03em", "fontWeight": "500"}],
+                    "data-value": ["14px", {"lineHeight": "1.0", "fontWeight": "500"}],
+                    "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                    "hero-lg": ["68px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "hero-lg-mobile": ["42px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                    "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .active-nav-item { transition: all 0.2s ease-in-out; }
+        input[type=range] { -webkit-appearance: none; background: transparent; }
+        input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 4px; cursor: pointer; background: #414943; border-radius: 2px; }
+        input[type=range]::-webkit-slider-thumb { border: none; height: 16px; width: 16px; border-radius: 50%; background: #9ed2b1; cursor: pointer; -webkit-appearance: none; margin-top: -6px; }
+        .simulator-dark { background-color: #0d1110; border: 1px solid #1f2926; }
+        @keyframes pulse-red { 0% { box-shadow: 0 0 0 0 rgba(192, 57, 43, 0.4); } 70% { box-shadow: 0 0 0 10px rgba(192, 57, 43, 0); } 100% { box-shadow: 0 0 0 0 rgba(192, 57, 43, 0); } }
+        .pulse-critical { animation: pulse-red 2s infinite; }
+    </style>
+<link rel="stylesheet" href="css/styles.css">
+<script src="js/interactions.js"></script>
+</head>
+<body class="bg-background font-body-md text-on-background overflow-hidden">
+<!-- Main Content -->
+<main class="md:ml-64 h-screen flex flex-col bg-background">
+<!-- TopAppBar -->
+<header class="flex justify-between items-center px-lg h-16 w-full bg-surface/80 backdrop-blur-md border-b border-border z-[100] sticky top-0">
+<div class="flex items-center gap-md">
+<span class="md:hidden material-symbols-outlined text-primary cursor-pointer" data-sidebar-toggle aria-label="Open navigation menu">menu</span>
+<div class="flex flex-col">
+<h2 class="font-headline-display text-body-md text-primary font-bold">Predictive Intelligence</h2>
+<p class="text-[10px] font-data-label uppercase text-ink-muted">Asset ID: MTR-02 (Compressor)</p>
+</div>
+</div>
+<div class="flex items-center gap-md">
+<div class="relative flex items-center bg-surface-container-low px-md py-xs rounded-full border border-border">
+<span class="material-symbols-outlined text-outline text-body-md mr-sm">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-body-sm w-48" placeholder="Search predictions..." type="text">
+</div>
+<div class="flex gap-sm">
+<button class="p-sm hover:bg-surface-container rounded-full transition-colors cursor-pointer active:opacity-70" onclick="location.href='profilensettings.html'">
+<span class="material-symbols-outlined text-on-surface-variant">settings</span>
+</button>
+<button class="p-sm hover:bg-surface-container rounded-full transition-colors cursor-pointer active:opacity-70" onclick="location.href='support.html'">
+<span class="material-symbols-outlined text-on-surface-variant">help</span>
+</button>
+<button class="p-sm hover:bg-surface-container rounded-full transition-colors cursor-pointer active:opacity-70" onclick="location.href='profilensettings.html'">
+<span class="material-symbols-outlined text-on-surface-variant">account_circle</span>
+</button>
+</div>
+</div>
+</header>
+<!-- Predictions Workspace -->
+<div class="flex-1 p-lg overflow-y-auto custom-scrollbar">
+<div class="grid grid-cols-12 gap-gutter max-w-[1400px] mx-auto">
+<!-- Left Column: Controls & Simulator -->
+<div class="col-span-12 lg:col-span-8 flex flex-col gap-gutter">
+<!-- Sensor Simulator Lab -->
+<section class="simulator-dark rounded-xl p-lg flex flex-col gap-lg shadow-2xl overflow-hidden relative">
+<!-- Lab Background Glow -->
+<div class="absolute -top-32 -right-32 w-64 h-64 bg-primary/20 blur-[100px] rounded-full pointer-events-none"></div>
+<div class="flex justify-between items-start border-b border-white/10 pb-md">
+<div>
+<h3 class="text-on-primary-container font-headline-display text-body-lg flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary-fixed-dim">biotech</span>
+                                    Sensor Simulator
+                                </h3>
+<p class="text-on-primary-container/60 font-data-label text-[10px] uppercase">Real-time inference modeling</p>
+</div>
+<div class="flex gap-sm">
+<span class="px-md py-1 bg-green-good/20 text-green-good font-data-label text-[10px] rounded uppercase flex items-center gap-xs" id="lab-status-badge"><span class="w-1.5 h-1.5 rounded-full bg-green-good animate-pulse"></span> Stable State</span>
+</div>
+</div>
+<!-- Waveform Canvas -->
+<div class="w-full h-48 bg-black/40 rounded border border-white/5 relative overflow-hidden">
+<div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(#9ed2b1 0.5px, transparent 0.5px); background-size: 20px 20px;"></div>
+<canvas class="w-full h-full relative z-10" id="waveform-canvas" width="592" height="191"></canvas>
+<div class="absolute bottom-2 left-4 z-20">
+<p class="font-data-label text-[9px] text-primary-fixed-dim/40 uppercase">Oscilloscope Trace | CWRU Signal Format | 500Hz</p>
+</div>
+</div>
+<!-- Interactive Sliders Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-lg">
+<div class="flex flex-col gap-sm">
+<div class="flex justify-between items-center">
+<label class="font-data-label text-[11px] text-white/50 uppercase tracking-widest">Vibration RMS (g)</label>
+<span class="font-data-value text-primary-fixed-dim text-lg" id="vibration-val">0.240</span>
+</div>
+<input class="w-full" id="vibration-slider" max="0.60" min="0.188" step="0.001" type="range" value="0.24">
+<div class="flex justify-between text-[10px] font-data-label text-white/20">
+<span>0.188</span>
+<span>0.60</span>
+</div>
+</div>
+<div class="flex flex-col gap-sm">
+<div class="flex justify-between items-center">
+<label class="font-data-label text-[11px] text-white/50 uppercase tracking-widest">Motor Current (A)</label>
+<span class="font-data-value text-primary-fixed-dim text-lg" id="current-val">1.25</span>
+</div>
+<input class="w-full" id="current-slider" max="4.00" min="0.85" step="0.01" type="range" value="1.25">
+<div class="flex justify-between text-[10px] font-data-label text-white/20">
+<span>0.85</span>
+<span>4.00</span>
+</div>
+</div>
+<div class="flex flex-col gap-sm">
+<div class="flex justify-between items-center">
+<label class="font-data-label text-[11px] text-white/50 uppercase tracking-widest">Temperature (°C)</label>
+<span class="font-data-value text-primary-fixed-dim text-lg" id="temp-val">82.4</span>
+</div>
+<input class="w-full" id="temp-slider" max="110" min="75" step="0.1" type="range" value="82.4">
+<div class="flex justify-between text-[10px] font-data-label text-white/20">
+<span>75°</span>
+<span>110°</span>
+</div>
+</div>
+<div class="flex flex-col gap-sm">
+<div class="flex justify-between items-center">
+<label class="font-data-label text-[11px] text-white/50 uppercase tracking-widest">Shaft Speed (RPM)</label>
+<span class="font-data-value text-primary-fixed-dim text-lg" id="flow-val">1500</span>
+</div>
+<input class="w-full" id="flow-slider" max="3000" min="1000" step="10" type="range" value="1500">
+<div class="flex justify-between text-[10px] font-data-label text-white/20">
+<span>1000</span>
+<span>3000</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Real-time Explanation (SHAP) -->
+<div class="bg-white border border-border p-lg rounded-xl flex flex-col gap-md">
+<h4 class="font-data-label text-[11px] uppercase tracking-widest text-ink-muted flex items-center gap-sm">
+<span class="material-symbols-outlined text-body-md">analytics</span>
+                            Model Explainability (SHAP Values)
+                        </h4>
+<div class="flex flex-col gap-sm py-md">
+<!-- SHAP Bar: Vibration -->
+<div class="grid grid-cols-12 items-center gap-md">
+<span class="col-span-3 font-data-label text-[10px] text-ink-muted uppercase">Vibration</span>
+<div class="col-span-8 h-4 bg-surface-container rounded-full overflow-hidden flex">
+<div class="h-full transition-all duration-300 bg-green-good" id="shap-vibration" style="width: 15%;"></div>
+</div>
+<span class="col-span-1 font-data-value text-[10px] text-right" id="shap-vibration-val">+0.06</span>
+</div>
+<!-- SHAP Bar: Temp -->
+<div class="grid grid-cols-12 items-center gap-md">
+<span class="col-span-3 font-data-label text-[10px] text-ink-muted uppercase">Temperature</span>
+<div class="col-span-8 h-4 bg-surface-container rounded-full overflow-hidden flex">
+<div class="h-full transition-all duration-300 bg-green-good" id="shap-temp" style="width: 8%;"></div>
+</div>
+<span class="col-span-1 font-data-value text-[10px] text-right" id="shap-temp-val">+0.06</span>
+</div>
+<!-- SHAP Bar: Current -->
+<div class="grid grid-cols-12 items-center gap-md">
+<span class="col-span-3 font-data-label text-[10px] text-ink-muted uppercase">Motor Current</span>
+<div class="col-span-8 h-4 bg-surface-container rounded-full overflow-hidden flex">
+<div class="h-full transition-all duration-300 bg-green-good" id="shap-current" style="width: 5%;"></div>
+</div>
+<span class="col-span-1 font-data-value text-[10px] text-right" id="shap-current-val">+0.03</span>
+</div>
+</div>
+<p class="text-[11px] text-ink-muted italic border-t border-border pt-sm mt-sm">Bars represent how much each feature is contributing to the current anomaly score.</p>
+</div>
+<!-- Historical Pattern Match -->
+<div class="hidden bg-white border border-border rounded-xl p-lg flex flex-col gap-md" id="historical-match-card">
+<h4 class="font-data-label text-[11px] uppercase tracking-widest text-ink-muted flex items-center gap-sm">
+<span class="material-symbols-outlined text-body-md text-primary">history_edu</span>
+Similar Historical Failure Pattern
+</h4>
+<div class="flex items-start gap-lg p-md bg-primary/4 rounded-lg border border-primary/10">
+<div class="w-10 h-10 shrink-0 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[20px]">event</span>
+</div>
+<div class="flex-1 min-w-0">
+<p class="font-bold text-sm text-on-surface mb-xs" id="hist-failure-type">Outer race fault — bearing replacement</p>
+<div class="flex flex-wrap gap-md text-[11px] text-ink-muted font-data-label">
+<span>Date: <strong id="hist-date" class="text-on-surface">2024-02-10</strong></span>
+<span>Similarity: <strong id="hist-similarity" class="text-primary">87%</strong></span>
+<span>TTF at event: <strong id="hist-rul" class="text-on-surface">48h</strong></span>
+</div>
+</div>
+<div class="shrink-0 text-right">
+<span class="font-data-display text-[28px] text-primary" id="hist-similarity-big">87%</span>
+<p class="font-data-label text-[9px] uppercase text-ink-muted">match</p>
+</div>
+</div>
+<p class="text-[11px] text-ink-muted italic">Pattern matched against Project ASTRA historical maintenance records &amp; CWRU bearing fault library.</p>
+</div>
+</div>
+<!-- Right Column: Inference Output -->
+<div class="col-span-12 lg:col-span-4 flex flex-col gap-gutter">
+<!-- Inference Result Card -->
+<div class="bg-white border border-border rounded-xl p-lg flex flex-col gap-lg h-full">
+<div class="flex flex-col gap-xs">
+<span class="font-data-label text-[10px] text-ink-muted uppercase tracking-[0.2em]">Inference Engine 01</span>
+<h3 class="font-headline-display text-body-lg text-primary">Live Predictions</h3>
+<div class="flex flex-wrap gap-xs mt-xs">
+<span class="text-[9px] font-data-label uppercase px-xs py-[2px] rounded bg-primary/5 text-primary border border-primary/20">LSTM AUTOENCODER</span>
+<span class="text-[9px] font-data-label uppercase px-xs py-[2px] rounded bg-amber-warn/5 text-amber-warn border border-amber-warn/20">GBDT FAULT CLASSIFIER</span>
+<span class="text-[9px] font-data-label uppercase px-xs py-[2px] rounded bg-red-alert/5 text-red-alert border border-red-alert/20">LSTM RUL</span>
+</div>
+</div>
+<!-- Anomaly Score -->
+<div class="p-md bg-surface-container-low rounded border border-border">
+<div class="flex justify-between items-end mb-sm">
+<p class="font-data-label text-[11px] text-ink-muted uppercase">Anomaly Score <span class="normal-case text-[9px] opacity-60">· Paderborn</span></p>
+<p class="font-data-display text-body-lg" id="anomaly-score-val">0%</p>
+</div>
+<div class="w-full h-3 bg-surface-container rounded-full overflow-hidden">
+<div class="h-full transition-all duration-500 bg-green-good" id="anomaly-progress" style="width: 0%;"></div>
+</div>
+</div>
+<!-- RUL Estimate -->
+<div class="p-md border border-border rounded flex justify-between items-center">
+<div>
+<p class="font-data-label text-[11px] text-ink-muted uppercase mb-xs">RUL Estimate <span class="normal-case text-[9px] opacity-60">· NASA CMAPSS</span></p>
+<p class="font-data-display text-[32px] text-primary" id="rul-val">3,000h</p>
+</div>
+<div class="text-right">
+<span class="material-symbols-outlined text-primary-fixed-dim text-[40px] opacity-20">hourglass_empty</span>
+</div>
+</div>
+<!-- Risk Level -->
+<div class="p-lg rounded-xl border flex flex-col items-center gap-sm text-center bg-green-light border-green-good/20" id="risk-badge-container">
+<span class="font-data-label text-[10px] uppercase text-green-good tracking-[0.3em] font-bold" id="risk-status-label">Risk Level: Minimal</span>
+<div class="w-12 h-12 rounded-full flex items-center justify-center bg-green-good/20 text-green-good" id="risk-icon"><span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">verified_user</span></div>
+<p class="font-headline-display text-body-md text-primary-container" id="risk-title">Optimal Efficiency</p>
+</div>
+<!-- CCP Alert Badge -->
+<div id="ccp-badge" class="hidden p-md rounded-lg border-2 border-red-alert bg-error-container flex items-start gap-md">
+<span class="material-symbols-outlined text-red-alert text-[22px] shrink-0 mt-xs" style="font-variation-settings:'FILL' 1;">emergency</span>
+<div class="flex-1 min-w-0">
+<div class="flex items-center gap-sm mb-xs">
+<span class="font-data-label text-[10px] bg-red-alert text-white px-sm py-[2px] rounded uppercase" id="ccp-priority-badge">CRITICAL</span>
+<span class="font-data-label text-[10px] text-on-error-container uppercase" id="ccp-type-label">Pasteurization CCP</span>
+</div>
+<p class="text-[11px] text-on-error-container font-semibold">CMMS Log auto-generated</p>
+<p class="text-[10px] text-on-error-container/70 mt-[2px]">CCP Rule 04 — Bearing anomaly on critical line</p>
+</div>
+<button class="shrink-0 text-[10px] font-data-label uppercase text-on-error-container border border-red-alert/40 rounded px-sm py-[2px] hover:bg-red-alert/20 transition-colors" onclick="pgToast('CMMS audit log KG-CCP-2026-0847 auto-generated and sent to Quality Manager', 'warning')">View Log</button>
+</div>
+<!-- Copilot Recommendation -->
+<div class="flex-1 flex flex-col gap-sm">
+<div class="flex items-center gap-sm text-primary">
+<span class="material-symbols-outlined text-body-md">smart_toy</span>
+<h4 class="font-data-label text-[11px] uppercase font-bold">XAI Copilot Recommendation</h4>
+</div>
+<div class="p-md bg-primary-container/5 rounded border border-primary/10 text-body-sm text-primary leading-relaxed italic" id="copilot-text">"The system is operating within calibrated parameters. Current vibration harmonics suggest healthy bearing lubrication. No action required."</div>
+<!-- Structured Recommendation Card -->
+<div id="rec-detail-card" class="hidden flex flex-col gap-xs p-md rounded-lg border border-amber-warn/30 bg-amber-warn/5">
+<p class="font-data-label text-[10px] uppercase text-amber-warn tracking-widest mb-xs">Recommended Action</p>
+<p class="font-bold text-sm text-on-surface" id="rec-action">Replace outer race bearing assembly</p>
+<div class="grid grid-cols-2 gap-xs mt-xs text-[11px]">
+<div class="p-xs rounded bg-surface-container">
+<p class="font-data-label text-[9px] uppercase text-ink-muted">Part Number</p>
+<p class="font-data-value text-on-surface font-bold" id="rec-part">PMP-001-OR7</p>
+</div>
+<div class="p-xs rounded bg-surface-container">
+<p class="font-data-label text-[9px] uppercase text-ink-muted">Cost if Ignored</p>
+<p class="font-data-value text-red-alert font-bold" id="rec-cost">$2,500</p>
+</div>
+<div class="p-xs rounded bg-surface-container">
+<p class="font-data-label text-[9px] uppercase text-ink-muted">Est. Downtime</p>
+<p class="font-data-value text-on-surface font-bold" id="rec-downtime">4h</p>
+</div>
+<div class="p-xs rounded bg-surface-container">
+<p class="font-data-label text-[9px] uppercase text-ink-muted">Maint. Window</p>
+<p class="font-data-value text-primary font-bold text-[10px]" id="rec-window">Tomorrow 22:00–02:00</p>
+</div>
+</div>
+</div>
+<div class="flex gap-sm mt-auto">
+<button class="flex-1 py-md bg-primary text-white font-data-label text-[11px] uppercase tracking-widest rounded-lg hover:bg-on-primary-fixed-variant transition-colors flex items-center justify-center gap-sm cursor-pointer active:scale-95" onclick="pgToast('Simulation logged to CMMS record KG-SIM-2026-0847', 'success')">
+<span class="material-symbols-outlined text-body-sm">receipt_long</span>Log Result
+</button>
+<button class="flex-1 py-md border border-primary text-primary font-data-label text-[11px] uppercase tracking-widest rounded-lg hover:bg-green-light transition-colors flex items-center justify-center gap-sm cursor-pointer active:scale-95" onclick="pgToast('Work order dispatched to maintenance team — ETA 12 min', 'success')">
+<span class="material-symbols-outlined text-body-sm">send</span>Send Alert
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<script>
+        // Simulation Logic
+        const sliders = {
+            vibration: document.getElementById('vibration-slider'),
+            current: document.getElementById('current-slider'),
+            temp: document.getElementById('temp-slider'),
+            flow: document.getElementById('flow-slider')
+        };
+
+        const displays = {
+            vibration: document.getElementById('vibration-val'),
+            current: document.getElementById('current-val'),
+            temp: document.getElementById('temp-val'),
+            flow: document.getElementById('flow-val'),
+            anomaly: document.getElementById('anomaly-score-val'),
+            anomalyBar: document.getElementById('anomaly-progress'),
+            rul: document.getElementById('rul-val'),
+            riskContainer: document.getElementById('risk-badge-container'),
+            riskLabel: document.getElementById('risk-status-label'),
+            riskIcon: document.getElementById('risk-icon'),
+            riskTitle: document.getElementById('risk-title'),
+            copilot: document.getElementById('copilot-text'),
+            labBadge: document.getElementById('lab-status-badge'),
+            shapVibration: document.getElementById('shap-vibration'),
+            shapTemp: document.getElementById('shap-temp'),
+            shapCurrent: document.getElementById('shap-current'),
+            shapVibrationVal: document.getElementById('shap-vibration-val'),
+            shapTempVal: document.getElementById('shap-temp-val'),
+            shapCurrentVal: document.getElementById('shap-current-val'),
+            // New elements
+            ccpBadge: document.getElementById('ccp-badge'),
+            ccpPriorityBadge: document.getElementById('ccp-priority-badge'),
+            ccpTypeLabel: document.getElementById('ccp-type-label'),
+            histCard: document.getElementById('historical-match-card'),
+            histFailureType: document.getElementById('hist-failure-type'),
+            histDate: document.getElementById('hist-date'),
+            histSimilarity: document.getElementById('hist-similarity'),
+            histSimilarityBig: document.getElementById('hist-similarity-big'),
+            histRul: document.getElementById('hist-rul'),
+            recDetailCard: document.getElementById('rec-detail-card'),
+            recAction: document.getElementById('rec-action'),
+            recPart: document.getElementById('rec-part'),
+            recCost: document.getElementById('rec-cost'),
+            recDowntime: document.getElementById('rec-downtime'),
+            recWindow: document.getElementById('rec-window'),
+        };
+
+        const canvas = document.getElementById('waveform-canvas');
+        const ctx = canvas.getContext('2d');
+        let animationFrame;
+
+        // Apply historical match data to UI
+        function _applyHistoricalMatch(hist) {
+            if (!hist) {
+                displays.histCard.classList.add('hidden');
+                return;
+            }
+            displays.histCard.classList.remove('hidden');
+            displays.histFailureType.innerText = hist.failure_type || hist.failureType || '';
+            displays.histDate.innerText = hist.date || '';
+            const simPct = Math.round((hist.similarity || 0) * 100) + '%';
+            displays.histSimilarity.innerText = simPct;
+            displays.histSimilarityBig.innerText = simPct;
+            displays.histRul.innerText = (hist.rul_at_event || hist.rulAtEvent || 0) + 'h';
+        }
+
+        // Apply CCP alert to UI
+        function _applyCCPAlert(ccp) {
+            if (!ccp || !ccp.is_ccp) {
+                displays.ccpBadge.classList.add('hidden');
+                return;
+            }
+            displays.ccpBadge.classList.remove('hidden');
+            const priority = ccp.priority || 'HIGH';
+            displays.ccpPriorityBadge.innerText = priority;
+            displays.ccpPriorityBadge.className = `font-data-label text-[10px] px-sm py-[2px] rounded uppercase text-white ${priority === 'CRITICAL' ? 'bg-red-alert' : 'bg-amber-warn'}`;
+            displays.ccpTypeLabel.innerText = (ccp.ccp_type || ccp.ccpType || 'CCP') + ' Line';
+            displays.ccpBadge.className = `p-md rounded-lg border-2 flex items-start gap-md ${priority === 'CRITICAL' ? 'border-red-alert bg-error-container' : 'border-amber-warn bg-amber-100'}`;
+        }
+
+        // Apply recommendation detail to UI
+        function _applyRecommendationDetail(rec) {
+            if (!rec || rec.part_number === 'N/A') {
+                displays.recDetailCard.classList.add('hidden');
+                return;
+            }
+            displays.recDetailCard.classList.remove('hidden');
+            displays.recAction.innerText = rec.action || '';
+            displays.recPart.innerText = rec.part_number || rec.partNumber || '';
+            const cost = rec.cost_if_ignored_usd || rec.costIfIgnoredUsd || 0;
+            displays.recCost.innerText = cost > 0 ? '$' + cost.toLocaleString() : 'N/A';
+            displays.recDowntime.innerText = (rec.downtime_hours || rec.downtimeHours || 0) + 'h';
+            displays.recWindow.innerText = rec.maintenance_window || rec.maintenanceWindow || '';
+        }
+
+        // Toy-math fallback used when API is unavailable (file:// or server offline)
+        function _toyModelFallback(v, i, t, f) {
+            const vScore = ((v - 0.188) / (0.60 - 0.188)) * 50;
+            const tScore = ((t - 75) / (110 - 75)) * 30;
+            const iScore = ((i - 0.85) / (4.00 - 0.85)) * 20;
+            const fScore = Math.abs(115 - f) / 15 * 10;
+            let totalScore = Math.min(100, Math.max(0, vScore + tScore + iScore + fScore - 15));
+            totalScore = Math.round(totalScore);
+
+            displays.anomaly.innerText = totalScore + '%';
+            displays.anomalyBar.style.width = totalScore + '%';
+
+            const finalRUL = Math.max(0, Math.round(3000 - (totalScore / 100) * 3000));
+            displays.rul.innerText = finalRUL.toLocaleString() + 'h';
+
+            const denom = (vScore + tScore + iScore) || 1;
+            displays.shapVibration.style.width = (vScore / denom * 100) + '%';
+            displays.shapTemp.style.width = (tScore / denom * 100) + '%';
+            displays.shapCurrent.style.width = (iScore / denom * 100) + '%';
+            displays.shapVibrationVal.innerText = '+' + (vScore / 100).toFixed(2);
+            displays.shapTempVal.innerText = '+' + (tScore / 100).toFixed(2);
+            displays.shapCurrentVal.innerText = '+' + (iScore / 100).toFixed(2);
+
+            let riskLevel;
+            if (totalScore < 30) { riskLevel = 'minimal'; }
+            else if (totalScore < 70) { riskLevel = 'elevated'; }
+            else { riskLevel = 'critical'; }
+
+            setRiskState(riskLevel, totalScore);
+
+            // Synthetic enrichment for fallback mode
+            _applyHistoricalMatch(totalScore >= 70 ? {
+                failure_type: 'Outer race fault — bearing replacement',
+                date: '2024-02-10', similarity: 0.87, rul_at_event: 48
+            } : totalScore >= 30 ? {
+                failure_type: 'Ball element micro-pitting',
+                date: '2024-05-05', similarity: 0.76, rul_at_event: 96
+            } : null);
+
+            _applyCCPAlert(totalScore >= 70
+                ? { is_ccp: true, ccp_type: 'Pasteurisation Motor', priority: 'CRITICAL' }
+                : totalScore >= 30
+                ? { is_ccp: true, ccp_type: 'Mixing Motor', priority: 'HIGH' }
+                : { is_ccp: false, ccp_type: 'N/A', priority: 'NORMAL' });
+
+            _applyRecommendationDetail(totalScore >= 70 ? {
+                action: 'Replace outer race bearing assembly on motor shaft',
+                part_number: 'MTR-101-OR7', cost_if_ignored_usd: 2500,
+                downtime_hours: 4, maintenance_window: 'Tomorrow 22:00–02:00 UTC'
+            } : totalScore >= 30 ? {
+                action: 'Schedule motor bearing inspection & lubrication',
+                part_number: 'LUB-023-MTR', cost_if_ignored_usd: 1800,
+                downtime_hours: 2, maintenance_window: 'Within 96h'
+            } : { part_number: 'N/A' });
+        }
+
+        // Apply a successful API response to the UI
+        function _applyInferenceResult(result) {
+            const pct = Math.round(result.anomaly_score * 100);
+            displays.anomaly.innerText = pct + '%';
+            displays.anomalyBar.style.width = pct + '%';
+            displays.rul.innerText = result.rul_hours.toLocaleString() + 'h';
+
+            const shap = result.shap_values;
+            const shapTotal = shap.vibration + shap.temperature + shap.current + shap.flow + 1e-6;
+            displays.shapVibration.style.width = (shap.vibration / shapTotal * 100) + '%';
+            displays.shapTemp.style.width = (shap.temperature / shapTotal * 100) + '%';
+            displays.shapCurrent.style.width = (shap.current / shapTotal * 100) + '%';
+            displays.shapVibrationVal.innerText = '+' + shap.vibration.toFixed(2);
+            displays.shapTempVal.innerText = '+' + shap.temperature.toFixed(2);
+            displays.shapCurrentVal.innerText = '+' + shap.current.toFixed(2);
+
+            setRiskState(result.risk_level, pct);
+            displays.copilot.innerText = '"' + result.recommendation + '"';
+
+            _applyHistoricalMatch(result.historical_match || null);
+            _applyCCPAlert(result.ccp_alert || null);
+            _applyRecommendationDetail(result.recommendation_detail || null);
+        }
+
+        let _inferDebounce = null;
+        async function updateSimulation() {
+            const v = parseFloat(sliders.vibration.value);
+            const i = parseFloat(sliders.current.value);
+            const t = parseFloat(sliders.temp.value);
+            const f = parseFloat(sliders.flow.value);
+
+            // Update slider value displays immediately (no wait needed)
+            displays.vibration.innerText = v.toFixed(3);
+            displays.current.innerText = i.toFixed(2);
+            displays.temp.innerText = t.toFixed(1);
+            displays.flow.innerText = Math.round(f);
+
+            // Debounce API call 120 ms to avoid flooding on rapid slider drag
+            clearTimeout(_inferDebounce);
+            _inferDebounce = setTimeout(async () => {
+                const api_f = f / 20;
+                if (typeof pgApiAvailable === 'undefined' || !pgApiAvailable()) {
+                    _toyModelFallback(v, i, t, api_f);
+                    return;
+                }
+                try {
+                    const result = await pgFetch('/api/predict/inference', {
+                        method: 'POST',
+                        body: JSON.stringify({
+                            vibration_rms: v,
+                            motor_current: i,
+                            temperature: t,
+                            flow_rate: api_f,
+                        }),
+                    });
+                    _applyInferenceResult(result);
+                } catch (err) {
+                    console.warn('Project ASTRA API unavailable, using local model:', err.message);
+                    _toyModelFallback(v, i, t, api_f);
+                }
+            }, 40);
+        }
+
+        function setRiskState(state, score, customRec) {
+            displays.riskContainer.classList.remove('bg-green-light', 'bg-amber-100', 'bg-red-alert/10', 'border-green-good/20', 'border-amber-warn/20', 'border-red-alert/20', 'pulse-critical');
+            displays.riskIcon.classList.remove('bg-green-good/20', 'bg-amber-warn/20', 'bg-red-alert/20', 'text-green-good', 'text-amber-warn', 'text-red-alert');
+            displays.anomalyBar.classList.remove('bg-green-good', 'bg-amber-warn', 'bg-red-alert');
+            displays.shapVibration.classList.remove('bg-green-good', 'bg-amber-warn', 'bg-red-alert');
+            displays.shapTemp.classList.remove('bg-green-good', 'bg-amber-warn', 'bg-red-alert');
+            displays.shapCurrent.classList.remove('bg-green-good', 'bg-amber-warn', 'bg-red-alert');
+
+            if (state === 'minimal') {
+                displays.riskContainer.classList.add('bg-green-light', 'border-green-good/20');
+                displays.riskIcon.classList.add('bg-green-good/20', 'text-green-good');
+                displays.riskLabel.innerText = "Risk Level: Minimal";
+                displays.riskLabel.classList.replace('text-amber-warn', 'text-green-good');
+                displays.riskLabel.classList.replace('text-red-alert', 'text-green-good');
+                displays.riskIcon.innerHTML = `<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">verified_user</span>`;
+                displays.riskTitle.innerText = "Optimal Efficiency";
+                displays.copilot.innerText = customRec || `"The system is operating within calibrated parameters. All motor harmonics and thermal baselines suggest healthy state. No action required."`;
+                displays.labBadge.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-green-good animate-pulse"></span> Stable State`;
+                displays.labBadge.className = "px-md py-1 bg-green-good/20 text-green-good font-data-label text-[10px] rounded uppercase flex items-center gap-xs";
+                displays.anomalyBar.classList.add('bg-green-good');
+                [displays.shapVibration, displays.shapTemp, displays.shapCurrent].forEach(el => el.classList.add('bg-green-good'));
+            } else {
+                const v = parseFloat(sliders.vibration.value);
+                const i = parseFloat(sliders.current.value);
+                const t = parseFloat(sliders.temp.value);
+                
+                // Normalise slider inputs to get relative driver
+                const vNorm = (v - 0.188) / (0.60 - 0.188);
+                const iNorm = (i - 0.85) / (4.00 - 0.85);
+                const tNorm = (t - 75) / (110 - 75);
+                
+                let driver = 'vibration';
+                let maxNorm = vNorm;
+                if (tNorm > maxNorm) { driver = 'temperature'; maxNorm = tNorm; }
+                if (iNorm > maxNorm) { driver = 'current'; maxNorm = iNorm; }
+
+                if (state === 'elevated') {
+                    displays.riskContainer.classList.add('bg-amber-100', 'border-amber-warn/20');
+                    displays.riskIcon.classList.add('bg-amber-warn/20', 'text-amber-warn');
+                    displays.riskLabel.innerText = "Risk Level: Elevated";
+                    displays.riskLabel.className = "font-data-label text-[10px] uppercase text-amber-warn tracking-[0.3em] font-bold";
+                    displays.riskIcon.innerHTML = `<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">report_problem</span>`;
+                    displays.riskTitle.innerText = "Monitoring Required";
+                    
+                    if (customRec) {
+                        displays.copilot.innerText = customRec;
+                    } else {
+                        if (driver === 'temperature') {
+                            displays.copilot.innerText = `"Warning: Elevated motor winding temperature detected. Suggest checking cooling ventilation and reducing motor speed."`;
+                        } else if (driver === 'current') {
+                            displays.copilot.innerText = `"Warning: Unbalanced stator current detected. Suggest checking electrical terminal connections and stator phases."`;
+                        } else {
+                            displays.copilot.innerText = `"Warning: Elevated vibration levels detected. Suggest inspecting motor mountings and checking bearing lubrication."`;
+                        }
+                    }
+
+                    displays.labBadge.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-amber-warn animate-pulse"></span> Anomaly Detected`;
+                    displays.labBadge.className = "px-md py-1 bg-amber-warn/20 text-amber-warn font-data-label text-[10px] rounded uppercase flex items-center gap-xs";
+                    displays.anomalyBar.classList.add('bg-amber-warn');
+                    [displays.shapVibration, displays.shapTemp, displays.shapCurrent].forEach(el => el.classList.add('bg-amber-warn'));
+                } else {
+                    displays.riskContainer.classList.add('bg-red-alert/10', 'border-red-alert/20', 'pulse-critical');
+                    displays.riskIcon.classList.add('bg-red-alert/20', 'text-red-alert');
+                    displays.riskLabel.innerText = "Risk Level: Critical";
+                    displays.riskLabel.className = "font-data-label text-[10px] uppercase text-red-alert tracking-[0.3em] font-bold";
+                    displays.riskIcon.innerHTML = `<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">error</span>`;
+                    displays.riskTitle.innerText = "Imminent Failure";
+                    
+                    if (customRec) {
+                        displays.copilot.innerText = customRec;
+                    } else {
+                        if (driver === 'temperature') {
+                            displays.copilot.innerText = `"CRITICAL: Extreme motor winding heat buildup detected (>80°C limit breached). Potential insulation failure or stator coil burn. Immediate controlled shutdown recommended."`;
+                        } else if (driver === 'current') {
+                            displays.copilot.innerText = `"CRITICAL: Phase-to-phase current imbalance exceeds safe tolerance. Stator winding short imminent. Emergency shutdown required to prevent motor damage."`;
+                        } else {
+                            displays.copilot.innerText = `"CRITICAL: Extreme high-frequency vibration amplitude detected. Motor bearing degradation matches inner/outer race failure. Controlled shutdown required."`;
+                        }
+                    }
+
+                    displays.labBadge.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-red-alert animate-pulse"></span> ALERT: CRITICAL`;
+                    displays.labBadge.className = "px-md py-1 bg-red-alert/20 text-red-alert font-data-label text-[10px] rounded uppercase flex items-center gap-xs";
+                    displays.anomalyBar.classList.add('bg-red-alert');
+                    [displays.shapVibration, displays.shapTemp, displays.shapCurrent].forEach(el => el.classList.add('bg-red-alert'));
+                }
+            }
+        }
+
+        // Oscilloscope Animation
+        function drawWaveform() {
+            canvas.width = canvas.offsetWidth;
+            canvas.height = canvas.offsetHeight;
+            
+            const v = parseFloat(sliders.vibration.value);
+            const time = Date.now() * 0.005;
+            
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.beginPath();
+            ctx.strokeStyle = v > 0.45 ? '#ba1a1a' : '#9ed2b1';
+            ctx.lineWidth = 2;
+            
+            const points = [];
+            const amplitude = (v / 0.6) * 50;
+            const frequency = 0.05;
+
+            for (let x = 0; x < canvas.width; x++) {
+                // Mix 3 sine waves for a realistic sensor signal
+                const y = (canvas.height / 2) + 
+                          Math.sin(x * frequency + time) * amplitude + 
+                          Math.sin(x * frequency * 2.1 + time * 1.5) * (amplitude * 0.3) +
+                          (Math.random() - 0.5) * (v * 5); // Add noise based on vibration
+                
+                if (x === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            }
+            
+            ctx.stroke();
+            animationFrame = requestAnimationFrame(drawWaveform);
+        }
+
+        // Initialize
+        Object.values(sliders).forEach(s => s.addEventListener('input', updateSimulation));
+        window.addEventListener('resize', () => {
+            canvas.width = canvas.offsetWidth;
+            canvas.height = canvas.offsetHeight;
+        });
+        
+        updateSimulation();
+        drawWaveform();
+
+    </script>
+<script src="js/api_client.js"></script>
+<script src="js/sidebar.js"></script>
+<script>renderSidebar('predictions');</script>
+</body></html>
