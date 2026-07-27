@@ -152,6 +152,29 @@ def send_whatsapp(body: str):
             print(f"[Notifier] Failed to send WAHA WhatsApp message: {e}")
             return False
 
+    elif provider == "callmebot":
+        apikey = settings.get("twilio_auth_token")
+        if not apikey or apikey == "token_placeholder" or "placeholder" in str(apikey):
+            print("[Notifier] CallMeBot API key not configured. WhatsApp skipped.")
+            return False
+            
+        clean_number = recipient_whatsapp.replace("+", "").replace(" ", "").replace("-", "")
+        encoded_message = urllib.parse.quote(body)
+        url = f"https://api.callmebot.com/whatsapp.php?phone={clean_number}&text={encoded_message}&apikey={apikey}"
+        
+        try:
+            req = urllib.request.Request(url, method="GET")
+            with urllib.request.urlopen(req) as response:
+                if response.status == 200:
+                    print("[Notifier] WhatsApp notification sent successfully via CallMeBot.")
+                    return True
+                else:
+                    print(f"[Notifier] CallMeBot returned status: {response.status}")
+                    return False
+        except Exception as e:
+            print(f"[Notifier] Failed to send CallMeBot WhatsApp: {e}")
+            return False
+
     else:  # Default to 'twilio'
         twilio_sid = settings.get("twilio_account_sid")
         twilio_token = settings.get("twilio_auth_token")

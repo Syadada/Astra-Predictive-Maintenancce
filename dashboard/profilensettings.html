@@ -379,6 +379,7 @@
 <label class="block font-data-label text-data-label text-on-surface-variant mb-1">WhatsApp Provider</label>
 <select id="whatsapp_provider" class="w-full bg-surface-container-low border-border rounded-lg text-ink font-body-sm focus:ring-primary focus:border-primary px-md py-sm" onchange="toggleWhatsAppFields()">
 <option value="twilio">Twilio API (Paid/Sandbox)</option>
+<option value="callmebot">CallMeBot API (Free & Personal)</option>
 <option value="waha">Self-Hosted WAHA / Evolution API (Free)</option>
 </select>
 </div>
@@ -391,6 +392,13 @@
 <div>
 <label class="block font-data-label text-data-label text-on-surface-variant mb-1">WAHA API Key / Token (Optional)</label>
 <input id="waha_auth_token" class="w-full bg-surface-container-low border-border rounded-lg text-ink font-body-sm focus:ring-primary focus:border-primary px-md py-sm" type="password" placeholder="••••••••">
+</div>
+</div>
+<!-- CallMeBot-specific Fields -->
+<div id="callmebot_fields" class="space-y-md hidden">
+<div>
+<label class="block font-data-label text-data-label text-on-surface-variant mb-1">CallMeBot API Key</label>
+<input id="callmebot_apikey" class="w-full bg-surface-container-low border-border rounded-lg text-ink font-body-sm focus:ring-primary focus:border-primary px-md py-sm" type="password" placeholder="••••••••">
 </div>
 </div>
 <!-- Twilio-specific Fields -->
@@ -467,13 +475,18 @@ Save Settings
             const provider = document.getElementById('whatsapp_provider').value;
             const twilioFields = document.getElementById('twilio_fields');
             const wahaFields = document.getElementById('waha_fields');
+            const callmebotFields = document.getElementById('callmebot_fields');
+            
+            twilioFields.classList.add('hidden');
+            wahaFields.classList.add('hidden');
+            callmebotFields.classList.add('hidden');
             
             if (provider === 'waha') {
-                twilioFields.classList.add('hidden');
                 wahaFields.classList.remove('hidden');
+            } else if (provider === 'callmebot') {
+                callmebotFields.classList.remove('hidden');
             } else {
                 twilioFields.classList.remove('hidden');
-                wahaFields.classList.add('hidden');
             }
         }
 
@@ -500,8 +513,13 @@ Save Settings
                     
                     if (provider === 'waha') {
                         document.getElementById('waha_auth_token').value = data.twilio_auth_token || '';
+                        document.getElementById('callmebot_apikey').value = '';
+                    } else if (provider === 'callmebot') {
+                        document.getElementById('callmebot_apikey').value = data.twilio_auth_token || '';
+                        document.getElementById('waha_auth_token').value = '';
                     } else {
                         document.getElementById('waha_auth_token').value = '';
+                        document.getElementById('callmebot_apikey').value = '';
                     }
                     toggleWhatsAppFields();
                 }
@@ -518,6 +536,8 @@ Save Settings
             let twilioToken = document.getElementById('twilio_auth_token').value;
             if (provider === 'waha') {
                 twilioToken = document.getElementById('waha_auth_token').value;
+            } else if (provider === 'callmebot') {
+                twilioToken = document.getElementById('callmebot_apikey').value;
             }
             
             const payload = {
