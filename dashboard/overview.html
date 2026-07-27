@@ -198,16 +198,16 @@
     <div class="flex items-start justify-between">
       <div>
         <span class="font-data-label text-[10px] uppercase text-on-surface-variant block mb-xs">Track 1 — Anomaly Detection</span>
-        <h3 class="font-bold text-sm text-on-surface">Random Forest · SKAB</h3>
-        <p class="text-[11px] text-on-surface-variant">Water pump sensor data · 1 Hz</p>
+        <h3 class="font-bold text-sm text-on-surface">LSTM Autoencoder · Paderborn</h3>
+        <p class="text-[11px] text-on-surface-variant">Conveyor sensor data (MTR-01) · 15.6 ms</p>
       </div>
       <span class="px-sm py-xs bg-green-light text-green-good text-[10px] font-bold rounded-full">DEPLOYED</span>
     </div>
     <div class="space-y-sm">
       <div>
         <div class="flex justify-between text-[11px] mb-1">
-          <span class="text-on-surface-variant">Precision</span>
-          <span class="font-bold text-green-good">1.00 — zero false alarms</span>
+          <span class="text-on-surface-variant">Avg Reconstruction Error</span>
+          <span class="font-bold text-green-good">1.077</span>
         </div>
         <div class="h-1.5 w-full bg-surface-container-low rounded-full">
           <div class="h-full bg-green-good rounded-full w-full"></div>
@@ -215,24 +215,24 @@
       </div>
       <div>
         <div class="flex justify-between text-[11px] mb-1">
-          <span class="text-on-surface-variant">Recall</span>
-          <span class="font-bold text-on-surface">0.886</span>
+          <span class="text-on-surface-variant">Anomaly Threshold</span>
+          <span class="font-bold text-on-surface">1.005</span>
         </div>
         <div class="h-1.5 w-full bg-surface-container-low rounded-full">
-          <div class="h-full bg-primary rounded-full" style="width:88.6%"></div>
+          <div class="h-full bg-primary rounded-full" style="width:90%"></div>
         </div>
       </div>
       <div>
         <div class="flex justify-between text-[11px] mb-1">
-          <span class="text-on-surface-variant">ROC-AUC</span>
-          <span class="font-bold text-on-surface">0.938</span>
+          <span class="text-on-surface-variant">Test FPR</span>
+          <span class="font-bold text-on-surface">25.0%</span>
         </div>
         <div class="h-1.5 w-full bg-surface-container-low rounded-full">
-          <div class="h-full bg-primary rounded-full" style="width:93.8%"></div>
+          <div class="h-full bg-primary rounded-full" style="width:25.0%"></div>
         </div>
       </div>
     </div>
-    <p class="text-[10px] text-on-surface-variant italic border-t border-border pt-sm">Precision = 1.0 means every alert is a real fault — critical for food safety CCP stages</p>
+    <p class="text-[10px] text-on-surface-variant italic border-t border-border pt-sm">Unsupervised LSTM Autoencoder evaluates reconstruction loss on 25-feature sliding windows.</p>
   </div>
 
   <!-- Card 2: Fault Classification -->
@@ -240,31 +240,31 @@
     <div class="flex items-start justify-between">
       <div>
         <span class="font-data-label text-[10px] uppercase text-on-surface-variant block mb-xs">Track 2 — Fault Classification</span>
-        <h3 class="font-bold text-sm text-on-surface">MLP Neural Network · CWRU</h3>
-        <p class="text-[11px] text-on-surface-variant">Bearing vibration data · 10 fault classes</p>
+        <h3 class="font-bold text-sm text-on-surface">Gradient Boosting · Paderborn</h3>
+        <p class="text-[11px] text-on-surface-variant">Bearing vibration data · 4 fault classes</p>
       </div>
       <span class="px-sm py-xs bg-green-light text-green-good text-[10px] font-bold rounded-full">DEPLOYED</span>
     </div>
     <div class="space-y-xs">
       <div class="flex justify-between text-[11px]">
         <span class="text-on-surface-variant">Test Accuracy</span>
-        <span class="font-bold text-on-surface">93.4%</span>
+        <span class="font-bold text-on-surface">100.0%</span>
       </div>
       <div class="flex justify-between text-[11px]">
-        <span class="text-on-surface-variant">Macro F1</span>
-        <span class="font-bold text-on-surface">0.933</span>
+        <span class="text-on-surface-variant">Weighted F1</span>
+        <span class="font-bold text-on-surface">1.000</span>
       </div>
       <div class="mt-sm space-y-xs border-t border-border pt-sm">
         <p class="font-data-label text-[9px] uppercase text-on-surface-variant mb-xs">Per-Class F1 (key fault types)</p>
         <div class="grid grid-cols-2 gap-xs text-[10px]">
-          <div class="flex justify-between"><span class="text-on-surface-variant">Inner Race</span><span class="font-bold text-green-good">0.986</span></div>
-          <div class="flex justify-between"><span class="text-on-surface-variant">Outer Race</span><span class="font-bold text-green-good">1.00</span></div>
-          <div class="flex justify-between"><span class="text-on-surface-variant">Ball Element</span><span class="font-bold text-on-surface">0.941</span></div>
-          <div class="flex justify-between"><span class="text-on-surface-variant">Normal</span><span class="font-bold text-green-good">0.986</span></div>
+          <div class="flex justify-between"><span class="text-on-surface-variant">Healthy</span><span class="font-bold text-green-good">1.000</span></div>
+          <div class="flex justify-between"><span class="text-on-surface-variant">Inner Race</span><span class="font-bold text-green-good">1.000</span></div>
+          <div class="flex justify-between"><span class="text-on-surface-variant">Outer Race</span><span class="font-bold text-green-good">1.000</span></div>
+          <div class="flex justify-between"><span class="text-on-surface-variant">Roller</span><span class="font-bold text-green-good">1.000</span></div>
         </div>
       </div>
     </div>
-    <p class="text-[10px] text-on-surface-variant italic border-t border-border pt-sm">Identifies which bearing component is failing — not just that something is wrong</p>
+    <p class="text-[10px] text-on-surface-variant italic border-t border-border pt-sm">Supervised Gradient Boosting Classifier categorizes inner race, outer race, and roller faults.</p>
   </div>
 
   <!-- Card 3: RUL Prediction -->
@@ -272,23 +272,23 @@
     <div class="flex items-start justify-between">
       <div>
         <span class="font-data-label text-[10px] uppercase text-on-surface-variant block mb-xs">Track 3 — RUL Prediction</span>
-        <h3 class="font-bold text-sm text-on-surface">MLP Neural Network · CMAPSS</h3>
-        <p class="text-[11px] text-on-surface-variant">NASA turbofan degradation dataset</p>
+        <h3 class="font-bold text-sm text-on-surface">LSTM Regressor · CMAPSS</h3>
+        <p class="text-[11px] text-on-surface-variant">Mixer degradation dataset (MTR-05)</p>
       </div>
       <span class="px-sm py-xs bg-green-light text-green-good text-[10px] font-bold rounded-full">DEPLOYED</span>
     </div>
     <div class="space-y-xs">
       <div class="flex justify-between text-[11px]">
-        <span class="text-on-surface-variant">Test RMSE</span>
-        <span class="font-bold text-on-surface">14.15 cycles</span>
+        <span class="text-on-surface-variant">Test MAE</span>
+        <span class="font-bold text-on-surface">10.34 cycles</span>
       </div>
       <div class="flex justify-between text-[11px]">
-        <span class="text-on-surface-variant">R²</span>
-        <span class="font-bold text-on-surface">0.773</span>
+        <span class="text-on-surface-variant">Test RMSE</span>
+        <span class="font-bold text-on-surface">14.82 cycles</span>
       </div>
       <div class="flex justify-between text-[11px]">
         <span class="text-on-surface-variant">NASA Score</span>
-        <span class="font-bold text-on-surface">46,481</span>
+        <span class="font-bold text-on-surface">235.68</span>
       </div>
       <div class="mt-sm border-t border-border pt-sm">
         <p class="font-data-label text-[9px] uppercase text-on-surface-variant mb-xs">Prediction Bias (Asymmetric Scoring)</p>
@@ -304,7 +304,7 @@
         </div>
       </div>
     </div>
-    <p class="text-[10px] text-on-surface-variant italic border-t border-border pt-sm">65% early predictions → conservative bias — prefer false urgency over missed failures</p>
+    <p class="text-[10px] text-on-surface-variant italic border-t border-border pt-sm">LSTM Regressor trained with custom asymmetric loss to predict remaining useful life safely.</p>
   </div>
 
 </div>
@@ -365,7 +365,7 @@
 <div class="px-lg py-md border-b border-border flex justify-between items-center bg-surface-container-lowest">
 <h2 class="font-headline-display text-[20px] text-primary">Live Equipment Monitoring</h2>
 <div class="flex gap-sm">
-<span class="font-data-label text-[11px] text-on-surface-variant px-md py-xs border border-outline/20 rounded-lg">Real-time Sensor Stream (SKAB)</span>
+<span class="font-data-label text-[11px] text-on-surface-variant px-md py-xs border border-outline/20 rounded-lg">Real-time Sensor Stream (ASTRA / Paderborn)</span>
 </div>
 </div>
 <div class="w-full">
@@ -718,10 +718,12 @@
     </div>
     <div class="flex items-center gap-sm">
       <select class="text-xs border border-border rounded px-sm py-1 bg-surface text-on-surface" id="stream-machine-select" onchange="streamMachineChanged()">
-        <option value="ASTRA-MTR-101">Motor M-101 (Conveyor Drive)</option>
-        <option value="ASTRA-MTR-204">Motor M-204 (Cooling Fan) ★ CCP</option>
-        <option value="ASTRA-MTR-300">Motor M-300 (Water Pump)</option>
-        <option value="ASTRA-MTR-305">Motor M-305 (Air Compressor)</option>
+        <option value="MTR-01">MTR-01 (Conveyor Drive)</option>
+        <option value="MTR-02">MTR-02 (Compressor)</option>
+        <option value="MTR-03">MTR-03 (Fan/Blower)</option>
+        <option value="MTR-04">MTR-04 (Pump) ★ CCP</option>
+        <option value="MTR-05">MTR-05 (Mixer) ★ CCP</option>
+        <option value="MTR-06">MTR-06 (Spindle)</option>
       </select>
       <button class="px-md py-1 text-xs font-bold bg-primary text-white rounded-lg hover:bg-tertiary transition-colors" id="stream-start-btn" onclick="streamToggle()">▶ Start Stream</button>
     </div>

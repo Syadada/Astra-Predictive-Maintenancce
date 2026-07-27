@@ -713,6 +713,20 @@ Schedule predictive replacement within 48 hours.
     }
 
     async function pgCreateWorkOrder(assetId, assetName, description) {
+        var mockId = 'WO-' + Math.floor(1000 + Math.random() * 9000);
+        var localWOs = JSON.parse(localStorage.getItem('localWorkOrders') || '[]');
+        var newWO = {
+            id: mockId,
+            asset_id: assetId,
+            equipment_id: assetId,
+            asset_name: assetName,
+            description: description,
+            assigned_tech: "Unassigned",
+            assigned_to: "Unassigned",
+            status: 'Pending',
+            created_at: new Date().toISOString()
+        };
+
         if (typeof pgApiAvailable !== 'undefined' && pgApiAvailable()) {
             try {
                 const resp = await pgFetch('/api/workorders', {
@@ -720,11 +734,40 @@ Schedule predictive replacement within 48 hours.
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ asset_id: assetId, asset_name: assetName, description: description })
                 });
+                newWO.id = resp.id || mockId;
+                localWOs.unshift(newWO);
+                localStorage.setItem('localWorkOrders', JSON.stringify(localWOs));
+
+                var logs = JSON.parse(localStorage.getItem('localLogHistory') || '[]');
+                logs.unshift({
+                    title: "Work Order: " + assetName,
+                    detail: description,
+                    parts: "Inspection Kit",
+                    tech: "Unassigned",
+                    date: new Date().toLocaleString('en-GB', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }),
+                    verified: false
+                });
+                localStorage.setItem('localLogHistory', JSON.stringify(logs));
+
                 pgToast(`Work order ${resp.id} created for ${assetName}!`, 'success');
             } catch (err) {
                 pgToast('Failed to create work order: ' + err.message, 'error');
             }
         } else {
+            localWOs.unshift(newWO);
+            localStorage.setItem('localWorkOrders', JSON.stringify(localWOs));
+
+            var logs = JSON.parse(localStorage.getItem('localLogHistory') || '[]');
+            logs.unshift({
+                title: "Work Order (Offline): " + assetName,
+                detail: description,
+                parts: "Inspection Kit",
+                tech: "Unassigned",
+                date: new Date().toLocaleString('en-GB', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }),
+                verified: false
+            });
+            localStorage.setItem('localLogHistory', JSON.stringify(logs));
+
             pgToast(`Work order created for ${assetName} (Local Mock Mode)`, 'success');
         }
     }

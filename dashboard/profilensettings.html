@@ -372,9 +372,29 @@
 <input id="recipient_email" class="w-full bg-surface-container-low border-border rounded-lg text-ink font-body-sm focus:ring-primary focus:border-primary px-md py-sm" type="email" placeholder="recipient@example.com">
 </div>
 </div>
-<!-- Twilio Settings -->
+<!-- WhatsApp Settings -->
 <div class="space-y-md">
-<h5 class="font-body-sm text-body-sm font-bold text-secondary border-b border-border pb-2">Twilio WhatsApp Settings</h5>
+<h5 class="font-body-sm text-body-sm font-bold text-secondary border-b border-border pb-2">WhatsApp Notification Settings</h5>
+<div>
+<label class="block font-data-label text-data-label text-on-surface-variant mb-1">WhatsApp Provider</label>
+<select id="whatsapp_provider" class="w-full bg-surface-container-low border-border rounded-lg text-ink font-body-sm focus:ring-primary focus:border-primary px-md py-sm" onchange="toggleWhatsAppFields()">
+<option value="twilio">Twilio API (Paid/Sandbox)</option>
+<option value="waha">Self-Hosted WAHA / Evolution API (Free)</option>
+</select>
+</div>
+<!-- WAHA-specific Fields -->
+<div id="waha_fields" class="space-y-md hidden">
+<div>
+<label class="block font-data-label text-data-label text-on-surface-variant mb-1">WAHA / Evolution Server URL</label>
+<input id="waha_server_url" class="w-full bg-surface-container-low border-border rounded-lg text-ink font-body-sm focus:ring-primary focus:border-primary px-md py-sm" type="text" placeholder="http://localhost:3000">
+</div>
+<div>
+<label class="block font-data-label text-data-label text-on-surface-variant mb-1">WAHA API Key / Token (Optional)</label>
+<input id="waha_auth_token" class="w-full bg-surface-container-low border-border rounded-lg text-ink font-body-sm focus:ring-primary focus:border-primary px-md py-sm" type="password" placeholder="••••••••">
+</div>
+</div>
+<!-- Twilio-specific Fields -->
+<div id="twilio_fields" class="space-y-md">
 <div>
 <label class="block font-data-label text-data-label text-on-surface-variant mb-1">Twilio Account SID</label>
 <input id="twilio_account_sid" class="w-full bg-surface-container-low border-border rounded-lg text-ink font-body-sm focus:ring-primary focus:border-primary px-md py-sm" type="text" placeholder="AC...">
@@ -386,6 +406,7 @@
 <div>
 <label class="block font-data-label text-data-label text-on-surface-variant mb-1">Twilio WhatsApp From (Sandbox)</label>
 <input id="twilio_whatsapp_from" class="w-full bg-surface-container-low border-border rounded-lg text-ink font-body-sm focus:ring-primary focus:border-primary px-md py-sm" type="text" placeholder="+14155238886">
+</div>
 </div>
 <div>
 <label class="block font-data-label text-data-label text-on-surface-variant mb-1">Recipient WhatsApp Number</label>
@@ -442,6 +463,20 @@ Save Settings
         const settingsUrl = apiBaseUrl + '/api/settings/notifications';
         const dispatchUrl = apiBaseUrl + '/api/alerts/dispatch';
 
+        function toggleWhatsAppFields() {
+            const provider = document.getElementById('whatsapp_provider').value;
+            const twilioFields = document.getElementById('twilio_fields');
+            const wahaFields = document.getElementById('waha_fields');
+            
+            if (provider === 'waha') {
+                twilioFields.classList.add('hidden');
+                wahaFields.classList.remove('hidden');
+            } else {
+                twilioFields.classList.remove('hidden');
+                wahaFields.classList.add('hidden');
+            }
+        }
+
         async function loadNotificationSettings() {
             try {
                 const res = await fetch(settingsUrl);
@@ -458,6 +493,17 @@ Save Settings
                     document.getElementById('twilio_auth_token').value = data.twilio_auth_token || '';
                     document.getElementById('twilio_whatsapp_from').value = data.twilio_whatsapp_from || '';
                     document.getElementById('recipient_whatsapp').value = data.recipient_whatsapp || '';
+                    
+                    const provider = data.whatsapp_provider || 'twilio';
+                    document.getElementById('whatsapp_provider').value = provider;
+                    document.getElementById('waha_server_url').value = data.waha_server_url || 'http://localhost:3000';
+                    
+                    if (provider === 'waha') {
+                        document.getElementById('waha_auth_token').value = data.twilio_auth_token || '';
+                    } else {
+                        document.getElementById('waha_auth_token').value = '';
+                    }
+                    toggleWhatsAppFields();
                 }
             } catch (err) {
                 console.error('Error loading notification settings:', err);
@@ -468,6 +514,12 @@ Save Settings
         async function saveNotificationSettings(e) {
             if (e) e.preventDefault();
             
+            const provider = document.getElementById('whatsapp_provider').value;
+            let twilioToken = document.getElementById('twilio_auth_token').value;
+            if (provider === 'waha') {
+                twilioToken = document.getElementById('waha_auth_token').value;
+            }
+            
             const payload = {
                 smtp_server: document.getElementById('smtp_server').value,
                 smtp_port: parseInt(document.getElementById('smtp_port').value) || 0,
@@ -475,9 +527,11 @@ Save Settings
                 sender_password: document.getElementById('sender_password').value,
                 recipient_email: document.getElementById('recipient_email').value,
                 twilio_account_sid: document.getElementById('twilio_account_sid').value,
-                twilio_auth_token: document.getElementById('twilio_auth_token').value,
+                twilio_auth_token: twilioToken,
                 twilio_whatsapp_from: document.getElementById('twilio_whatsapp_from').value,
-                recipient_whatsapp: document.getElementById('recipient_whatsapp').value
+                recipient_whatsapp: document.getElementById('recipient_whatsapp').value,
+                whatsapp_provider: provider,
+                waha_server_url: document.getElementById('waha_server_url').value
             };
 
             try {

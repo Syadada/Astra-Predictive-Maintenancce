@@ -240,13 +240,16 @@
           pgNotificationSettings.recipient_email = settings.recipient_email;
         }
         if (settings.recipient_whatsapp) {
-          // Clean phone number: remove non-digits
-          var phone = settings.recipient_whatsapp.replace(/\D/g, '');
-          // Format local Indonesian prefix to international (e.g., 089... -> 6289... and 62089... -> 6289...)
-          if (phone.startsWith('0')) {
-            phone = '62' + phone.slice(1);
-          } else if (phone.startsWith('620')) {
-            phone = '62' + phone.slice(3);
+          var phone = settings.recipient_whatsapp;
+          if (!phone.includes('*')) {
+            // Clean phone number: remove non-digits
+            phone = phone.replace(/\D/g, '');
+            // Format local Indonesian prefix to international (e.g., 089... -> 6289... and 62089... -> 6289...)
+            if (phone.startsWith('0')) {
+              phone = '62' + phone.slice(1);
+            } else if (phone.startsWith('620')) {
+              phone = '62' + phone.slice(3);
+            }
           }
           pgNotificationSettings.recipient_whatsapp = phone;
           console.log('[ASTRA-Notifier] Resolved recipient_whatsapp to:', phone);
@@ -265,7 +268,6 @@
   } else {
     pgLoadNotificationSettings();
   }
-
   function pgDispatchAlert(machineId, machineName, message) {
     console.log('[ASTRA-Notifier] pgDispatchAlert (Backend Twilio + SMTP) invoked:', { machineId, machineName, message });
     pgToast('Dispatching alerts in background...', 'info', 1500);
@@ -286,14 +288,38 @@
     })
     .then(function(data) {
       console.log('[ASTRA-Notifier] Backend alerts successfully queued/dispatched:', data);
-      pgToast('Alert dispatched via Email & WhatsApp (Twilio)!', 'success');
+      pgToast('Alert dispatched via Email & WhatsApp!', 'success');
+      
+      // Save alert to Log History
+      var logs = JSON.parse(localStorage.getItem('localLogHistory') || '[]');
+      logs.unshift({
+        title: "Alert Dispatched: " + machineName,
+        detail: message,
+        parts: "N/A",
+        tech: "System Watchdog",
+        date: new Date().toLocaleString('en-GB', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }),
+        verified: true
+      });
+      localStorage.setItem('localLogHistory', JSON.stringify(logs));
     })
     .catch(function(err) {
       console.error('[ASTRA-Notifier] Backend dispatch failed:', err);
-      pgToast('Failed to dispatch alert: ' + err.message, 'error');
+      
+      // Save fallback alert to Log History
+      var logs = JSON.parse(localStorage.getItem('localLogHistory') || '[]');
+      logs.unshift({
+        title: "Alert Failed/Logged: " + machineName,
+        detail: message + " (Warning: API alert dispatch failed)",
+        parts: "N/A",
+        tech: "System Watchdog",
+        date: new Date().toLocaleString('en-GB', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }),
+        verified: false
+      });
+      localStorage.setItem('localLogHistory', JSON.stringify(logs));
+      
+      pgToast('Logged alert locally. Server delivery failed: ' + err.message, 'info');
     });
   }
-
   function pgCreateWorkOrder(assetId, assetName, status, anomalyScore, faultClass, rul) {
     console.log('[ASTRA-CMMS] pgCreateWorkOrder invoked:', { assetId, assetName, status, anomalyScore, faultClass, rul });
     
@@ -376,11 +402,67 @@
         return res.json();
       })
       .then(function(data) {
+        // Save to local storage for robust cross-page instant loading
+        var localWOs = JSON.parse(localStorage.getItem('localWorkOrders') || '[]');
+        localWOs.unshift({
+          id: data.id || 'WO-' + Date.now().toString().slice(-4),
+          asset_id: assetId,
+          equipment_id: assetId,
+          asset_name: assetName,
+          description: description,
+          assigned_tech: assignedTech,
+          assigned_to: assignedTech,
+          status: 'Pending',
+          created_at: new Date().toISOString()
+        });
+        localStorage.setItem('localWorkOrders', JSON.stringify(localWOs));
+
+        // Save work order to Log History
+        var logs = JSON.parse(localStorage.getItem('localLogHistory') || '[]');
+        logs.unshift({
+          title: "Work Order: " + assetName,
+          detail: description,
+          parts: "Bearing Kit",
+          tech: assignedTech,
+          date: new Date().toLocaleString('en-GB', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }),
+          verified: false
+        });
+        localStorage.setItem('localLogHistory', JSON.stringify(logs));
+
         pgToast(`Work order #${data.id} assigned to ${assignedTech}!`, 'success');
       })
       .catch(function(err) {
         console.error('[ASTRA-CMMS] Failed to create work order:', err);
-        pgToast('Failed to create work order: ' + err.message, 'error');
+        
+        // Local offline fallback
+        var mockId = 'WO-' + Math.floor(1000 + Math.random() * 9000);
+        var localWOs = JSON.parse(localStorage.getItem('localWorkOrders') || '[]');
+        localWOs.unshift({
+          id: mockId,
+          asset_id: assetId,
+          equipment_id: assetId,
+          asset_name: assetName,
+          description: description,
+          assigned_tech: assignedTech,
+          assigned_to: assignedTech,
+          status: 'Pending',
+          created_at: new Date().toISOString()
+        });
+        localStorage.setItem('localWorkOrders', JSON.stringify(localWOs));
+
+        // Save offline work order to Log History
+        var logs = JSON.parse(localStorage.getItem('localLogHistory') || '[]');
+        logs.unshift({
+          title: "Work Order (Offline): " + assetName,
+          detail: description,
+          parts: "Bearing Kit",
+          tech: assignedTech,
+          date: new Date().toLocaleString('en-GB', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }),
+          verified: false
+        });
+        localStorage.setItem('localLogHistory', JSON.stringify(logs));
+
+        pgToast(`Server offline. Saved local work order #${mockId}!`, 'info');
       });
     };
     overlay.onclick = function (e) { if (e.target === overlay) close(); };

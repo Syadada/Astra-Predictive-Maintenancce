@@ -130,10 +130,12 @@
             <div>
               <label class="block font-data-label text-[10px] text-on-surface-variant mb-1 uppercase">Select Machine Asset</label>
               <select id="asset_select" class="w-full bg-surface-container-low border-border rounded-lg text-ink font-body-sm focus:ring-primary focus:border-primary px-md py-sm">
-                <option value="ASTRA-MTR-101|Motor M-101 (Conveyor Drive)">Motor M-101 (Conveyor Drive)</option>
-                <option value="ASTRA-MTR-204|Motor M-204 (Cooling Fan)">Motor M-204 (Cooling Fan)</option>
-                <option value="ASTRA-MTR-300|Motor M-300 (Water Pump)">Motor M-300 (Water Pump)</option>
-                <option value="ASTRA-MTR-305|Motor M-350 (Water Pump)">Motor M-350 (Water Pump)</option>
+                <option value="MTR-01|Conveyor Drive">MTR-01 (Conveyor Drive)</option>
+                <option value="MTR-02|Compressor">MTR-02 (Compressor)</option>
+                <option value="MTR-03|Fan/Blower">MTR-03 (Fan/Blower)</option>
+                <option value="MTR-04|Pump">MTR-04 (Pump)</option>
+                <option value="MTR-05|Mixer">MTR-05 (Mixer)</option>
+                <option value="MTR-06|Spindle">MTR-06 (Spindle)</option>
               </select>
             </div>
 
@@ -263,19 +265,48 @@
 
     // Load active records
     async function loadWorkOrders() {
+      const tbody = document.getElementById('work-orders-tbody');
+      if (!tbody) return;
+
       try {
-        const data = await pgFetch('/api/workorders');
-        const tbody = document.getElementById('work-orders-tbody');
-        if (!tbody || !data.work_orders) return;
-
-        if (data.work_orders.length === 0) {
-          tbody.innerHTML = '<tr><td colspan="5" class="p-md text-ink-muted italic text-center">No active work orders</td></tr>';
-          return;
+        let apiWOs = [];
+      if (typeof pgApiAvailable !== 'undefined' && pgApiAvailable()) {
+        try {
+          const data = await pgFetch('/api/workorders');
+          if (data && data.work_orders) {
+            apiWOs = data.work_orders;
+          }
+        } catch (err) {
+          console.warn('Failed to load work orders from API:', err.message);
         }
+      }
 
-        tbody.innerHTML = data.work_orders.map(wo => {
-          let statusLabel = "";
-          if (wo.status === "In Progress") {
+      // Merge with local storage work orders
+      let localWOs = [];
+      try {
+        localWOs = JSON.parse(localStorage.getItem('localWorkOrders') || '[]');
+        if (!Array.isArray(localWOs)) localWOs = [];
+      } catch (e) {
+        console.error('Error parsing localWorkOrders:', e);
+        localWOs = [];
+      }
+      const mergedWOs = [...localWOs];
+
+      // Append API work orders if not already in local storage list (by ID)
+      apiWOs.forEach(function(wo) {
+        if (!mergedWOs.some(item => String(item.id || '') === String(wo.id || ''))) {
+          mergedWOs.push(wo);
+        }
+      });
+
+      if (mergedWOs.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" class="p-md text-ink-muted italic text-center">No active work orders</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = mergedWOs.map(wo => {
+        let statusLabel = "";
+        if (wo.status === "In Progress") {
             statusLabel = `<span class="inline-flex items-center gap-xs text-[11px] font-bold text-amber-warn px-sm py-xs bg-amber-warn/10 rounded-full"><span class="w-1.5 h-1.5 rounded-full bg-amber-warn animate-pulse"></span>In Progress</span>`;
           } else if (wo.status === "Completed") {
             statusLabel = `<span class="inline-flex items-center gap-xs text-[11px] font-bold text-green-good px-sm py-xs bg-green-good/10 rounded-full"><span class="w-1.5 h-1.5 rounded-full bg-green-good"></span>Completed</span>`;
@@ -290,9 +321,9 @@
             <tr class="border-b border-border/40 hover:bg-green-light/20 transition-colors">
               <td class="p-md font-data-value text-data-value text-primary font-bold">#${wo.id}</td>
               <td class="p-md">
-                <span class="font-bold text-primary block">${wo.asset_name}</span>
-                <span class="text-xs text-on-surface-variant">${wo.description}</span>
-                <span class="block text-[10px] text-ink-muted mt-1">Dispatched: ${wo.created_at}</span>
+                <span class="font-bold text-primary block">${wo.asset_name || 'Induction Motor'}</span>
+                <span class="text-xs text-on-surface-variant">${wo.description || ''}</span>
+                <span class="block text-[10px] text-ink-muted mt-1">Dispatched: ${wo.created_at || ''}</span>
               </td>
               <td class="p-md flex items-center gap-sm mt-3 border-none">
                 <img alt="Tech" class="w-6 h-6 rounded-full" src="${avatar}">
@@ -301,7 +332,7 @@
               <td class="p-md">${statusLabel}</td>
               <td class="p-md text-right">
                 <div class="flex gap-2 justify-end">
-                  <button onclick="openEditModal('${wo.id}', '${wo.asset_name.replace(/'/g, "\\'")}', '${wo.description.replace(/'/g, "\\'")}', '${techName.replace(/'/g, "\\'")}', '${wo.status}')" 
+                  <button onclick="openEditModal('${wo.id}', '${(wo.asset_name || 'Induction Motor').replace(/'/g, "\\'")}', '${(wo.description || '').replace(/'/g, "\\'")}', '${(techName || 'Unassigned').replace(/'/g, "\\'")}', '${wo.status || 'Pending'}')" 
                           class="p-1 hover:bg-green-light text-secondary rounded transition-colors" title="Edit">
                     <span class="material-symbols-outlined text-sm">edit</span>
                   </button>
@@ -339,6 +370,22 @@
         });
 
         if (res.ok) {
+          const data = await res.json();
+          // Save to local storage for robust cross-page instant loading
+          var localWOs = JSON.parse(localStorage.getItem('localWorkOrders') || '[]');
+          localWOs.unshift({
+            id: data.id || 'WO-' + Date.now().toString().slice(-4),
+            asset_id: assetId,
+            equipment_id: assetId,
+            asset_name: assetName,
+            description: description,
+            assigned_tech: assignedTech,
+            assigned_to: assignedTech,
+            status: 'Pending',
+            created_at: new Date().toISOString()
+          });
+          localStorage.setItem('localWorkOrders', JSON.stringify(localWOs));
+
           pgToast('Work order created and dispatched successfully!', 'success');
           document.getElementById('wo_description').value = '';
           loadWorkOrders();
@@ -346,7 +393,27 @@
           throw new Error('HTTP ' + res.status);
         }
       } catch (err) {
-        pgToast('Failed to create work order: ' + err.message, 'error');
+        console.error('Failed to create work order:', err);
+        
+        // Local offline fallback
+        var mockId = 'WO-' + Math.floor(1000 + Math.random() * 9000);
+        var localWOs = JSON.parse(localStorage.getItem('localWorkOrders') || '[]');
+        localWOs.unshift({
+          id: mockId,
+          asset_id: assetId,
+          equipment_id: assetId,
+          asset_name: assetName,
+          description: description,
+          assigned_tech: assignedTech,
+          assigned_to: assignedTech,
+          status: 'Pending',
+          created_at: new Date().toISOString()
+        });
+        localStorage.setItem('localWorkOrders', JSON.stringify(localWOs));
+
+        pgToast(`Server offline. Saved local work order #${mockId}!`, 'info');
+        document.getElementById('wo_description').value = '';
+        loadWorkOrders();
       }
     });
 

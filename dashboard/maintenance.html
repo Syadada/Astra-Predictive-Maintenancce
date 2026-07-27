@@ -253,7 +253,7 @@
 <span class="material-symbols-outlined text-primary">history</span>
 <h3 class="font-body-lg font-bold text-primary uppercase tracking-wider">Log History</h3>
 </div>
-<div class="flex-grow flex flex-col gap-md">
+<div class="flex-grow flex flex-col gap-md" id="log-history-container">
 <!-- Log Item 1 -->
 <div class="pg-log-item">
 <div class="flex justify-between items-center mb-xs">
@@ -333,69 +333,134 @@
 <script src="js/api_client.js"></script>
 <script>
     async function loadWorkOrders() {
-        if (typeof pgApiAvailable === 'undefined' || !pgApiAvailable()) return;
+        const tbody = document.getElementById('work-orders-tbody');
+        if (!tbody) return;
+
+        let apiWOs = [];
+        if (typeof pgApiAvailable !== 'undefined' && pgApiAvailable()) {
+            try {
+                const data = await pgFetch('/api/workorders');
+                if (data && data.work_orders) {
+                    apiWOs = data.work_orders;
+                }
+            } catch (err) {
+                console.warn('Failed to load work orders from API:', err.message);
+            }
+        }
+
+        // Merge with local storage work orders
+        let localWOs = [];
         try {
-            const data = await pgFetch('/api/workorders');
-            const tbody = document.getElementById('work-orders-tbody');
-            if (!tbody || !data.work_orders) return;
-            
-            if (data.work_orders.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="6" class="p-md text-ink-muted italic text-center">No active work orders</td></tr>';
-                return;
+            localWOs = JSON.parse(localStorage.getItem('localWorkOrders') || '[]');
+            if (!Array.isArray(localWOs)) localWOs = [];
+        } catch (e) {
+            console.error('Error parsing localWorkOrders:', e);
+            localWOs = [];
+        }
+        const mergedWOs = [...localWOs];
+
+        // Append API work orders if not already in local storage list (by ID)
+        apiWOs.forEach(function(wo) {
+            if (!mergedWOs.some(item => String(item.id || '') === String(wo.id || ''))) {
+                mergedWOs.push(wo);
+            }
+        });
+
+        if (mergedWOs.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="6" class="p-md text-ink-muted italic text-center">No active work orders</td></tr>';
+            return;
+        }
+
+        // Render work orders dynamically!
+        tbody.innerHTML = mergedWOs.map(wo => {
+            // Determine priority badge and status styling
+            let priorityClass = "bg-primary";
+            let priorityText = "ROUTINE";
+            const desc = (wo.description || '').toLowerCase();
+            if (desc.includes("critical") || desc.includes("seizure") || desc.includes("flatline") || desc.includes("extreme")) {
+                priorityClass = "bg-red-alert status-pulse";
+                priorityText = "CRITICAL";
+            } else if (desc.includes("warning") || desc.includes("fatigue") || desc.includes("elevated")) {
+                priorityClass = "bg-amber-warn";
+                priorityText = "WARNING";
             }
             
-            // Render work orders dynamically!
-            tbody.innerHTML = data.work_orders.map(wo => {
-                // Determine priority badge and status styling
-                let priorityClass = "bg-primary";
-                let priorityText = "ROUTINE";
-                const desc = wo.description.toLowerCase();
-                if (desc.includes("critical") || desc.includes("seizure") || desc.includes("flatline") || desc.includes("extreme")) {
-                    priorityClass = "bg-red-alert status-pulse";
-                    priorityText = "CRITICAL";
-                } else if (desc.includes("warning") || desc.includes("fatigue") || desc.includes("elevated")) {
-                    priorityClass = "bg-amber-warn";
-                    priorityText = "WARNING";
-                }
-                
-                let statusHtml = "";
-                if (wo.status === "In Progress") {
-                    statusHtml = `<div class="flex items-center gap-sm text-amber-warn font-bold"><span class="w-2 h-2 rounded-full bg-amber-warn animate-pulse"></span>In Progress</div>`;
-                } else if (wo.status === "Completed") {
-                    statusHtml = `<div class="flex items-center gap-sm text-green-good font-bold"><span class="w-2 h-2 rounded-full bg-green-good"></span>Completed</div>`;
-                } else {
-                    statusHtml = `<div class="flex items-center gap-sm text-ink-muted"><span class="w-2 h-2 rounded-full bg-outline"></span>Pending</div>`;
-                }
-                                // Static Technician avatars and names for realism
-                const techList = {
-                    "J. Sutherland": "https://lh3.googleusercontent.com/aida-public/AB6AXuC0fnVbVzCtrz_Td3kG-_Q0VXR4yDDY6FdCkkmBIaBFJ0u4TLMxNKpK3bhM4KQ1PAToqgb_VB85STToSweG9g-KBrct4wuJDnuru0eDFMOcmp_D0Pxx_UqSrk0sYCfqKm3Nh5fNiUtk1xiYu9iDH8naW3jaoowT9FdXnNpTJf6YNXxRTVd6_k-s_t8PiL7hpmS9FquBEngd7m4P9C7Qu4P_gRag6SCapwbyYS_fWvS8OesBRKf448vyV9MQ7O_dg5hsokwVfmKC_no",
-                    "M. Rossi": "https://lh3.googleusercontent.com/aida-public/AB6AXu_IGn_uOujdee89SjR-E9S2OpWrgUxfzN96P8eaWiSNE_1nX_h98zIrf_b9Z9tSCdnUXvt8cRCjd5uTW6r0Z_memym7IDsm1I_6xf89a4lUzssgMgP1QSvTjI95vdk4clXcfh6cSS6rRjJj-pvEbqfREIRdvuWtAKqPBU1CxUOfQ1bMPKM5BxaqXfVzdW8uoqo6LpOqShl0AlrEzLmljFiKLrET8w9P9PT3TDshcAJQk4_gCCic2iaPVRHdjDx-F4R7JzGHY7pcOU",
-                    "S. O'Brien": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=256&h=256",
-                    "H. Tanaka": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=256&h=256",
-                    "Unassigned": "https://lh3.googleusercontent.com/aida-public/AB6AXuAJB3nF963ZDZN5AzByGsqb2MxVyIvYYJZPDV3NOPF900ug_3y-d7MEHM9IcmdVDLg62EThO7ZZgtVfPH2qBLypFdU6CntX3pU3T1JaCfwVtgGdlrtJC5dzHHTfJxSNG-UN1NvfxKBe1DzYgQaD3aqaZg3Xxnt5j4CGxyaLfpyjHJO3tUUkGQIBvHZZAZPScXVH5c1S1afsZtZtXFKb6SEtVWsYVchjtnhJNUrqnmceziBRB5_XQGZV4hDOih0mFzLsvnv-I80nDtU"
-                };
-                
-                const techName = wo.assigned_tech || 'Unassigned';
-                const avatar = techList[techName] || techList["Unassigned"];
-                
-                return `<tr class="border-b border-border hover:bg-green-light/30 transition-colors">
-                    <td class="p-md font-data-value text-data-value text-ink">#${wo.id}</td>
-                    <td class="p-md font-bold text-primary">${wo.asset_name}<br><span class="text-[11px] font-normal text-ink-muted">${wo.description}</span></td>
-                    <td class="p-md text-center">
-                        <span class="inline-block px-sm py-xs rounded ${priorityClass} text-white font-data-label text-[10px] font-bold">${priorityText}</span>
-                    </td>
-                    <td class="p-md flex items-center gap-sm">
-                        <img alt="Tech" class="w-6 h-6 rounded-full" src="${avatar}">
-                        <span>${techName}</span>
-                    </td>
-                    <td class="p-md">${statusHtml}</td>
-                    <td class="p-md text-right">
-                        <button class="material-symbols-outlined text-ink-muted hover:text-primary" onclick="pgToast('Work order options menu - available in v2.1', 'info')">more_vert</button>
-                    </td>
-                </tr>`;
-            }).join('\n');
-        } catch (err) {
-            console.warn('Failed to load work orders:', err.message);
+            let statusHtml = "";
+            if (wo.status === "In Progress") {
+                statusHtml = `<div class="flex items-center gap-sm text-amber-warn font-bold"><span class="w-2 h-2 rounded-full bg-amber-warn animate-pulse"></span>In Progress</div>`;
+            } else if (wo.status === "Completed") {
+                statusHtml = `<div class="flex items-center gap-sm text-green-good font-bold"><span class="w-2 h-2 rounded-full bg-green-good"></span>Completed</div>`;
+            } else {
+                statusHtml = `<div class="flex items-center gap-sm text-ink-muted"><span class="w-2 h-2 rounded-full bg-outline"></span>Pending</div>`;
+            }
+            
+            // Static Technician avatars and names for realism
+            const techList = {
+                "J. Sutherland": "https://lh3.googleusercontent.com/aida-public/AB6AXuC0fnVbVzCtrz_Td3kG-_Q0VXR4yDDY6FdCkkmBIaBFJ0u4TLMxNKpK3bhM4KQ1PAToqgb_VB85STToSweG9g-KBrct4wuJDnuru0eDFMOcmp_D0Pxx_UqSrk0sYCfqKm3Nh5fNiUtk1xiYu9iDH8naW3jaoowT9FdXnNpTJf6YNXxRTVd6_k-s_t8PiL7hpmS9FquBEngd7m4P9C7Qu4P_gRag6SCapwbyYS_fWvS8OesBRKf448vyV9MQ7O_dg5hsokwVfmKC_no",
+                "M. Rossi": "https://lh3.googleusercontent.com/aida-public/AB6AXu_IGn_uOujdee89SjR-E9S2OpWrgUxfzN96P8eaWiSNE_1nX_h98zIrf_b9Z9tSCdnUXvt8cRCjd5uTW6r0Z_memym7IDsm1I_6xf89a4lUzssgMgP1QSvTjI95vdk4clXcfh6cSS6rRjJj-pvEbqfREIRdvuWtAKqPBU1CxUOfQ1bMPKM5BxaqXfVzdW8uoqo6LpOqShl0AlrEzLmljFiKLrET8w9P9PT3TDshcAJQk4_gCCic2iaPVRHdjDx-F4R7JzGHY7pcOU",
+                "S. O'Brien": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=256&h=256",
+                "H. Tanaka": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=256&h=256",
+                "Unassigned": "https://lh3.googleusercontent.com/aida-public/AB6AXuAJB3nF963ZDZN5AzByGsqb2MxVyIvYYJZPDV3NOPF900ug_3y-d7MEHM9IcmdVDLg62EThO7ZZgtVfPH2qBLypFdU6CntX3pU3T1JaCfwVtgGdlrtJC5dzHHTfJxSNG-UN1NvfxKBe1DzYgQaD3aqaZg3Xxnt5j4CGxyaLfpyjHJO3tUUkGQIBvHZZAZPScXVH5c1S1afsZtZtXFKb6SEtVWsYVchjtnhJNUrqnmceziBRB5_XQGZV4hDOih0mFzLsvnv-I80nDtU"
+            };
+            
+            const techName = wo.assigned_tech || wo.assigned_to || 'Unassigned';
+            const avatar = techList[techName] || techList["Unassigned"];
+            
+            return `<tr class="border-b border-border hover:bg-green-light/30 transition-colors">
+                <td class="p-md font-data-value text-data-value text-ink">#${wo.id}</td>
+                <td class="p-md font-bold text-primary">${wo.asset_name || 'Induction Motor'}<br><span class="text-[11px] font-normal text-ink-muted">${wo.description || ''}</span></td>
+                <td class="p-md text-center">
+                    <span class="inline-block px-sm py-xs rounded ${priorityClass} text-white font-data-label text-[10px] font-bold">${priorityText}</span>
+                </td>
+                <td class="p-md flex items-center gap-sm">
+                    <img alt="Tech" class="w-6 h-6 rounded-full" src="${avatar}">
+                    <span>${techName}</span>
+                </td>
+                <td class="p-md">${statusHtml}</td>
+                <td class="p-md text-right">
+                    <button class="material-symbols-outlined text-ink-muted hover:text-primary" onclick="pgToast('Work order options menu - available in v2.1', 'info')">more_vert</button>
+                </td>
+            </tr>`;
+        }).join('\n');
+    }
+
+    function loadLogHistory() {
+        const container = document.getElementById('log-history-container');
+        if (!container) return;
+        
+        // Remove any previously added dynamic log items to avoid duplicating
+        document.querySelectorAll('.dynamic-log-item').forEach(el => el.remove());
+        
+        let logs = [];
+        try {
+            logs = JSON.parse(localStorage.getItem('localLogHistory') || '[]');
+            if (!Array.isArray(logs)) logs = [];
+        } catch (e) {
+            console.error('Error parsing localLogHistory:', e);
+            logs = [];
+        }
+        
+        // Prepend dynamic logs at the top in chronological order
+        for (var i = logs.length - 1; i >= 0; i--) {
+            var log = logs[i];
+            var statusText = log.verified ? 'VERIFIED' : 'PENDING';
+            var statusClass = log.verified ? 'text-green-good' : 'text-amber-warn';
+            
+            var logEl = document.createElement('div');
+            logEl.className = 'pg-log-item dynamic-log-item border-l-4 border-primary pl-3 py-1';
+            logEl.innerHTML = `
+                <div class="flex justify-between items-center mb-xs">
+                    <span class="font-data-label text-data-label text-ink-muted uppercase">${log.date}</span>
+                    <span class="${statusClass} font-bold text-[10px]">${statusText}</span>
+                </div>
+                <h4 class="font-body-sm font-bold text-primary">${log.title}</h4>
+                <p class="text-[12px] text-on-surface-variant mt-1 italic">"${log.detail}"</p>
+                <div class="flex gap-xs mt-2">
+                    <span class="bg-surface-container px-xs py-[2px] rounded text-[9px] font-data-label">PARTS: ${log.parts}</span>
+                    <span class="bg-surface-container px-xs py-[2px] rounded text-[9px] font-data-label">TECH: ${log.tech}</span>
+                </div>
+            `;
+            container.insertBefore(logEl, container.firstChild);
         }
     }
 </script>
@@ -418,9 +483,11 @@
             }
         }, 1000);
 
-        // Load dynamic work orders
+        // Load dynamic work orders and logs
         loadWorkOrders();
+        loadLogHistory();
         setInterval(loadWorkOrders, 4000);
+        setInterval(loadLogHistory, 4000);
     </script>
 <script src="js/sidebar.js"></script>
 <script>renderSidebar('maintenance');</script>
