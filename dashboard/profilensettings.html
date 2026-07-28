@@ -349,6 +349,16 @@
 <!-- SMTP Settings -->
 <div class="space-y-md">
 <h5 class="font-body-sm text-body-sm font-bold text-secondary border-b border-border pb-2">SMTP Email Settings</h5>
+<div class="flex items-center justify-between py-xs mb-sm">
+    <div>
+        <p class="font-body-sm text-body-sm font-semibold text-ink">Enable Email Alerts</p>
+        <p class="font-data-label text-data-label text-ink-muted">Send email alerts for critical anomalies</p>
+    </div>
+    <label class="relative inline-flex items-center cursor-pointer">
+        <input id="email_enabled" class="sr-only peer" type="checkbox" checked>
+        <div class="w-11 h-6 bg-surface-variant peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+    </label>
+</div>
 <div>
 <label class="block font-data-label text-data-label text-on-surface-variant mb-1">SMTP Server</label>
 <input id="smtp_server" class="w-full bg-surface-container-low border-border rounded-lg text-ink font-body-sm focus:ring-primary focus:border-primary px-md py-sm" type="text" placeholder="smtp.gmail.com">
@@ -497,6 +507,7 @@ Save Settings
                 const data = await res.json();
                 
                 if (data) {
+                    document.getElementById('email_enabled').checked = (data.email_enabled !== false);
                     document.getElementById('smtp_server').value = data.smtp_server || '';
                     document.getElementById('smtp_port').value = data.smtp_port || '';
                     document.getElementById('sender_email').value = data.sender_email || '';
@@ -551,7 +562,8 @@ Save Settings
                 twilio_whatsapp_from: document.getElementById('twilio_whatsapp_from').value,
                 recipient_whatsapp: document.getElementById('recipient_whatsapp').value,
                 whatsapp_provider: provider,
-                waha_server_url: document.getElementById('waha_server_url').value
+                waha_server_url: document.getElementById('waha_server_url').value,
+                email_enabled: document.getElementById('email_enabled').checked
             };
 
             try {

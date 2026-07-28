@@ -30,6 +30,7 @@ RECIPIENT_WHATSAPP = os.getenv("ASTRA_RECIPIENT_WHATSAPP", "")    # User's phone
 
 _last_notified = {}  # key: machine_id + alert_type, value: timestamp
 _last_whatsapp_sent_time = 0.0
+_email_disabled_by_limit = False
 
 def get_active_settings():
     # Load defaults from environment variables (overridden by local_config.py)
@@ -44,7 +45,8 @@ def get_active_settings():
         "twilio_whatsapp_from": TWILIO_WHATSAPP_FROM,
         "recipient_whatsapp": RECIPIENT_WHATSAPP,
         "whatsapp_provider": os.getenv("ASTRA_WHATSAPP_PROVIDER", "twilio"),
-        "waha_server_url": os.getenv("ASTRA_WAHA_SERVER_URL", "http://localhost:3000")
+        "waha_server_url": os.getenv("ASTRA_WAHA_SERVER_URL", "http://localhost:3000"),
+        "email_enabled": True
     }
 
     # Attempt to load from PostgreSQL
@@ -69,6 +71,9 @@ def get_active_settings():
                 if k == 'id':
                     continue
                 # Overlay if not empty and not a default placeholder
+                if isinstance(v, bool):
+                    settings[k] = v
+                    continue
                 val_str = str(v).lower()
                 is_placeholder = (
                     "placeholder" in val_str or 
@@ -85,7 +90,15 @@ def get_active_settings():
     return settings
 
 def send_email(subject: str, body: str):
+    global _email_disabled_by_limit
+    if _email_disabled_by_limit:
+        # Silently skip to avoid spamming the console logs
+        return False
+
     settings = get_active_settings()
+    if not settings.get("email_enabled", True):
+        # Email disabled by user toggle
+        return False
     sender_password = settings.get("sender_password")
     sender_email = settings.get("sender_email")
     recipient_email = settings.get("recipient_email")
@@ -109,8 +122,23 @@ def send_email(subject: str, body: str):
         server.quit()
         print(f"[Notifier] Email alert successfully sent to {recipient_email}")
         return True
+    except smtplib.SMTPResponseException as e:
+        err_msg = str(e.smtp_error)
+        if e.smtp_code == 550 or "sending limit" in err_msg.lower() or "limit exceeded" in err_msg.lower():
+            _email_disabled_by_limit = True
+            print(f"[Notifier] Gmail SMTP Error: {e.smtp_code} - {err_msg}")
+            print("[Notifier] Gmail daily sending limit exceeded. Email notifications will be suspended for this session to prevent log spam.")
+        else:
+            print(f"[Notifier] Failed to send email (SMTP response exception): {e}")
+        return False
     except Exception as e:
-        print(f"[Notifier] Failed to send email: {e}")
+        err_str = str(e)
+        if "550" in err_str and ("sending limit" in err_str.lower() or "limit exceeded" in err_str.lower()):
+            _email_disabled_by_limit = True
+            print(f"[Notifier] Gmail daily sending limit exceeded error detected: {e}")
+            print("[Notifier] Email notifications will be suspended for this session to prevent log spam.")
+        else:
+            print(f"[Notifier] Failed to send email: {e}")
         return False
 
 def send_whatsapp(body: str):

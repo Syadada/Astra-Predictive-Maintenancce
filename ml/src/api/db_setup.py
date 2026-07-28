@@ -199,11 +199,13 @@ def create_tables():
             twilio_whatsapp_from TEXT,
             recipient_whatsapp TEXT,
             whatsapp_provider TEXT DEFAULT 'twilio',
-            waha_server_url TEXT DEFAULT 'http://localhost:3000'
+            waha_server_url TEXT DEFAULT 'http://localhost:3000',
+            email_enabled BOOLEAN DEFAULT TRUE
         );
     """)
     cursor.execute("ALTER TABLE notification_settings ADD COLUMN IF NOT EXISTS whatsapp_provider TEXT DEFAULT 'twilio'")
     cursor.execute("ALTER TABLE notification_settings ADD COLUMN IF NOT EXISTS waha_server_url TEXT DEFAULT 'http://localhost:3000'")
+    cursor.execute("ALTER TABLE notification_settings ADD COLUMN IF NOT EXISTS email_enabled BOOLEAN DEFAULT TRUE")
 
     # 8. prediction_results table
     cursor.execute("""
@@ -268,8 +270,8 @@ def create_tables():
     if cursor.fetchone()[0] == 0:
         print("[DB Setup] Seeding default notification settings...")
         cursor.execute("""
-            INSERT INTO notification_settings (id, smtp_server, smtp_port, sender_email, sender_password, recipient_email, twilio_account_sid, twilio_auth_token, twilio_whatsapp_from, recipient_whatsapp, whatsapp_provider, waha_server_url)
-            VALUES (1, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            INSERT INTO notification_settings (id, smtp_server, smtp_port, sender_email, sender_password, recipient_email, twilio_account_sid, twilio_auth_token, twilio_whatsapp_from, recipient_whatsapp, whatsapp_provider, waha_server_url, email_enabled)
+            VALUES (1, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
         """, (
             "smtp.gmail.com",
             587,
@@ -281,7 +283,8 @@ def create_tables():
             "+14155238886",
             "+628999999999",
             "twilio",
-            "http://localhost:3000"
+            "http://localhost:3000",
+            True
         ))
         conn.commit()
         print("[DB Setup] Seeded default notification settings.")

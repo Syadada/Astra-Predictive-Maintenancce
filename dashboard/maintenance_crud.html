@@ -454,6 +454,26 @@
         });
 
         if (res.ok) {
+          // Sync with local storage
+          var localWOs = JSON.parse(localStorage.getItem('localWorkOrders') || '[]');
+          var existing = localWOs.find(w => String(w.id) === String(id));
+          if (existing) {
+            existing.status = status;
+            existing.description = description;
+            existing.assigned_tech = assignedTech;
+            existing.assigned_to = assignedTech;
+          } else {
+            localWOs.push({
+              id: id,
+              status: status,
+              description: description,
+              assigned_tech: assignedTech,
+              assigned_to: assignedTech,
+              created_at: new Date().toISOString()
+            });
+          }
+          localStorage.setItem('localWorkOrders', JSON.stringify(localWOs));
+
           pgToast('Changes saved successfully!', 'success');
           closeEditModal();
           loadWorkOrders();
@@ -475,6 +495,11 @@
           });
 
           if (res.ok) {
+            // Delete from local storage
+            var localWOs = JSON.parse(localStorage.getItem('localWorkOrders') || '[]');
+            localWOs = localWOs.filter(w => String(w.id) !== String(id));
+            localStorage.setItem('localWorkOrders', JSON.stringify(localWOs));
+
             pgToast('Work order deleted successfully!', 'success');
             loadWorkOrders();
           } else {

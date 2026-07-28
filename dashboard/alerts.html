@@ -794,8 +794,7 @@ Schedule predictive replacement within 48 hours.
             const footer = container.querySelector('.pt-xl');
             const liveHTML = data.alerts
                 .map((a, i) => _buildAlertCard(a, i))
-                .join('
-');
+                .join('\n');
             container.innerHTML = liveHTML + (footer ? footer.outerHTML : '');
         } catch (err) {
             console.warn('Alerts API load failed:', err.message);

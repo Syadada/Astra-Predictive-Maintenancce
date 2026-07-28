@@ -228,7 +228,7 @@
 <span class="material-symbols-outlined text-primary">engineering</span>
 <h3 class="font-body-lg font-bold text-primary uppercase tracking-wider">Active Work Orders</h3>
 </div>
-<button class="font-data-label text-data-label text-secondary hover:underline uppercase" onclick="pgToast('Showing all 47 active work orders', 'info')">View All</button>
+<button class="font-data-label text-data-label text-secondary hover:underline uppercase" onclick="window.location.href='maintenance_crud.html'">View All</button>
 </div>
 <div class="overflow-x-auto">
 <table class="w-full text-left pg-table">
@@ -366,6 +366,7 @@
             }
         });
 
+        window.allWorkOrders = mergedWOs;
         if (mergedWOs.length === 0) {
             tbody.innerHTML = '<tr><td colspan="6" class="p-md text-ink-muted italic text-center">No active work orders</td></tr>';
             return;
@@ -418,7 +419,7 @@
                 </td>
                 <td class="p-md">${statusHtml}</td>
                 <td class="p-md text-right">
-                    <button class="material-symbols-outlined text-ink-muted hover:text-primary" onclick="pgToast('Work order options menu - available in v2.1', 'info')">more_vert</button>
+                    <button class="material-symbols-outlined text-ink-muted hover:text-primary" onclick="openStatusModal('${wo.id}')">more_vert</button>
                 </td>
             </tr>`;
         }).join('\n');
@@ -488,7 +489,124 @@
         loadLogHistory();
         setInterval(loadWorkOrders, 4000);
         setInterval(loadLogHistory, 4000);
+        function openStatusModal(id) {
+            const wo = (window.allWorkOrders || []).find(w => String(w.id) === String(id));
+            if (!wo) {
+                pgToast('Work order not found', 'error');
+                return;
+            }
+            document.getElementById('status_wo_id').value = id;
+            document.getElementById('status_wo_desc').value = wo.description || '';
+            document.getElementById('status_wo_tech').value = wo.assigned_tech || wo.assigned_to || 'Unassigned';
+            document.getElementById('status_wo_asset').value = wo.asset_name || 'Induction Motor';
+            document.getElementById('status_wo_select').value = wo.status || 'Pending';
+            
+            const modal = document.getElementById('statusModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeStatusModal() {
+            const modal = document.getElementById('statusModal');
+            modal.classList.remove('flex');
+            modal.classList.add('hidden');
+        }
+
+        // Handle status save submit
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('editStatusForm');
+            if (form) {
+                form.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    const id = document.getElementById('status_wo_id').value;
+                    const desc = document.getElementById('status_wo_desc').value;
+                    const tech = document.getElementById('status_wo_tech').value;
+                    const status = document.getElementById('status_wo_select').value;
+                    
+                    pgToast('Updating status...', 'info', 1500);
+                    
+                    let success = false;
+                    const apiBase = window.location.protocol === 'file:' ? 'http://127.0.0.1:8000' : '';
+                    
+                    try {
+                        const res = await fetch(apiBase + `/api/workorders/${id}`, {
+                            method: 'PUT',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                status: status,
+                                description: desc,
+                                assigned_tech: tech
+                            })
+                        });
+                        if (res.ok) {
+                            success = true;
+                        }
+                    } catch (err) {
+                        console.warn('API status update failed, fallback to local storage:', err);
+                    }
+                    
+                    // Update local storage to ensure sync and cross-page consistency
+                    let localWOs = JSON.parse(localStorage.getItem('localWorkOrders') || '[]');
+                    let existingLocal = localWOs.find(w => String(w.id) === String(id));
+                    if (existingLocal) {
+                        existingLocal.status = status;
+                    } else {
+                        const apiWO = (window.allWorkOrders || []).find(w => String(w.id) === String(id));
+                        if (apiWO) {
+                            localWOs.push({
+                                ...apiWO,
+                                status: status
+                            });
+                        }
+                    }
+                    localStorage.setItem('localWorkOrders', JSON.stringify(localWOs));
+                    
+                    pgToast(success ? 'Status updated successfully!' : 'Saved status locally!', 'success');
+                    closeStatusModal();
+                    loadWorkOrders();
+                });
+            }
+        });
     </script>
+
+  <!-- Edit Status Modal -->
+  <div id="statusModal" class="fixed inset-0 z-[200] hidden items-center justify-center p-md bg-black/40 backdrop-blur-[2px]">
+    <div class="bg-white border border-border rounded-xl p-lg max-w-md w-full shadow-2xl flex flex-col gap-lg text-on-background">
+      <div class="flex justify-between items-center border-b border-border pb-md">
+        <h4 class="font-body-lg font-bold text-primary flex items-center gap-sm">
+          <span class="material-symbols-outlined text-primary">edit_note</span>
+          Update Work Order Status
+        </h4>
+        <span class="material-symbols-outlined cursor-pointer hover:text-red-alert" onclick="closeStatusModal()">close</span>
+      </div>
+
+      <form id="editStatusForm" class="space-y-md">
+        <input type="hidden" id="status_wo_id">
+        <input type="hidden" id="status_wo_desc">
+        <input type="hidden" id="status_wo_tech">
+        
+        <div>
+          <label class="block font-data-label text-[10px] text-on-surface-variant mb-1 uppercase">Asset</label>
+          <input type="text" id="status_wo_asset" disabled class="w-full bg-surface-container-high border-border rounded-lg text-ink-muted font-body-sm px-md py-sm cursor-not-allowed">
+        </div>
+
+        <div>
+          <label class="block font-data-label text-[10px] text-on-surface-variant mb-1 uppercase">Task Status</label>
+          <select id="status_wo_select" class="w-full bg-surface-container-low border-border rounded-lg text-ink font-body-sm focus:ring-primary focus:border-primary px-md py-sm">
+            <option value="Pending">Pending</option>
+            <option value="In Progress">In Progress</option>
+            <option value="Completed">Completed</option>
+          </select>
+        </div>
+
+        <div class="flex justify-end gap-sm pt-md border-t border-border">
+          <button type="button" onclick="closeStatusModal()" class="px-lg py-sm bg-white border border-border text-primary font-body-sm font-bold rounded hover:bg-surface-container-low transition-all">Cancel</button>
+          <button type="submit" class="px-lg py-sm bg-primary text-white font-body-sm font-bold rounded hover:bg-opacity-90 transition-all">Save Status</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
 <script src="js/sidebar.js"></script>
 <script>renderSidebar('maintenance');</script>
 </body></html>

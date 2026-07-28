@@ -184,6 +184,42 @@
   // ─── MOCK DOWNLOAD ──────────────────────────────────────────────────────────
   function pgMockDownload(filename, ext) {
     ext = ext || 'pdf';
+    
+    // Check if API is available and route to live FastAPI database report endpoints
+    if (window.location.protocol === 'http:' || window.location.protocol === 'https:') {
+      const apiBase = '';
+      const queryFormat = ext ? '?format=' + ext : '';
+      if (filename.toLowerCase().includes('weekly')) {
+        window.open(apiBase + '/api/reports/weekly' + queryFormat, '_blank');
+        pgToast(filename + '.' + ext + ' downloaded from live database', 'success', 2500);
+        return;
+      } else if (filename.toLowerCase().includes('cmms_log') || filename.toLowerCase().includes('maintenance_m') || filename.toLowerCase().includes('compliance')) {
+        // Extract motor ID from filename (e.g. CMMS_Log_M101_2026 or Maintenance_M204_2026)
+        let motorId = 'all';
+        if (filename.includes('M101') || filename.includes('MTR-01') || filename.includes('_M1_')) {
+          motorId = 'MTR-01';
+        } else if (filename.includes('M204') || filename.includes('MTR-02') || filename.includes('M204')) {
+          motorId = 'MTR-02';
+        } else if (filename.includes('M3') || filename.includes('MTR-03')) {
+          motorId = 'MTR-03';
+        } else if (filename.includes('M4') || filename.includes('MTR-04')) {
+          motorId = 'MTR-04';
+        } else if (filename.includes('M5') || filename.includes('MTR-05')) {
+          motorId = 'MTR-05';
+        } else if (filename.includes('M6') || filename.includes('MTR-06')) {
+          motorId = 'MTR-06';
+        }
+        window.open(apiBase + '/api/reports/cmms/' + motorId + queryFormat, '_blank');
+        pgToast(filename + '.' + ext + ' downloaded from live database', 'success', 2500);
+        return;
+      } else if (filename.toLowerCase().includes('downtime')) {
+        window.open(apiBase + '/api/reports/downtime' + queryFormat, '_blank');
+        pgToast(filename + '.' + ext + ' downloaded from live database', 'success', 2500);
+        return;
+      }
+    }
+
+    // Fallback to local client-side mockup generation
     pgToast('Preparing ' + filename + '.' + ext + '…', 'info', 2000);
     setTimeout(function () {
       var content, mime;
@@ -191,8 +227,38 @@
         content = 'Report,Generated,Status\n' + filename + ',' + new Date().toISOString().slice(0, 10) + ',Completed';
         mime    = 'text/csv';
       } else {
-        content = '%PDF-1.4\n% PredictaGuard — ' + filename + '\n1 0 obj<</Type/Catalog>>endobj\n';
-        mime    = 'application/pdf';
+        // Construct a mathematically valid 1-page PDF so that PDF viewers can open it without errors
+        var textContent = 'PredictaGuard Report: ' + filename.replace(/_/g, ' ') + ' (' + new Date().toLocaleDateString() + ')';
+        var streamContent = 'BT\n/F1 12 Tf\n72 712 Td\n(' + textContent + ') Tj\nET';
+        var streamLen = streamContent.length;
+        
+        // Offset calculations
+        var headerLen = ('5 0 obj\n<%3C/Length ' + streamLen + '%3E%3E\nstream\n').replace(/%3C/g, '<').replace(/%3E/g, '>').length;
+        var streamEndLen = '\nendstream\nendobj\n'.length;
+        var xrefOffset = 313 + headerLen + streamLen + streamEndLen;
+        
+        content = 
+          '%PDF-1.4\n' +
+          '1 0 obj\n<</Type /Catalog /Pages 2 0 R>>\nendobj\n' +
+          '2 0 obj\n<</Type /Pages /Kids [3 0 R] /Count 1>>\nendobj\n' +
+          '3 0 obj\n<</Type /Page /Parent 2 0 R /Resources <</Font <</F1 4 0 R>>>> /MediaBox [0 0 595 842] /Contents 5 0 R>>\nendobj\n' +
+          '4 0 obj\n<</Type /Font /Subtype /Type1 /BaseFont /Helvetica>>\nendobj\n' +
+          '5 0 obj\n<</Length ' + streamLen + '>>\nstream\n' + streamContent + '\nendstream\nendobj\n' +
+          'xref\n' +
+          '0 6\n' +
+          '0000000000 65535 f \n' +
+          '0000000009 00000 n \n' +
+          '0000000058 00000 n \n' +
+          '0000000115 00000 n \n' +
+          '0000000244 00000 n \n' +
+          '0000000313 00000 n \n' +
+          'trailer\n' +
+          '<</Size 6 /Root 1 0 R>>\n' +
+          'startxref\n' +
+          xrefOffset + '\n' +
+          '%%EOF\n';
+          
+        mime = 'application/pdf';
       }
       var blob = new Blob([content], { type: mime });
       var url  = URL.createObjectURL(blob);
