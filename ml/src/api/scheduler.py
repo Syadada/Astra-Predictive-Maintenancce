@@ -6,6 +6,12 @@ from sqlalchemy import create_engine, text
 from collections import namedtuple
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
+# Alert cooldown settings
+# HIGH_WARNING: email is suppressed if already sent within this window
+_EMAIL_COOLDOWN_HOURS = 2
+# Tracks previous severity per motor to detect status transitions (in-memory cache)
+_motor_previous_severity: dict = {}
+
 # Add project root to sys path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
 try:
@@ -218,15 +224,33 @@ async def run_inference():
                 sequence=sequence
             )
             
-            # Insert into database
+            current_severity = decision['severity']
+            alert_tier = decision.get('alert_tier', 'none')
+            previous_severity = _motor_previous_severity.get(motor.motor_id, 'NORMAL')
+            
+            # ── Determine if notification should be sent ──────────────────
+            should_notify, notify_reason = _should_send_notification(
+                motor_id=motor.motor_id,
+                current_severity=current_severity,
+                alert_tier=alert_tier,
+                previous_severity=previous_severity,
+                db_engine=engine,
+            )
+            
+            # Update in-memory previous severity tracker
+            _motor_previous_severity[motor.motor_id] = current_severity
+
+            # Insert into database (including new consensus_votes and alert_tier columns)
             with engine.connect() as conn:
                 conn.execute(
                     text("""
                         INSERT INTO prediction_results (
-                            motor_id, predicted_at, health_score, anomaly_score, fault_type, 
-                            rul_days, severity, recommendation, top_cause, alert_sent
+                            motor_id, predicted_at, health_score, anomaly_score, fault_type,
+                            rul_days, severity, recommendation, top_cause, alert_sent,
+                            consensus_votes, alert_tier
                         ) VALUES (
-                            :mid, :pat, :hs, :as_, :ft, :rul, :sev, :rec, :cause, :alert
+                            :mid, :pat, :hs, :as_, :ft, :rul, :sev, :rec, :cause, :alert,
+                            :cv, :tier
                         )
                     """),
                     {
@@ -236,31 +260,109 @@ async def run_inference():
                         "as_": decision['anomaly_score'],
                         "ft": decision['fault_type'],
                         "rul": decision['rul_days'],
-                        "sev": decision['severity'],
+                        "sev": current_severity,
                         "rec": decision['recommendation'],
                         "cause": decision['top_cause'],
-                        "alert": decision['alert_sent']
+                        "alert": False,
+                        "cv": decision.get('consensus_votes', 0),
+                        "tier": alert_tier,
                     }
                 )
                 conn.commit()
-                
-            # Dispatch warning/critical alerts
-            if decision['severity'] in ['WARNING', 'CRITICAL']:
-                print(f"[Scheduler] Dispatching alerts for {motor.motor_id} due to {decision['severity']} status...")
-                sent = notification_service.send(motor, decision)
+
+            # ── Tiered Notification Routing ───────────────────────────────
+            if should_notify:
+                print(f"[Scheduler] [{alert_tier.upper()}] Dispatching notification for "
+                      f"{motor.motor_id} ({current_severity}) — {notify_reason}")
+                sent = notification_service.send(motor, decision, alert_tier=alert_tier)
                 if sent:
-                    # Update database to mark alert_sent = True
                     with engine.connect() as conn:
                         conn.execute(
-                            text("UPDATE prediction_results SET alert_sent = TRUE WHERE motor_id = :mid AND predicted_at = :pat"),
+                            text("UPDATE prediction_results SET alert_sent = TRUE "
+                                 "WHERE motor_id = :mid AND predicted_at = :pat"),
                             {"mid": decision['motor_id'], "pat": decision['predicted_at']}
                         )
                         conn.commit()
-                        
-            print(f"[Scheduler] Completed inference for motor {motor.motor_id} | Health: {decision['health_score']:.1f}% | Severity: {decision['severity']}")
+            else:
+                print(f"[Scheduler] Notification suppressed for {motor.motor_id} "
+                      f"({current_severity}) — {notify_reason}")
+
+            print(f"[Scheduler] Motor {motor.motor_id} | Health: {decision['health_score']:.1f}% "
+                  f"| Severity: {current_severity} | Tier: {alert_tier} "
+                  f"| Consensus: {decision.get('consensus_votes', 0)}/3")
             
     except Exception as e:
         print(f"[Scheduler Error] Inference exception: {e}")
+
+# ─── Alert Management: Cooldown + Status Change Trigger ─────────────────────
+
+_SEVERITY_RANK = {
+    'NORMAL': 0,
+    'WARNING': 1,
+    'HIGH_WARNING': 2,
+    'CRITICAL': 3,
+}
+
+def _should_send_notification(motor_id: str, current_severity: str, alert_tier: str,
+                               previous_severity: str, db_engine) -> tuple:
+    """
+    Determines whether a notification should be sent based on:
+    1. Alert tier (WARNING/dashboard_only → no external notification)
+    2. Status change trigger (only notify on severity upgrades)
+    3. Alert cooldown (HIGH_WARNING email has a 2-hour cooldown)
+    4. CRITICAL always triggers a notification on any transition from non-CRITICAL
+
+    Returns:
+        (should_notify: bool, reason: str)
+    """
+    current_rank = _SEVERITY_RANK.get(current_severity, 0)
+    previous_rank = _SEVERITY_RANK.get(previous_severity, 0)
+
+    # Tier 'none' or 'dashboard_only': never send external notifications
+    if alert_tier in ('none', 'dashboard_only'):
+        return False, f"Tier '{alert_tier}' — dashboard display only, no external notification"
+
+    # CRITICAL: always send if status upgraded from a lower level
+    if current_severity == 'CRITICAL':
+        if previous_severity != 'CRITICAL':
+            return True, f"Status escalated from {previous_severity} → CRITICAL"
+        else:
+            # Already was CRITICAL; check if we re-entered (e.g., brief drop then back)
+            # Still suppress repeated CRITICAL notifications without a status change
+            return False, "Already in CRITICAL state — notification suppressed to prevent alert fatigue"
+
+    # HIGH_WARNING (email tier): apply cooldown of _EMAIL_COOLDOWN_HOURS
+    if current_severity == 'HIGH_WARNING':
+        # Only send on upgrade (WARNING → HIGH_WARNING or NORMAL → HIGH_WARNING)
+        if current_rank <= previous_rank:
+            return False, f"No severity upgrade detected ({previous_severity} → {current_severity}) — email suppressed"
+
+        # Check cooldown: was an email sent for this motor in the last N hours?
+        cooldown_query = text("""
+            SELECT MAX(predicted_at) FROM prediction_results
+            WHERE motor_id = :mid
+              AND alert_sent = TRUE
+              AND severity = 'HIGH_WARNING'
+        """)
+        try:
+            with db_engine.connect() as conn:
+                last_sent = conn.execute(cooldown_query, {"mid": motor_id}).scalar()
+        except Exception as e:
+            print(f"[Scheduler Warning] Cooldown check failed: {e}")
+            last_sent = None
+
+        if last_sent is not None:
+            last_sent = last_sent.replace(tzinfo=None)
+            elapsed_hours = (datetime.now() - last_sent).total_seconds() / 3600
+            if elapsed_hours < _EMAIL_COOLDOWN_HOURS:
+                return False, (f"HIGH_WARNING email cooldown active "
+                               f"(last sent {elapsed_hours:.1f}h ago, cooldown: {_EMAIL_COOLDOWN_HOURS}h)")
+
+        return True, f"Status upgraded {previous_severity} → HIGH_WARNING"
+
+    # Any other tier not handled above: suppress
+    return False, f"Unhandled tier '{alert_tier}' — notification suppressed"
+
 
 # Register jobs
 scheduler.add_job(run_feature_pipeline, 'interval', seconds=30, id='feature_pipeline')

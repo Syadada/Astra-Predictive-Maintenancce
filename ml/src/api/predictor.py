@@ -123,10 +123,12 @@ class Predictor:
 
     def predict_anomaly_score(self, window_Nx60x8: np.ndarray) -> float:
         """window_Nx60x8: shape (N, 60, 8), already scaled by skab_scaler.
-        Returns anomaly probability for the first window."""
+        Returns anomaly probability for the first window, clipped to [0.0, 1.0]."""
         X = window_Nx60x8[:1].reshape(1, -1)
-        proba = self.skab_model.predict_proba(X)[0, 1]
-        return float(proba)
+        raw = self.skab_model.predict_proba(X)[0, 1]
+        # Clip to valid probability range — some sklearn estimators can return
+        # values slightly outside [0, 1] due to calibration or feature scaling drift.
+        return float(np.clip(raw, 0.0, 1.0))
 
     def predict_rul(self, window_1x30x14: np.ndarray) -> float:
         """window_1x30x14: shape (1, 30, 14), already scaled by cmapss_scaler.

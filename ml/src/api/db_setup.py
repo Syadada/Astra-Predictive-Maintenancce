@@ -220,9 +220,16 @@ def create_tables():
             severity        VARCHAR(20),
             recommendation  TEXT,
             top_cause       TEXT,
-            alert_sent      BOOLEAN DEFAULT FALSE
+            alert_sent      BOOLEAN DEFAULT FALSE,
+            -- Alert Management columns (added in v2)
+            consensus_votes INTEGER DEFAULT 0,     -- how many of 3 signals agreed (0-3)
+            alert_tier      VARCHAR(20) DEFAULT 'none'  -- notification channels triggered
         );
     """)
+
+    # Safe migration for existing databases — add new columns if not already present
+    cursor.execute("ALTER TABLE prediction_results ADD COLUMN IF NOT EXISTS consensus_votes INTEGER DEFAULT 0")
+    cursor.execute("ALTER TABLE prediction_results ADD COLUMN IF NOT EXISTS alert_tier VARCHAR(20) DEFAULT 'none'")
 
     conn.commit()
     print("[DB Setup] Schemas initialized successfully.")
