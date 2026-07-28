@@ -362,12 +362,13 @@
 
         function pgDownloadReport(type, format) {
             if (pgApiAvailable()) {
+                const queryFormat = format ? `?format=${format}` : '';
                 if (type === 'weekly') {
-                    window.open('/api/reports/weekly', '_blank');
+                    window.open(`/api/reports/weekly${queryFormat}`, '_blank');
                 } else if (type === 'cmms') {
-                    window.open('/api/reports/cmms/all', '_blank');
+                    window.open(`/api/reports/cmms/all${queryFormat}`, '_blank');
                 } else if (type === 'downtime') {
-                    window.open('/api/reports/downtime', '_blank');
+                    window.open(`/api/reports/downtime${queryFormat}`, '_blank');
                 }
             } else {
                 pgMockDownload(type === 'weekly' ? 'Weekly_Health_Summary_W24_2026' : (type === 'cmms' ? 'CMMS_Compliance_Log_Q2_2026' : 'Asset_Downtime_Analysis_Jun2026'), format);

@@ -618,13 +618,30 @@ Schedule predictive replacement within 48 hours.
     // -----------------------------------------------------------------------
 
     const _SEV_ICON = {
-        critical: '<span class="material-symbols-outlined text-[32px] status-pulse" style="font-variation-settings: \'FILL\' 1;">error</span>',
-        warning:  '<span class="material-symbols-outlined text-[32px]" style="font-variation-settings: \'FILL\' 1;">warning</span>',
+        critical:     '<span class="material-symbols-outlined text-[32px] status-pulse" style="font-variation-settings: \'FILL\' 1;">error</span>',
+        high_warning: '<span class="material-symbols-outlined text-[32px] status-pulse" style="font-variation-settings: \'FILL\' 1;">warning_amber</span>',
+        warning:      '<span class="material-symbols-outlined text-[32px]" style="font-variation-settings: \'FILL\' 1;">warning</span>',
     };
-    const _SEV_BG   = { critical: 'border-red-alert/30', warning: 'border-amber-warn/30' };
-    const _SEV_ICON_BG = { critical: 'bg-error-container text-red-alert', warning: 'bg-amber-100 text-amber-warn' };
-    const _SEV_BADGE   = { critical: 'bg-red-alert', warning: 'bg-amber-warn' };
-    const _SEV_VALUE   = { critical: 'text-red-alert', warning: 'text-amber-warn' };
+    const _SEV_BG   = {
+        critical:     'border-red-alert/30',
+        high_warning: 'border-orange-500/40',
+        warning:      'border-amber-warn/30',
+    };
+    const _SEV_ICON_BG = {
+        critical:     'bg-error-container text-red-alert',
+        high_warning: 'bg-orange-100 text-orange-600',
+        warning:      'bg-amber-100 text-amber-warn',
+    };
+    const _SEV_BADGE   = {
+        critical:     'bg-red-alert',
+        high_warning: 'bg-orange-600',
+        warning:      'bg-amber-warn',
+    };
+    const _SEV_VALUE   = {
+        critical:     'text-red-alert',
+        high_warning: 'text-orange-600',
+        warning:      'text-amber-warn',
+    };
 
     const _FEAT_COLOR = { red: 'text-red-alert', amber: 'text-amber-warn', muted: 'text-ink-muted' };
     const _FEAT_BAR   = { red: 'bg-red-alert', amber: 'bg-amber-warn', muted: 'bg-outline-variant' };
@@ -659,7 +676,10 @@ Schedule predictive replacement within 48 hours.
 
     function _buildAlertCard(alert, idx) {
         const user = JSON.parse(localStorage.getItem('currentUser')) || { role: 'Operator' };
-        const sev  = alert.severity;
+        // Normalize severity to lowercase+underscore for _SEV_ map lookup
+        // e.g. "HIGH_WARNING" → "high_warning", "CRITICAL" → "critical"
+        const sev  = (alert.severity || '').toLowerCase().replace(/ /g, '_');
+        const sevLabel = (alert.severity || '').toUpperCase();
         const xaiId = 'xai-live-' + idx;
         const mins  = alert.minutes_ago === 1 ? '1 min ago' : alert.minutes_ago + ' mins ago';
         const confPct = Math.round(alert.confidence * 100);
@@ -678,7 +698,7 @@ Schedule predictive replacement within 48 hours.
     <div class="flex-1 grid grid-cols-1 md:grid-cols-3 gap-lg w-full">
       <div>
         <div class="flex items-center gap-sm mb-1">
-          <span class="font-data-label text-data-label ${_SEV_BADGE[sev] || 'bg-primary'} text-white px-2 py-0.5 rounded uppercase">${sev.toUpperCase()}</span>
+          <span class="font-data-label text-data-label ${_SEV_BADGE[sev] || 'bg-primary'} text-white px-2 py-0.5 rounded uppercase">${sevLabel}</span>
           <span class="text-ink-muted text-body-sm">${mins}</span>
         </div>
         <h4 class="font-bold text-body-lg text-ink">${alert.asset_name}</h4>
@@ -786,23 +806,83 @@ Schedule predictive replacement within 48 hours.
 
     async function loadAlerts() {
         if (!pgApiAvailable()) return;
+        const container = document.querySelector('.space-y-md');
+        if (!container) return;
+
+        // Hide static placeholders and show skeleton
+        container.querySelectorAll('.pg-alert-card').forEach(c => c.style.display = 'none');
+        let skeleton = document.getElementById('alerts-loading-skeleton');
+        if (!skeleton) {
+            skeleton = document.createElement('div');
+            skeleton.id = 'alerts-loading-skeleton';
+            skeleton.className = 'space-y-md animate-pulse w-full';
+            skeleton.innerHTML = `
+              <div class="bg-surface-container-low border border-border rounded-xl p-lg flex flex-col md:flex-row gap-lg items-center">
+                <div class="w-12 h-12 rounded-full bg-surface-container-highest shrink-0"></div>
+                <div class="flex-1 grid grid-cols-1 md:grid-cols-3 gap-lg w-full">
+                  <div class="space-y-sm">
+                    <div class="h-4 bg-surface-container-highest rounded w-1/4"></div>
+                    <div class="h-6 bg-surface-container-highest rounded w-3/4"></div>
+                    <div class="h-4 bg-surface-container-highest rounded w-1/2"></div>
+                  </div>
+                  <div class="space-y-sm flex flex-col justify-center">
+                    <div class="h-3 bg-surface-container-highest rounded w-1/3"></div>
+                    <div class="h-8 bg-surface-container-highest rounded w-1/2"></div>
+                  </div>
+                  <div class="flex flex-col md:items-end justify-center gap-sm">
+                    <div class="h-10 bg-surface-container-highest rounded w-32"></div>
+                    <div class="h-10 bg-surface-container-highest rounded w-40"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="bg-surface-container-low border border-border rounded-xl p-lg flex flex-col md:flex-row gap-lg items-center">
+                <div class="w-12 h-12 rounded-full bg-surface-container-highest shrink-0"></div>
+                <div class="flex-1 grid grid-cols-1 md:grid-cols-3 gap-lg w-full">
+                  <div class="space-y-sm">
+                    <div class="h-4 bg-surface-container-highest rounded w-1/4"></div>
+                    <div class="h-6 bg-surface-container-highest rounded w-3/4"></div>
+                    <div class="h-4 bg-surface-container-highest rounded w-1/2"></div>
+                  </div>
+                  <div class="space-y-sm flex flex-col justify-center">
+                    <div class="h-3 bg-surface-container-highest rounded w-1/3"></div>
+                    <div class="h-8 bg-surface-container-highest rounded w-1/2"></div>
+                  </div>
+                  <div class="flex flex-col md:items-end justify-center gap-sm">
+                    <div class="h-10 bg-surface-container-highest rounded w-32"></div>
+                    <div class="h-10 bg-surface-container-highest rounded w-40"></div>
+                  </div>
+                </div>
+              </div>`;
+            container.insertBefore(skeleton, container.firstChild);
+        }
+
         try {
             const data = await pgFetch('/api/alerts');
-            const container = document.querySelector('.space-y-md');
-            if (!container || !data.alerts || data.alerts.length === 0) return;
+            if (skeleton) skeleton.remove();
+            
+            if (!data.alerts || data.alerts.length === 0) {
+                // If API returns no alerts, show placeholders
+                container.querySelectorAll('.pg-alert-card').forEach(c => c.style.display = 'block');
+                return;
+            }
 
             const footer = container.querySelector('.pt-xl');
             const liveHTML = data.alerts
                 .map((a, i) => _buildAlertCard(a, i))
-                .join('
-');
+                .join('\n');
             container.innerHTML = liveHTML + (footer ? footer.outerHTML : '');
         } catch (err) {
             console.warn('Alerts API load failed:', err.message);
+            if (skeleton) skeleton.remove();
+            // Restore placeholders on failure
+            container.querySelectorAll('.pg-alert-card').forEach(c => c.style.display = 'block');
         }
     }
 
     document.addEventListener('DOMContentLoaded', () => {
+        if (pgApiAvailable()) {
+            document.querySelectorAll('.pg-alert-card').forEach(c => c.style.display = 'none');
+        }
         pgStartPolling(loadAlerts, 8000);
     });
 </script>

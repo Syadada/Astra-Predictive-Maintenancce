@@ -5,6 +5,7 @@ __pycache__/
 .venv/
 venv/
 env/
+v/
 
 # Raw datasets (third-party, licensed separately — see README for sources)
 /dataset/

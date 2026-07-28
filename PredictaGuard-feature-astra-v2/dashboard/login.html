@@ -298,6 +298,19 @@
     if (localStorage.getItem('currentUser')) {
       window.location.href = 'overview.html';
     }
+
+    // Show contextual message if redirected here due to session expiry or logout
+    (function () {
+      var params = new URLSearchParams(window.location.search);
+      var reason = params.get('reason');
+      if (reason === 'idle_timeout') {
+        showToast('⏱️ Session expired due to inactivity. Please sign in again.', 'error');
+      } else if (reason === 'session_expired') {
+        showToast('🔒 Your session has expired. Please sign in again.', 'error');
+      } else if (reason === 'user_logout') {
+        showToast('👋 You have been logged out successfully.', 'info');
+      }
+    })();
   </script>
 </body>
 </html>

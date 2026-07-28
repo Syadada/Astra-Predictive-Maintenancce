@@ -63,11 +63,13 @@ class DBManager:
                 twilio_whatsapp_from TEXT,
                 recipient_whatsapp TEXT,
                 whatsapp_provider TEXT DEFAULT 'twilio',
-                waha_server_url TEXT DEFAULT 'http://localhost:3000'
+                waha_server_url TEXT DEFAULT 'http://localhost:3000',
+                email_enabled BOOLEAN DEFAULT TRUE
             )
         """)
         cursor.execute("ALTER TABLE notification_settings ADD COLUMN IF NOT EXISTS whatsapp_provider TEXT DEFAULT 'twilio'")
         cursor.execute("ALTER TABLE notification_settings ADD COLUMN IF NOT EXISTS waha_server_url TEXT DEFAULT 'http://localhost:3000'")
+        cursor.execute("ALTER TABLE notification_settings ADD COLUMN IF NOT EXISTS email_enabled BOOLEAN DEFAULT TRUE")
         cursor.execute("""
             CREATE TABLE IF NOT EXISTS users (
                 email VARCHAR(255) PRIMARY KEY,
@@ -87,8 +89,8 @@ class DBManager:
         if ns_count == 0:
             print("[DBManager] Notification settings table is empty. Seeding defaults...")
             cursor.execute("""
-                INSERT INTO notification_settings (id, smtp_server, smtp_port, sender_email, sender_password, recipient_email, twilio_account_sid, twilio_auth_token, twilio_whatsapp_from, recipient_whatsapp, whatsapp_provider, waha_server_url)
-                VALUES (1, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                INSERT INTO notification_settings (id, smtp_server, smtp_port, sender_email, sender_password, recipient_email, twilio_account_sid, twilio_auth_token, twilio_whatsapp_from, recipient_whatsapp, whatsapp_provider, waha_server_url, email_enabled)
+                VALUES (1, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
             """, (
                 "smtp.gmail.com",
                 587,
@@ -100,7 +102,8 @@ class DBManager:
                 "+14155238886",
                 "+628999999999",
                 "twilio",
-                "http://localhost:3000"
+                "http://localhost:3000",
+                True
             ))
             conn.commit()
 
@@ -341,8 +344,8 @@ class DBManager:
             INSERT INTO notification_settings (
                 id, smtp_server, smtp_port, sender_email, sender_password, recipient_email,
                 twilio_account_sid, twilio_auth_token, twilio_whatsapp_from, recipient_whatsapp,
-                whatsapp_provider, waha_server_url
-            ) VALUES (1, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                whatsapp_provider, waha_server_url, email_enabled
+            ) VALUES (1, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
             ON CONFLICT (id) DO UPDATE SET
                 smtp_server = EXCLUDED.smtp_server,
                 smtp_port = EXCLUDED.smtp_port,
@@ -354,7 +357,8 @@ class DBManager:
                 twilio_whatsapp_from = EXCLUDED.twilio_whatsapp_from,
                 recipient_whatsapp = EXCLUDED.recipient_whatsapp,
                 whatsapp_provider = EXCLUDED.whatsapp_provider,
-                waha_server_url = EXCLUDED.waha_server_url
+                waha_server_url = EXCLUDED.waha_server_url,
+                email_enabled = EXCLUDED.email_enabled
         """, (
             s.get("smtp_server"),
             s.get("smtp_port"),
@@ -366,7 +370,8 @@ class DBManager:
             s.get("twilio_whatsapp_from"),
             s.get("recipient_whatsapp"),
             s.get("whatsapp_provider", "twilio"),
-            s.get("waha_server_url", "http://localhost:3000")
+            s.get("waha_server_url", "http://localhost:3000"),
+            s.get("email_enabled") if s.get("email_enabled") is not None else True
         ))
         conn.commit()
         conn.close()

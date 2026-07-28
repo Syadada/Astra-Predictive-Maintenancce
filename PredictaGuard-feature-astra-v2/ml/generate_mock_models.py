@@ -46,18 +46,7 @@ joblib.dump(le, os.path.join(proc_dir, "cwru_label_encoder.joblib"))
 
 # 5. cwru_features.npz
 X_train_cwru = np.random.randn(200, 9)
-X_test_cwru = np.random.randn(50, 9)
-y_train_cwru = np.random.choice(classes, size=200)
-y_train_cwru_enc = le.transform(y_train_cwru)
-y_test_cwru = np.random.choice(classes, size=50)
-y_test_cwru_enc = le.transform(y_test_cwru)
-np.savez_compressed(
-    os.path.join(proc_dir, "cwru_features.npz"), 
-    X_train=X_train_cwru,
-    X_test=X_test_cwru,
-    y_multi_train=y_train_cwru_enc,
-    y_multi_test=y_test_cwru_enc
-)
+np.savez_compressed(os.path.join(proc_dir, "cwru_features.npz"), X_train=X_train_cwru)
 
 # 6. skab_windows.npz (X_test: (234, 60, 8), y_test: (234,))
 print("Generating mock skab_windows.npz...")
