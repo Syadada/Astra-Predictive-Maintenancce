@@ -343,6 +343,8 @@ def get_equipment_status():
                     WHERE motor_id = :mid 
                     ORDER BY recorded_at DESC LIMIT 30
                 """),
+                {"mid": mid}
+            ).fetchall()
             raw_points = [float(r[0]) for r in reversed(res_spark)] if res_spark else []
             if not raw_points or len(raw_points) < 2 or all(abs(p - raw_points[0]) < 0.001 for p in raw_points):
                 import random
