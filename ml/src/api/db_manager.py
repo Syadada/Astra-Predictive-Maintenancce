@@ -339,6 +339,14 @@ class DBManager:
 
     def save_notification_settings(self, s: dict) -> None:
         """Saves the notification settings (upserting id=1)."""
+        # Strip string fields to avoid leading/trailing space issues (e.g. getaddrinfo failed)
+        cleaned = {}
+        for k, v in s.items():
+            if isinstance(v, str):
+                cleaned[k] = v.strip()
+            else:
+                cleaned[k] = v
+
         conn = self.get_connection()
         cursor = conn.cursor()
         cursor.execute("""
@@ -361,18 +369,18 @@ class DBManager:
                 waha_server_url = EXCLUDED.waha_server_url,
                 email_enabled = EXCLUDED.email_enabled
         """, (
-            s.get("smtp_server"),
-            s.get("smtp_port"),
-            s.get("sender_email"),
-            s.get("sender_password"),
-            s.get("recipient_email"),
-            s.get("twilio_account_sid"),
-            s.get("twilio_auth_token"),
-            s.get("twilio_whatsapp_from"),
-            s.get("recipient_whatsapp"),
-            s.get("whatsapp_provider", "twilio"),
-            s.get("waha_server_url", "http://localhost:3000"),
-            s.get("email_enabled") if s.get("email_enabled") is not None else True
+            cleaned.get("smtp_server"),
+            cleaned.get("smtp_port"),
+            cleaned.get("sender_email"),
+            cleaned.get("sender_password"),
+            cleaned.get("recipient_email"),
+            cleaned.get("twilio_account_sid"),
+            cleaned.get("twilio_auth_token"),
+            cleaned.get("twilio_whatsapp_from"),
+            cleaned.get("recipient_whatsapp"),
+            cleaned.get("whatsapp_provider", "twilio"),
+            cleaned.get("waha_server_url", "http://localhost:3000"),
+            cleaned.get("email_enabled") if cleaned.get("email_enabled") is not None else True
         ))
         conn.commit()
         conn.close()

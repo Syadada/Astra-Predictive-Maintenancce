@@ -7,6 +7,8 @@ import urllib.request
 import urllib.parse
 import json
 import time
+import socket
+
 
 # Add project root to sys path to resolve local config overrides
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
@@ -16,17 +18,17 @@ except ImportError:
     pass
 
 # Configurable settings (can be overridden by environment variables or direct code edits)
-SMTP_SERVER = os.getenv("ASTRA_SMTP_SERVER", "smtp.gmail.com")
+SMTP_SERVER = os.getenv("ASTRA_SMTP_SERVER", "smtp.gmail.com").strip()
 SMTP_PORT = int(os.getenv("ASTRA_SMTP_PORT", "587"))
-SENDER_EMAIL = os.getenv("ASTRA_SENDER_EMAIL", "")
-SENDER_PASSWORD = os.getenv("ASTRA_SENDER_PASSWORD", "")
-RECIPIENT_EMAIL = os.getenv("ASTRA_RECIPIENT_EMAIL", "")
+SENDER_EMAIL = os.getenv("ASTRA_SENDER_EMAIL", "").strip()
+SENDER_PASSWORD = os.getenv("ASTRA_SENDER_PASSWORD", "").strip()
+RECIPIENT_EMAIL = os.getenv("ASTRA_RECIPIENT_EMAIL", "").strip()
 
 # Twilio WhatsApp API Credentials
-TWILIO_ACCOUNT_SID = os.getenv("ASTRA_TWILIO_SID", "")
-TWILIO_AUTH_TOKEN = os.getenv("ASTRA_TWILIO_TOKEN", "")
-TWILIO_WHATSAPP_FROM = os.getenv("ASTRA_TWILIO_WHATSAPP_FROM", "+14155238886")  # Twilio Sandbox number
-RECIPIENT_WHATSAPP = os.getenv("ASTRA_RECIPIENT_WHATSAPP", "")    # User's phone number
+TWILIO_ACCOUNT_SID = os.getenv("ASTRA_TWILIO_SID", "").strip()
+TWILIO_AUTH_TOKEN = os.getenv("ASTRA_TWILIO_TOKEN", "").strip()
+TWILIO_WHATSAPP_FROM = os.getenv("ASTRA_TWILIO_WHATSAPP_FROM", "+14155238886").strip()  # Twilio Sandbox number
+RECIPIENT_WHATSAPP = os.getenv("ASTRA_RECIPIENT_WHATSAPP", "").strip()    # User's phone number
 
 _last_notified = {}  # key: machine_id + alert_type, value: timestamp
 _last_whatsapp_sent_time = 0.0
@@ -44,8 +46,8 @@ def get_active_settings():
         "twilio_auth_token": TWILIO_AUTH_TOKEN,
         "twilio_whatsapp_from": TWILIO_WHATSAPP_FROM,
         "recipient_whatsapp": RECIPIENT_WHATSAPP,
-        "whatsapp_provider": os.getenv("ASTRA_WHATSAPP_PROVIDER", "twilio"),
-        "waha_server_url": os.getenv("ASTRA_WAHA_SERVER_URL", "http://localhost:3000"),
+        "whatsapp_provider": os.getenv("ASTRA_WHATSAPP_PROVIDER", "twilio").strip(),
+        "waha_server_url": os.getenv("ASTRA_WAHA_SERVER_URL", "http://localhost:3000").strip(),
         "email_enabled": True
     }
 
@@ -70,6 +72,8 @@ def get_active_settings():
             for k, v in db_settings.items():
                 if k == 'id':
                     continue
+                if isinstance(v, str):
+                    v = v.strip()
                 # Overlay if not empty and not a default placeholder
                 if isinstance(v, bool):
                     settings[k] = v
@@ -83,6 +87,21 @@ def get_active_settings():
                     "@example.com" in val_str
                 )
                 if v and str(v).strip() and not is_placeholder:
+                    # Env-var set explicitly in local_config.py takes priority over DB
+                    # for sensitive credentials (password fields). This prevents a wrong
+                    # password saved in DB from overriding the correct one from env.
+                    env_map = {
+                        "sender_password": "ASTRA_SENDER_PASSWORD",
+                        "sender_email": "ASTRA_SENDER_EMAIL",
+                        "recipient_email": "ASTRA_RECIPIENT_EMAIL",
+                        "smtp_server": "ASTRA_SMTP_SERVER",
+                    }
+                    env_key = env_map.get(k)
+                    if env_key:
+                        env_val = os.getenv(env_key, "").strip()
+                        if env_val:
+                            # Env var is explicitly set — keep it, skip DB value
+                            continue
                     settings[k] = v
     except Exception as e:
         print(f"[Notifier] Failed to load settings from DB, falling back to environment/defaults: {e}")
@@ -108,6 +127,12 @@ def send_email(subject: str, body: str):
     if sender_password == "your-app-password" or not sender_password or "placeholder" in str(sender_password):
         print("[Notifier] SMTP password not configured. Email notification skipped.")
         return False
+    if not smtp_server:
+        print("[Notifier] SMTP server not configured. Email notification skipped.")
+        return False
+    if not sender_email or not recipient_email:
+        print("[Notifier] SMTP sender or recipient email not configured. Email notification skipped.")
+        return False
     try:
         msg = MIMEMultipart()
         msg['From'] = sender_email
@@ -122,6 +147,9 @@ def send_email(subject: str, body: str):
         server.quit()
         print(f"[Notifier] Email alert successfully sent to {recipient_email}")
         return True
+    except socket.gaierror as e:
+        print(f"[Notifier] Failed to send email: DNS resolution failed for '{smtp_server}'. Please check your network connection or SMTP server configuration. Details: {e}")
+        return False
     except smtplib.SMTPResponseException as e:
         err_msg = str(e.smtp_error)
         if e.smtp_code == 550 or "sending limit" in err_msg.lower() or "limit exceeded" in err_msg.lower():

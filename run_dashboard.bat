@@ -60,6 +60,6 @@ if %ERRORLEVEL% NEQ 0 (
     echo [WARNING] Database setup failed. Make sure PostgreSQL is running on port 5432.
 )
 
-python -X utf8 -m uvicorn src.api.main:app --host 127.0.0.1 --port 8000
+python -X utf8 -m uvicorn src.api.main:app --host 127.0.0.1 --port 8000 --reload
 
 pause

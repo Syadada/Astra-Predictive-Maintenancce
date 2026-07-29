@@ -136,7 +136,7 @@
 <span class="material-symbols-outlined absolute left-md top-1/2 -translate-y-1/2 text-outline" data-icon="search">search</span>
 <input class="bg-surface border border-border rounded-lg pl-xl pr-md py-sm w-80 font-body-sm focus:ring-2 focus:ring-primary focus:border-primary outline-none" placeholder="Search asset ID or tag..." type="text">
 </div>
-<button class="bg-primary text-white px-lg py-sm rounded-lg font-data-label text-data-label flex items-center gap-sm hover:bg-primary-container transition-colors" onclick="pgConfirm('Register a new asset in the ASTRA Facility registry?', function(){ pgToast('Asset registration form opened  Asset ID: KG-P07-NEW-001', 'info'); })">
+<button class="bg-primary text-white px-lg py-sm rounded-lg font-data-label text-data-label flex items-center gap-sm hover:bg-primary-container transition-colors" onclick="openRegisterModal()">
 <span class="material-symbols-outlined text-[18px]" data-icon="add">add</span>
                     REGISTER ASSET
                 </button>
@@ -541,6 +541,80 @@
             }
         }
 
+        function openRegisterModal() {
+            const modal = document.getElementById('register-asset-modal');
+            if (modal) {
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+            }
+        }
+
+        function closeRegisterModal() {
+            const modal = document.getElementById('register-asset-modal');
+            if (modal) {
+                modal.classList.remove('flex');
+                modal.classList.add('hidden');
+            }
+            document.getElementById('register-asset-form').reset();
+        }
+
+        async function submitRegisterAsset(e) {
+            e.preventDefault();
+            
+            const payload = {
+                motor_id: document.getElementById('new-asset-id').value,
+                name: document.getElementById('new-asset-name').value,
+                location: document.getElementById('new-asset-location').value,
+                power_kw: parseFloat(document.getElementById('new-asset-power').value),
+                nominal_rpm: parseFloat(document.getElementById('new-asset-rpm').value),
+                nominal_current: parseFloat(document.getElementById('new-asset-current').value),
+                max_temp: parseFloat(document.getElementById('new-asset-temp').value),
+                max_vibration: parseFloat(document.getElementById('new-asset-vibration').value),
+                is_critical: document.getElementById('new-asset-critical').checked
+            };
+            
+            try {
+                const baseUrl = window.API_BASE_URL || '';
+                const response = await fetch(`${baseUrl}/api/equipment/register`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    if (window.pgToast) {
+                        window.pgToast(`Asset ${payload.motor_id} successfully registered!`, 'success');
+                    } else {
+                        alert(`Asset ${payload.motor_id} successfully registered!`);
+                    }
+                    closeRegisterModal();
+                    if (typeof loadEquipment === 'function') {
+                        loadEquipment();
+                    } else {
+                        location.reload();
+                    }
+                } else {
+                    const errMsg = data.detail || 'Failed to register asset.';
+                    if (window.pgToast) {
+                        window.pgToast(errMsg, 'error');
+                    } else {
+                        alert(errMsg);
+                    }
+                }
+            } catch (err) {
+                console.error(err);
+                if (window.pgToast) {
+                    window.pgToast('Failed to register asset: ' + err.message, 'error');
+                } else {
+                    alert('Failed to register asset: ' + err.message);
+                }
+            }
+        }
+
         window.onload = () => {
             if (pgApiAvailable()) {
                 pgStartPolling(loadEquipment, 5000);
@@ -555,6 +629,81 @@
             }
         };
 </script>
+
+<!-- Register Asset Modal -->
+<div id="register-asset-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden items-center justify-center transition-all duration-300">
+    <div class="bg-surface border border-border rounded-xl shadow-2xl w-full max-w-lg p-xl flex flex-col gap-lg animate-in fade-in zoom-in-95 duration-200">
+        <div class="flex justify-between items-center border-b border-border pb-md">
+            <h3 class="font-data-label text-lg font-bold text-primary flex items-center gap-sm">
+                <span class="material-symbols-outlined text-primary" data-icon="add_circle">add_circle</span>
+                Register New Equipment Asset
+            </h3>
+            <button onclick="closeRegisterModal()" class="text-outline hover:text-primary transition-colors">
+                <span class="material-symbols-outlined" data-icon="close">close</span>
+            </button>
+        </div>
+        <form id="register-asset-form" onsubmit="submitRegisterAsset(event)" class="flex flex-col gap-md">
+            <div class="grid grid-cols-2 gap-md">
+                <div class="flex flex-col gap-xs">
+                    <label class="font-data-label text-[10px] text-outline uppercase tracking-wider">Asset ID *</label>
+                    <input id="new-asset-id" required class="bg-surface-container-low border border-border rounded-lg px-md py-sm font-body-sm text-ink focus:ring-2 focus:ring-primary focus:border-primary outline-none" placeholder="e.g. MTR-007" type="text">
+                </div>
+                <div class="flex flex-col gap-xs">
+                    <label class="font-data-label text-[10px] text-outline uppercase tracking-wider">Asset Name *</label>
+                    <input id="new-asset-name" required class="bg-surface-container-low border border-border rounded-lg px-md py-sm font-body-sm text-ink focus:ring-2 focus:ring-primary focus:border-primary outline-none" placeholder="e.g. Cooling Pump C" type="text">
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-md">
+                <div class="flex flex-col gap-xs">
+                    <label class="font-data-label text-[10px] text-outline uppercase tracking-wider">Location *</label>
+                    <input id="new-asset-location" required class="bg-surface-container-low border border-border rounded-lg px-md py-sm font-body-sm text-ink focus:ring-2 focus:ring-primary focus:border-primary outline-none" placeholder="e.g. Zone 3 - Auxiliary Pumps" type="text">
+                </div>
+                <div class="flex flex-col gap-xs">
+                    <label class="font-data-label text-[10px] text-outline uppercase tracking-wider">Power (kW)</label>
+                    <input id="new-asset-power" required class="bg-surface-container-low border border-border rounded-lg px-md py-sm font-body-sm text-ink focus:ring-2 focus:ring-primary focus:border-primary outline-none" placeholder="15.0" type="number" step="0.1" value="15.0">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-md">
+                <div class="flex flex-col gap-xs">
+                    <label class="font-data-label text-[10px] text-outline uppercase tracking-wider">Nominal RPM</label>
+                    <input id="new-asset-rpm" required class="bg-surface-container-low border border-border rounded-lg px-md py-sm font-body-sm text-ink focus:ring-2 focus:ring-primary focus:border-primary outline-none" placeholder="1450" type="number" step="1" value="1450">
+                </div>
+                <div class="flex flex-col gap-xs">
+                    <label class="font-data-label text-[10px] text-outline uppercase tracking-wider">Nominal Current (A)</label>
+                    <input id="new-asset-current" required class="bg-surface-container-low border border-border rounded-lg px-md py-sm font-body-sm text-ink focus:ring-2 focus:ring-primary focus:border-primary outline-none" placeholder="38.0" type="number" step="0.1" value="38.0">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-md">
+                <div class="flex flex-col gap-xs">
+                    <label class="font-data-label text-[10px] text-outline uppercase tracking-wider">Max Allowed Temp (°C)</label>
+                    <input id="new-asset-temp" required class="bg-surface-container-low border border-border rounded-lg px-md py-sm font-body-sm text-ink focus:ring-2 focus:ring-primary focus:border-primary outline-none" placeholder="80.0" type="number" step="0.1" value="80.0">
+                </div>
+                <div class="flex flex-col gap-xs">
+                    <label class="font-data-label text-[10px] text-outline uppercase tracking-wider">Max Allowed Vib (mm/s)</label>
+                    <input id="new-asset-vibration" required class="bg-surface-container-low border border-border rounded-lg px-md py-sm font-body-sm text-ink focus:ring-2 focus:ring-primary focus:border-primary outline-none" placeholder="4.5" type="number" step="0.1" value="4.5">
+                </div>
+            </div>
+
+            <div class="flex items-center gap-md py-xs">
+                <input id="new-asset-critical" class="rounded text-primary focus:ring-primary h-4 w-4 bg-surface-container-low border-border" type="checkbox">
+                <label for="new-asset-critical" class="font-body-sm text-ink select-none cursor-pointer">Mark as Critical Asset (High Priority alerts)</label>
+            </div>
+
+            <div class="flex justify-end gap-md border-t border-border pt-md mt-sm">
+                <button type="button" onclick="closeRegisterModal()" class="px-lg py-sm border border-border rounded-lg text-ink font-data-label text-data-label hover:bg-surface-container-low transition-colors">
+                    CANCEL
+                </button>
+                <button type="submit" class="px-lg py-sm bg-primary text-white rounded-lg font-data-label text-data-label hover:bg-primary-container transition-colors shadow-md">
+                    REGISTER ASSET
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
 <script src="js/sidebar.js"></script>
 <script>renderSidebar('equipment');</script>
 </body></html>

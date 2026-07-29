@@ -141,6 +141,17 @@ class NotificationSettingsRequest(BaseModel):
     waha_server_url: Optional[str] = "http://localhost:3000"
     email_enabled: Optional[bool] = True
 
+class MotorRegisterRequest(BaseModel):
+    motor_id: str
+    name: str
+    location: str
+    power_kw: float
+    nominal_rpm: float
+    nominal_current: float
+    max_temp: float
+    max_vibration: float
+    is_critical: Optional[bool] = False
+
 class WorkOrderRequest(BaseModel):
     asset_id: Optional[str] = None
     equipment_id: Optional[str] = None
@@ -813,6 +824,52 @@ def list_work_orders():
             "workorders": wo_list,
             "work_orders": wo_list
         }
+
+@app.post("/api/equipment/register")
+@app.post("/api/motors/register")
+def register_motor(req: MotorRegisterRequest):
+    db = state.get("db")
+    if db is None:
+        raise HTTPException(status_code=503, detail="Database not initialized")
+    
+    motor_id = req.motor_id.strip()
+    name = req.name.strip()
+    location = req.location.strip()
+    
+    if not motor_id or not name or not location:
+        raise HTTPException(status_code=400, detail="Motor ID, Name, and Location are required.")
+        
+    with engine.connect() as conn:
+        existing = conn.execute(
+            text("SELECT motor_id FROM motors WHERE UPPER(motor_id) = UPPER(:mid)"),
+            {"mid": motor_id}
+        ).fetchone()
+        if existing:
+            raise HTTPException(status_code=400, detail=f"Equipment with ID '{motor_id}' already exists.")
+            
+        conn.execute(
+            text("""
+                INSERT INTO motors (
+                    motor_id, name, location, power_kw, nominal_rpm, nominal_current, max_temp, max_vibration, is_critical
+                ) VALUES (
+                    :motor_id, :name, :location, :power_kw, :nominal_rpm, :nominal_current, :max_temp, :max_vibration, :is_critical
+                )
+            """),
+            {
+                "motor_id": motor_id,
+                "name": name,
+                "location": location,
+                "power_kw": req.power_kw,
+                "nominal_rpm": req.nominal_rpm,
+                "nominal_current": req.nominal_current,
+                "max_temp": req.max_temp,
+                "max_vibration": req.max_vibration,
+                "is_critical": req.is_critical
+            }
+        )
+        conn.commit()
+        
+    return {"status": "success", "message": f"Equipment {motor_id} registered successfully."}
 
 @app.post("/api/workorders")
 @app.post("/api/work_orders")
