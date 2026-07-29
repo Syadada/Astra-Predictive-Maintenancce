@@ -228,6 +228,10 @@
         window.open(apiBase + '/api/reports/parts' + queryFormat, '_blank');
         pgToast(filename + '.' + ext + ' downloaded from live database', 'success', 2500);
         return;
+      } else if (filename.toLowerCase().includes('log') || filename.toLowerCase().includes('telemetry') || filename.toLowerCase().includes('activity')) {
+        window.open(apiBase + '/api/reports/telemetry' + queryFormat, '_blank');
+        pgToast(filename + '.' + ext + ' downloaded from live database', 'success', 2500);
+        return;
       }
     }
 
@@ -310,6 +314,31 @@
               '$' + p.unit_cost.toFixed(2),
               '"' + p.supplier + '"',
               '"' + p.status + '"'
+            ];
+            csvLines.push(row.join(','));
+          });
+          content = csvLines.join('\n');
+          mime    = 'text/csv';
+        } else if (filename.toLowerCase().includes('log') || filename.toLowerCase().includes('telemetry') || filename.toLowerCase().includes('activity')) {
+          var defaultLogs = [
+            { timestamp: '2026-07-29 23:14:08 UTC', machine_id: 'MTR-01', vibration: 0.42, current: 22.4, temp: 48.5, accuracy: '87.8%', latency: '12ms', status: 'HEALTHY_NOMINAL' },
+            { timestamp: '2026-07-29 23:12:00 UTC', machine_id: 'MTR-04', vibration: 4.85, current: 58.2, temp: 88.0, accuracy: '87.8%', latency: '14ms', status: 'CRITICAL_HIGH_TEMP' },
+            { timestamp: '2026-07-29 23:10:00 UTC', machine_id: 'MTR-05', vibration: 0.50, current: 88.0, temp: 51.0, accuracy: '87.8%', latency: '11ms', status: 'HIGH_WARNING_TORQUE' },
+            { timestamp: '2026-07-29 23:08:00 UTC', machine_id: 'MTR-03', vibration: 2.10, current: 35.1, temp: 72.0, accuracy: '87.8%', latency: '13ms', status: 'WARNING_ELEVATED_TEMP' },
+            { timestamp: '2026-07-29 23:05:00 UTC', machine_id: 'MTR-02', vibration: 0.65, current: 98.0, temp: 55.0, accuracy: '87.8%', latency: '12ms', status: 'HEALTHY_NOMINAL' },
+            { timestamp: '2026-07-29 23:00:00 UTC', machine_id: 'MTR-06', vibration: 0.35, current: 15.0, temp: 42.0, accuracy: '87.8%', latency: '10ms', status: 'HEALTHY_NOMINAL' }
+          ];
+          var csvLines = ['Timestamp,Machine ID,Vibration (mm/s),Current (A),Temperature (C),Model Accuracy,Latency,Telemetry Status'];
+          defaultLogs.forEach(function(l) {
+            var row = [
+              '"' + l.timestamp + '"',
+              '"' + l.machine_id + '"',
+              l.vibration,
+              l.current,
+              l.temp,
+              '"' + l.accuracy + '"',
+              '"' + l.latency + '"',
+              '"' + l.status + '"'
             ];
             csvLines.push(row.join(','));
           });

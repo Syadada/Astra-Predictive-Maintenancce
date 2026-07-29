@@ -148,18 +148,18 @@
 <div class="bg-surface border border-border p-lg rounded-lg shadow-sm pg-card">
 <span class="font-data-label text-data-label text-on-surface-variant uppercase mb-xs block">Overall Health</span>
 <div class="flex items-baseline gap-xs">
-<span class="font-data-display text-data-display text-primary" data-count="74">74</span>
+<span class="font-data-value text-[32px] font-bold text-primary" data-count="46">46</span>
 <span class="font-body-md font-bold text-primary">%</span>
 </div>
 <div class="mt-md h-1.5 w-full bg-surface-container-low rounded-full overflow-hidden">
-<div class="h-full bg-green-good w-[74%]"></div>
+<div class="h-full bg-green-good w-[46%]" id="overall-health-bar"></div>
 </div>
 </div>
 <div class="bg-surface border border-border p-lg rounded-lg shadow-sm pg-card">
 <span class="font-data-label text-data-label text-on-surface-variant uppercase mb-xs block">At Risk</span>
 <div class="flex items-baseline gap-xs">
-<span class="font-data-display text-data-display text-amber-warn" data-count="2">2</span>
-<span class="font-data-label text-[12px] text-amber-warn">Critical CCP</span>
+<span class="font-data-value text-[32px] font-bold text-amber-warn" data-count="2">2</span>
+<span class="font-data-label text-[12px] font-bold text-amber-warn">Critical CCP</span>
 </div>
 <div class="mt-md flex gap-xs">
 <div class="h-1.5 flex-1 bg-amber-warn rounded-full"></div>
@@ -171,8 +171,8 @@
 <div class="bg-surface border border-border p-lg rounded-lg shadow-sm pg-card">
 <span class="font-data-label text-data-label text-on-surface-variant uppercase mb-xs block">Predicted Failures</span>
 <div class="flex items-baseline gap-xs">
-<span class="font-data-display text-data-display text-red-alert" data-count="3">3</span>
-<span class="font-data-label text-[12px] text-red-alert">Next 48h</span>
+<span class="font-data-value text-[32px] font-bold text-red-alert" data-count="2">2</span>
+<span class="font-data-label text-[12px] font-bold text-red-alert">Next 48h</span>
 </div>
 <div class="mt-md">
 <span class="text-[12px] font-body-sm text-on-surface-variant">Impact: Production Line A</span>
@@ -181,9 +181,8 @@
 <div class="bg-surface border border-border p-lg rounded-lg shadow-sm pg-card">
 <span class="font-data-label text-data-label text-on-surface-variant uppercase mb-xs block">Downtime Avoided</span>
 <div class="flex items-baseline gap-xs">
-<span class="font-data-display text-data-display text-green-good" data-count="32">32</span>
-<span class="font-data-display text-[24px] text-green-good">.4</span>
-<span class="font-body-md font-bold text-green-good ml-xs">h</span>
+<span class="font-data-value text-[32px] font-bold text-green-good" data-count="14.5">14.5</span>
+<span class="font-body-md font-bold text-green-good ml-xs">hours</span>
 </div>
 <div class="mt-md">
 <span class="text-[12px] font-body-sm text-green-good">Estimated ROI: €124,500</span>
@@ -248,19 +247,19 @@
     <div class="space-y-xs">
       <div class="flex justify-between text-[11px]">
         <span class="text-on-surface-variant">Test Accuracy</span>
-        <span class="font-bold text-on-surface">100.0%</span>
+        <span class="font-bold text-on-surface">88.4%</span>
       </div>
       <div class="flex justify-between text-[11px]">
         <span class="text-on-surface-variant">Weighted F1</span>
-        <span class="font-bold text-on-surface">1.000</span>
+        <span class="font-bold text-on-surface">0.882</span>
       </div>
       <div class="mt-sm space-y-xs border-t border-border pt-sm">
         <p class="font-data-label text-[9px] uppercase text-on-surface-variant mb-xs">Per-Class F1 (key fault types)</p>
         <div class="grid grid-cols-2 gap-xs text-[10px]">
-          <div class="flex justify-between"><span class="text-on-surface-variant">Healthy</span><span class="font-bold text-green-good">1.000</span></div>
-          <div class="flex justify-between"><span class="text-on-surface-variant">Inner Race</span><span class="font-bold text-green-good">1.000</span></div>
-          <div class="flex justify-between"><span class="text-on-surface-variant">Outer Race</span><span class="font-bold text-green-good">1.000</span></div>
-          <div class="flex justify-between"><span class="text-on-surface-variant">Roller</span><span class="font-bold text-green-good">1.000</span></div>
+          <div class="flex justify-between"><span class="text-on-surface-variant">Healthy</span><span class="font-bold text-green-good">0.924</span></div>
+          <div class="flex justify-between"><span class="text-on-surface-variant">Inner Race</span><span class="font-bold text-green-good">0.885</span></div>
+          <div class="flex justify-between"><span class="text-on-surface-variant">Outer Race</span><span class="font-bold text-green-good">0.871</span></div>
+          <div class="flex justify-between"><span class="text-on-surface-variant">Roller</span><span class="font-bold text-green-good">0.848</span></div>
         </div>
       </div>
     </div>
@@ -430,8 +429,8 @@
   <div class="mt-sm pt-sm border-t border-border space-y-xs">
     <h4 class="font-data-label text-on-surface-variant uppercase text-[10px]">Fault ID Model (CWRU · MLP)</h4>
     <div class="space-y-xs text-[11px]">
-      <div class="flex justify-between"><span class="text-on-surface-variant">Test Accuracy</span><span class="font-bold">93.4%</span></div>
-      <div class="flex justify-between"><span class="text-on-surface-variant">10 fault classes · Macro F1</span><span class="font-bold">0.933</span></div>
+      <div class="flex justify-between"><span class="text-on-surface-variant">Test Accuracy</span><span class="font-bold">88.4%</span></div>
+      <div class="flex justify-between"><span class="text-on-surface-variant">10 fault classes · Macro F1</span><span class="font-bold">0.882</span></div>
     </div>
   </div>
 </div>
@@ -497,8 +496,8 @@
   <div class="mt-sm pt-sm border-t border-border space-y-xs">
     <h4 class="font-data-label text-on-surface-variant uppercase text-[10px]">Fault ID Model (CWRU · MLP)</h4>
     <div class="space-y-xs text-[11px]">
-      <div class="flex justify-between"><span class="text-on-surface-variant">Test Accuracy</span><span class="font-bold">93.4%</span></div>
-      <div class="flex justify-between"><span class="text-on-surface-variant">10 fault classes · Macro F1</span><span class="font-bold">0.933</span></div>
+      <div class="flex justify-between"><span class="text-on-surface-variant">Test Accuracy</span><span class="font-bold">88.4%</span></div>
+      <div class="flex justify-between"><span class="text-on-surface-variant">10 fault classes · Macro F1</span><span class="font-bold">0.882</span></div>
     </div>
   </div>
 </div>
@@ -584,8 +583,8 @@
   <div class="mt-sm pt-sm border-t border-border space-y-xs">
     <h4 class="font-data-label text-on-surface-variant uppercase text-[10px]">Fault ID Model (CWRU · MLP)</h4>
     <div class="space-y-xs text-[11px]">
-      <div class="flex justify-between"><span class="text-on-surface-variant">Test Accuracy</span><span class="font-bold">93.4%</span></div>
-      <div class="flex justify-between"><span class="text-on-surface-variant">10 fault classes · Macro F1</span><span class="font-bold">0.933</span></div>
+      <div class="flex justify-between"><span class="text-on-surface-variant">Test Accuracy</span><span class="font-bold">88.4%</span></div>
+      <div class="flex justify-between"><span class="text-on-surface-variant">10 fault classes · Macro F1</span><span class="font-bold">0.882</span></div>
     </div>
   </div>
 </div>
