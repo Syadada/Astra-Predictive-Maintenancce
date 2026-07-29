@@ -19,8 +19,8 @@ class DBManager:
             host=os.getenv("ASTRA_DB_HOST", "localhost"),
             port=int(os.getenv("ASTRA_DB_PORT", "5432")),
             database=os.getenv("ASTRA_DB_NAME", "astra_predictive_maintenance"),
-            user=os.getenv("ASTRA_DB_USER", "rasyaad"),
-            password=os.getenv("ASTRA_DB_PASSWORD", "Sellevolerei1")
+            user=os.getenv("ASTRA_DB_USER", "postgres"),
+            password=os.getenv("ASTRA_DB_PASSWORD", "")
         )
 
     def init_db(self):
@@ -76,11 +76,12 @@ class DBManager:
                 password VARCHAR(255) NOT NULL,
                 name VARCHAR(255) NOT NULL,
                 role VARCHAR(50) NOT NULL,
-                clearance VARCHAR(50) NOT NULL,
-                title VARCHAR(255) NOT NULL,
-                avatar TEXT
+                clearance VARCHAR(50) NOT NULL
             )
         """)
+        cursor.execute("CREATE TABLE IF NOT EXISTS prediction_results (id BIGSERIAL PRIMARY KEY, motor_id VARCHAR(10), predicted_at TIMESTAMP, health_score FLOAT, anomaly_score FLOAT, fault_type VARCHAR(50), rul_days FLOAT, severity VARCHAR(20), recommendation TEXT, top_cause TEXT, alert_sent BOOLEAN DEFAULT FALSE)")
+        cursor.execute("ALTER TABLE prediction_results ADD COLUMN IF NOT EXISTS consensus_votes INTEGER DEFAULT 0")
+        cursor.execute("ALTER TABLE prediction_results ADD COLUMN IF NOT EXISTS alert_tier VARCHAR(20) DEFAULT 'none'")
         conn.commit()
 
         # Check if notification_settings table is empty

@@ -58,8 +58,8 @@ def get_active_settings():
             host=os.getenv("ASTRA_DB_HOST", "localhost"),
             port=int(os.getenv("ASTRA_DB_PORT", "5432")),
             database=os.getenv("ASTRA_DB_NAME", "astra_predictive_maintenance"),
-            user=os.getenv("ASTRA_DB_USER", "rasyaad"),
-            password=os.getenv("ASTRA_DB_PASSWORD", "Sellevolerei1")
+            user=os.getenv("ASTRA_DB_USER", "postgres"),
+            password=os.getenv("ASTRA_DB_PASSWORD", "")
         )
         cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
         cursor.execute("SELECT * FROM notification_settings WHERE id = 1")

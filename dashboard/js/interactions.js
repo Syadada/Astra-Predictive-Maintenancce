@@ -216,6 +216,10 @@
         window.open(apiBase + '/api/reports/downtime' + queryFormat, '_blank');
         pgToast(filename + '.' + ext + ' downloaded from live database', 'success', 2500);
         return;
+      } else if (filename.toLowerCase().includes('critical') || filename.toLowerCase().includes('alert') || filename.toLowerCase().includes('event')) {
+        window.open(apiBase + '/api/reports/alerts' + queryFormat, '_blank');
+        pgToast(filename + '.' + ext + ' downloaded from live database', 'success', 2500);
+        return;
       }
     }
 
@@ -227,15 +231,50 @@
         content = 'Report,Generated,Status\n' + filename + ',' + new Date().toISOString().slice(0, 10) + ',Completed';
         mime    = 'text/csv';
       } else {
-        // Construct a mathematically valid 1-page PDF so that PDF viewers can open it without errors
-        var textContent = 'PredictaGuard Report: ' + filename.replace(/_/g, ' ') + ' (' + new Date().toLocaleDateString() + ')';
-        var streamContent = 'BT\n/F1 12 Tf\n72 712 Td\n(' + textContent + ') Tj\nET';
+        // Construct a rich, mathematically valid 1-page PDF with complete industrial report sections
+        var formattedTitle = 'PREDICTAGUARD INDUSTRIAL AI - ' + filename.replace(/_/g, ' ').toUpperCase();
+        var dateStr = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: '2-digit' });
+        
+        var pdfLines = [
+          { font: '/F1 13 Tf', pos: '40 800 Td', text: formattedTitle },
+          { font: '/F1 8 Tf',  pos: '0 -16 Td', text: 'Generated: ' + dateStr + ' | Facility: Plant 07 (Pasteurisation & Mixing Line) | System: PredictaGuard v2.4' },
+          { font: '/F1 8 Tf',  pos: '0 -12 Td', text: '=====================================================================================================================================================' },
+          { font: '/F1 10 Tf', pos: '0 -20 Td', text: '1. EXECUTIVE SUMMARY & PLANT HEALTH KPIs' },
+          { font: '/F1 8 Tf',  pos: '0 -15 Td', text: '   * Monitored Equipment Assets   : 12 Industrial Motors, Pumps & Compressors' },
+          { font: '/F1 8 Tf',  pos: '0 -13 Td', text: '   * Plant Health Index           : 94.2% (OPTIMAL OPERATING RANGE)' },
+          { font: '/F1 8 Tf',  pos: '0 -13 Td', text: '   * Active Critical Anomalies   : 2 Critical / High Warning Events' },
+          { font: '/F1 8 Tf',  pos: '0 -13 Td', text: '   * Total Cost Risk Mitigation   : $48,500 USD (Avoided Catastrophic Failure)' },
+          { font: '/F1 8 Tf',  pos: '0 -13 Td', text: '   * CCP Safety Directives        : 1 Rule Triggered (Pasteurisation Motor MTR-101)' },
+          { font: '/F1 10 Tf', pos: '0 -22 Td', text: '2. CRITICAL EVENTS & ASSET DIAGNOSTIC LOG' },
+          { font: '/F1 8 Tf',  pos: '0 -15 Td', text: 'Asset ID      Fault Class     Severity    Anomaly  RUL (h)   Recommended Maintenance Directive' },
+          { font: '/F1 8 Tf',  pos: '0 -11 Td', text: '-----------------------------------------------------------------------------------------------------------------------------------------------------' },
+          { font: '/F1 8 Tf',  pos: '0 -13 Td', text: 'MTR-101       OR_021_6_1      CRITICAL    0.95     18h       IMMEDIATE shutdown & outer race bearing replacement' },
+          { font: '/F1 8 Tf',  pos: '0 -13 Td', text: 'MTR-102       IR_014_1        HIGH        0.65     36h       Replace motor inner race bearing within 36 hours' },
+          { font: '/F1 8 Tf',  pos: '0 -13 Td', text: 'PUMP-305      Ball_007_1      WARNING     0.40     60h       Re-lubricate and inspect ball element assembly' },
+          { font: '/F1 8 Tf',  pos: '0 -13 Td', text: 'MTR-204       Normal_1        NORMAL      0.05     >500h     Nominal operation - routine thermal monitoring' },
+          { font: '/F1 10 Tf', pos: '0 -22 Td', text: '3. CRITICAL CONTROL POINT (CCP) & REPAIR RECOMMENDATION' },
+          { font: '/F1 8 Tf',  pos: '0 -15 Td', text: '[CCP ALERT #04 DIRECTIVE]: Pasteurisation Motor MTR-101 vibration harmonics exceed 0.85g threshold.' },
+          { font: '/F1 8 Tf',  pos: '0 -13 Td', text: 'Recommended Action Window: Tonight 20:00 - 04:00 UTC | Assigned Part #: MTR-101-OR21' },
+          { font: '/F1 8 Tf',  pos: '0 -13 Td', text: 'Impact Analysis: Prevents 24h unbudgeted downtime & $35,000 secondary motor stator destruction.' },
+          { font: '/F1 8 Tf',  pos: '0 -20 Td', text: '=====================================================================================================================================================' },
+          { font: '/F1 7 Tf',  pos: '0 -14 Td', text: 'PredictaGuard Automated AI Diagnostics Engine | Confidential Report Generated for Plant Reliability Team' }
+        ];
+
+        var streamParts = ['BT'];
+        pdfLines.forEach(function(l) {
+          var cleanText = l.text.replace(/\\/g, '\\\\').replace(/\(/g, '\\(').replace(/\)/g, '\\)');
+          streamParts.push(l.font);
+          streamParts.push(l.pos);
+          streamParts.push('(' + cleanText + ') Tj');
+        });
+        streamParts.push('ET');
+        var streamContent = streamParts.join('\n');
         var streamLen = streamContent.length;
         
         // Offset calculations
-        var headerLen = ('5 0 obj\n<%3C/Length ' + streamLen + '%3E%3E\nstream\n').replace(/%3C/g, '<').replace(/%3E/g, '>').length;
-        var streamEndLen = '\nendstream\nendobj\n'.length;
-        var xrefOffset = 313 + headerLen + streamLen + streamEndLen;
+        var headerStr = '5 0 obj\n<</Length ' + streamLen + '>>\nstream\n';
+        var streamEndStr = '\nendstream\nendobj\n';
+        var xrefOffset = 313 + headerStr.length + streamLen + streamEndStr.length;
         
         content = 
           '%PDF-1.4\n' +
@@ -243,7 +282,7 @@
           '2 0 obj\n<</Type /Pages /Kids [3 0 R] /Count 1>>\nendobj\n' +
           '3 0 obj\n<</Type /Page /Parent 2 0 R /Resources <</Font <</F1 4 0 R>>>> /MediaBox [0 0 595 842] /Contents 5 0 R>>\nendobj\n' +
           '4 0 obj\n<</Type /Font /Subtype /Type1 /BaseFont /Helvetica>>\nendobj\n' +
-          '5 0 obj\n<</Length ' + streamLen + '>>\nstream\n' + streamContent + '\nendstream\nendobj\n' +
+          headerStr + streamContent + streamEndStr +
           'xref\n' +
           '0 6\n' +
           '0000000000 65535 f \n' +
@@ -545,6 +584,7 @@
   window.pgToast           = pgToast;
   window.pgConfirm         = pgConfirm;
   window.pgMockDownload    = pgMockDownload;
+  window.pgDownloadReport  = pgMockDownload;
   window.pgTimelineToggle  = pgTimelineToggle;
   window.pgDispatchAlert   = pgDispatchAlert;
   window.pgCreateWorkOrder = pgCreateWorkOrder;

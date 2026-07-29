@@ -4,6 +4,7 @@ Loads all 3 trained models + scalers at startup and exposes inference methods.
 """
 import os
 import warnings
+from typing import Any
 import joblib
 import numpy as np
 import shap
@@ -39,7 +40,7 @@ _FAULT_SEVERITY = {
     "OR_021_6_1": 0.95,
 }
 
-_HISTORICAL_MATCHES: dict = {
+_HISTORICAL_MATCHES: dict[str, dict[str, Any]] = {
     "OR_007_6_1": {"date": "2024-02-10", "similarity": 0.87, "failure_type": "Outer race fault — bearing replacement", "rul_at_event": 48},
     "OR_014_6_1": {"date": "2024-03-22", "similarity": 0.82, "failure_type": "Outer race fault — progressive spalling", "rul_at_event": 36},
     "OR_021_6_1": {"date": "2023-11-15", "similarity": 0.91, "failure_type": "Severe outer race damage — emergency shutdown", "rul_at_event": 18},
@@ -51,7 +52,7 @@ _HISTORICAL_MATCHES: dict = {
     "Ball_021_1": {"date": "2024-06-01", "similarity": 0.88, "failure_type": "Severe ball element damage", "rul_at_event": 24},
 }
 
-_RECOMMENDATION_DETAILS: dict = {
+_RECOMMENDATION_DETAILS: dict[str, dict[str, Any]] = {
     "Normal_1":   {"action": "Continue monitoring — no action required", "part_number": "N/A", "cost_if_ignored_usd": 0, "downtime_hours": 0, "maintenance_window": "N/A"},
     "OR_007_6_1": {"action": "Replace outer race bearing assembly on motor shaft", "part_number": "MTR-101-OR7", "cost_if_ignored_usd": 2500, "downtime_hours": 4, "maintenance_window": "Tomorrow 22:00–02:00 UTC"},
     "OR_014_6_1": {"action": "Emergency bearing replacement — motor outer race", "part_number": "MTR-101-OR14", "cost_if_ignored_usd": 8000, "downtime_hours": 8, "maintenance_window": "Tonight 20:00–04:00 UTC"},
@@ -64,7 +65,7 @@ _RECOMMENDATION_DETAILS: dict = {
     "Ball_021_1": {"action": "Emergency bearing replacement — motor ball element", "part_number": "MTR-101-BLT21", "cost_if_ignored_usd": 25000, "downtime_hours": 16, "maintenance_window": "Within 24h"},
 }
 
-_CCP_RULES: dict = {
+_CCP_RULES: dict[str, dict[str, Any]] = {
     "minimal":  {"is_ccp": False, "ccp_type": "N/A",             "priority": "NORMAL"},
     "elevated": {"is_ccp": True,  "ccp_type": "Mixing Motor",    "priority": "HIGH"},
     "critical": {"is_ccp": True,  "ccp_type": "Pasteurisation Motor", "priority": "CRITICAL"},
@@ -255,14 +256,14 @@ class Predictor:
 
         # Historical match (only for non-normal fault classes)
         hist_data = _HISTORICAL_MATCHES.get(fault_class)
-        historical_match = HistoricalMatch(**hist_data) if hist_data else None
+        historical_match = HistoricalMatch(**hist_data) if hist_data is not None else None
 
         # Recommendation detail (fallback to Normal_1 if class not found)
-        rec_data = _RECOMMENDATION_DETAILS.get(fault_class, _RECOMMENDATION_DETAILS["Normal_1"])
+        rec_data = _RECOMMENDATION_DETAILS.get(fault_class) or _RECOMMENDATION_DETAILS["Normal_1"]
         recommendation_detail = RecommendationDetail(**rec_data)
 
         # CCP alert based on risk level
-        ccp_data = _CCP_RULES[risk_level]
+        ccp_data = _CCP_RULES.get(risk_level) or _CCP_RULES["minimal"]
         ccp_alert = CCPAlert(**ccp_data)
 
         # Determine dominant driver feature for Copilot text

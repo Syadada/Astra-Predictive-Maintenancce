@@ -1,0 +1,14 @@
+import os
+
+# Override default PostgreSQL connection settings if necessary
+# os.environ["ASTRA_DB_HOST"] = "localhost"
+# os.environ["ASTRA_DB_PORT"] = "5432"
+# os.environ["ASTRA_DB_USER"] = "postgres"
+# os.environ["ASTRA_DB_PASSWORD"] = ""
+
+# Notification service overrides (Twilio WhatsApp + SMTP Email)
+# os.environ["ASTRA_TWILIO_SID"] = "ACXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+# os.environ["ASTRA_TWILIO_TOKEN"] = "your_twilio_token_here"
+# os.environ["ASTRA_RECIPIENT_WHATSAPP"] = "+628XXXXXXXXXX"
+# os.environ["ASTRA_SENDER_EMAIL"] = "sender@example.com"
+# os.environ["ASTRA_RECIPIENT_EMAIL"] = "recipient@example.com"

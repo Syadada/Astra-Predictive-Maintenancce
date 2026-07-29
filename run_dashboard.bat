@@ -54,11 +54,11 @@ if exist "models\skab_best_model.joblib" goto :start_server
 echo [INFO] Model files are missing (gitignored). Generating mock models/data...
 python generate_mock_models.py
 
-:start_server
-echo [INFO] Starting the Project ASTRA API and Dashboard...
-echo Open http://localhost:8000/ in your browser once the server starts.
-echo Press CTRL+C in this terminal window to stop the server.
-echo --------------------------------------------------------------
+echo [INFO] Running database migrations...
+python -X utf8 src/api/db_setup.py
+if %ERRORLEVEL% NEQ 0 (
+    echo [WARNING] Database setup failed. Make sure PostgreSQL is running on port 5432.
+)
 
 python -X utf8 -m uvicorn src.api.main:app --host 127.0.0.1 --port 8000
 

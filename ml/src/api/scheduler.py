@@ -28,8 +28,8 @@ from src.api.notifications import NotificationService
 
 DB_HOST = os.getenv("ASTRA_DB_HOST", "localhost")
 DB_PORT = int(os.getenv("ASTRA_DB_PORT", "5432"))
-DB_USER = os.getenv("ASTRA_DB_USER", "rasyaad")
-DB_PASSWORD = os.getenv("ASTRA_DB_PASSWORD", "Sellevolerei1")
+DB_USER = os.getenv("ASTRA_DB_USER", "postgres")
+DB_PASSWORD = os.getenv("ASTRA_DB_PASSWORD", "")
 DB_NAME = "astra_predictive_maintenance"
 
 engine = create_engine(f'postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}')

@@ -52,8 +52,8 @@ from src.api.schemas import (
 
 DB_HOST = os.getenv("ASTRA_DB_HOST", "localhost")
 DB_PORT = int(os.getenv("ASTRA_DB_PORT", "5432"))
-DB_USER = os.getenv("ASTRA_DB_USER", "rasyaad")
-DB_PASSWORD = os.getenv("ASTRA_DB_PASSWORD", "Sellevolerei1")
+DB_USER = os.getenv("ASTRA_DB_USER", "postgres")
+DB_PASSWORD = os.getenv("ASTRA_DB_PASSWORD", "")
 DB_NAME = "astra_predictive_maintenance"
 
 engine = create_engine(f'postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}')
@@ -318,98 +318,222 @@ def get_equipment_status():
 def get_alerts():
     """
     Returns active alarms from prediction results formatted for alerts.html client.
+    Reads real data from prediction_results + motors + raw_sensor_data tables.
     """
-    with engine.connect() as conn:
-        res = conn.execute(
-            text("""
-                SELECT r.id, r.motor_id, r.severity, r.predicted_at, r.recommendation, r.top_cause, r.anomaly_score, m.name
-                FROM prediction_results r
-                JOIN motors m ON r.motor_id = m.motor_id
-                WHERE r.severity IN ('WARNING', 'CRITICAL')
-                ORDER BY r.predicted_at DESC LIMIT 30
-            """)
-        ).fetchall()
-        
-        alerts_list = []
-        for row in res:
-            r_id, motor_id, severity, predicted_at, rec, cause, anomaly, motor_name = row
-            
-            # Calculate minutes ago
-            delta = datetime.now() - predicted_at
-            minutes_ago = max(1, int(delta.total_seconds() / 60))
-            
-            # Fetch latest raw sensor data to show real value
-            latest_sensor = conn.execute(
+    try:
+        with engine.connect() as conn:
+            res = conn.execute(
                 text("""
-                    SELECT vibration_x, current_a, temperature 
-                    FROM raw_sensor_data 
-                    WHERE motor_id = :mid 
-                    ORDER BY recorded_at DESC LIMIT 1
-                """),
-                {"mid": motor_id}
-            ).fetchone()
+                    SELECT r.id, r.motor_id, r.severity, r.predicted_at, r.recommendation,
+                           r.top_cause, r.anomaly_score, r.health_score, r.consensus_votes,
+                           m.name, m.max_temp, m.max_vibration, m.nominal_current
+                    FROM prediction_results r
+                    JOIN motors m ON r.motor_id = m.motor_id
+                    WHERE r.severity IN ('WARNING', 'HIGH_WARNING', 'CRITICAL')
+                    ORDER BY r.predicted_at DESC LIMIT 30
+                """)
+            ).fetchall()
             
-            # Map parameters based on cause
-            unit = "mm/s"
-            val = float(anomaly)
-            threshold = 8.5
+            # De-duplicate: keep only the latest alert per motor
+            seen_motors = set()
+            unique_rows = []
+            for row in res:
+                mid = row[1]
+                if mid not in seen_motors:
+                    seen_motors.add(mid)
+                    unique_rows.append(row)
             
-            if "temp" in cause.lower() or "temperature" in cause.lower():
-                unit = "°C"
-                threshold = 85.0
-                val = float(latest_sensor[2]) if latest_sensor and latest_sensor[2] is not None else (82.4 + (float(anomaly) * 0.5) if anomaly < 30 else 145.0)
-            elif "current" in cause.lower() or "amperage" in cause.lower():
-                unit = "A"
-                threshold = 38.0
-                val = float(latest_sensor[1]) if latest_sensor and latest_sensor[1] is not None else (22.0 + (float(anomaly) * 0.1) if anomaly < 30 else 42.0)
-            elif "power" in cause.lower() or "rpm" in cause.lower():
-                unit = "kW"
-                threshold = 18.0
-                val = float(latest_sensor[0] * 5.0) if latest_sensor and latest_sensor[0] is not None else (11.0 + (float(anomaly) * 0.2) if anomaly < 30 else 24.0)
-            else:
-                # Default is vibration
-                val = float(latest_sensor[0]) if latest_sensor and latest_sensor[0] is not None else float(anomaly)
-            
-            # Limit display value
-            if val > 1000 or val <= 0:
-                val = 14.8 if unit == "mm/s" else 42.1
+            alerts_list = []
+            for row in unique_rows:
+                (r_id, motor_id, severity, predicted_at, rec, cause, anomaly,
+                 health, consensus, motor_name, max_temp, max_vib, nom_current) = row
                 
-            # Parse top_cause for structured recommendations
-            parsed_recs = []
-            cleaned_title = cause.split('\n')[0] if cause else rec
+                # Calculate minutes ago
+                delta = datetime.now() - predicted_at
+                minutes_ago = max(1, int(delta.total_seconds() / 60))
+                
+                # Fetch latest raw sensor data
+                latest_sensor = conn.execute(
+                    text("""
+                        SELECT vibration_x, current_a, temperature 
+                        FROM raw_sensor_data 
+                        WHERE motor_id = :mid 
+                        ORDER BY recorded_at DESC LIMIT 1
+                    """),
+                    {"mid": motor_id}
+                ).fetchone()
             
-            if cause:
-                lines = cause.split('\n')
-                for line in lines:
-                    if line.strip().startswith('-'):
-                        parsed_recs.append(line.strip().lstrip('-').strip())
-                        
-            # Fallback if no structured recs found
-            if not parsed_recs:
-                parsed_recs = [rec, "Check base alignment and tighten base bolts.", "Verify phase current balance using clamp meter."]
-            
-            # Feature impacts (SHAP)
-            features = [
-                {"name": "Radial Vibration", "impact": 0.85 if "vib" in cause.lower() else 0.20, "color": "red" if "vib" in cause.lower() else "muted"},
-                {"name": "Stator Current", "impact": 0.65 if "current" in cause.lower() else 0.15, "color": "amber" if "current" in cause.lower() else "muted"},
-                {"name": "Motor Temperature", "impact": 0.75 if "temp" in cause.lower() else 0.10, "color": "red" if "temp" in cause.lower() else "muted"}
-            ]
-            
-            alerts_list.append({
-                "id": r_id,
-                "asset_id": motor_id,
-                "asset_name": motor_name,
-                "severity": severity.lower(),
-                "title": cleaned_title,
-                "minutes_ago": minutes_ago,
-                "value": round(val, 1),
-                "unit": unit,
-                "threshold": threshold,
-                "confidence": 0.92 if severity == "CRITICAL" else 0.78,
-                "recommendations": parsed_recs,
-                "feature_impacts": features
-            })
-        return {"alerts": alerts_list}
+                # ── Parse top_cause to extract feature name and build a short title ──
+                cause_str = cause if cause else ""
+                first_line = cause_str.split('\n')[0].strip()
+                
+                # Extract the feature descriptor from the decision engine's message
+                # Pattern: "{Feature Name} is abnormally high/has dropped below..."
+                feature_desc = ""
+                short_title = first_line
+                if " is abnormally high" in first_line:
+                    feature_desc = first_line.split(" is abnormally high")[0].strip()
+                    short_title = f"{feature_desc} — Abnormally High"
+                elif " has dropped below normal" in first_line:
+                    feature_desc = first_line.split(" has dropped below normal")[0].strip()
+                    short_title = f"{feature_desc} — Below Normal"
+                elif "Sensor Fault" in first_line:
+                    short_title = "Sensor Fault Detected"
+                    feature_desc = "Sensor"
+                elif "within nominal" in first_line.lower():
+                    short_title = "Parameters Within Nominal Range"
+                    feature_desc = "Telemetry"
+                else:
+                    # Truncate to first sentence if still too long
+                    if len(short_title) > 60:
+                        short_title = short_title[:57] + "..."
+                
+                fd_lower = feature_desc.lower()
+                
+                # ── Map sensor reading, unit, threshold, and label from feature ──
+                sensor_label = "Sensor Reading"
+                unit = "mm/s"
+                threshold = float(max_vib) if max_vib else 4.5
+                val = float(anomaly) if anomaly else 0.0
+                
+                if any(kw in fd_lower for kw in ['temperature', 'temp', 'thermal']):
+                    sensor_label = "Temperature"
+                    unit = "°C"
+                    threshold = float(max_temp) if max_temp else 85.0
+                    val = float(latest_sensor[2]) if latest_sensor and latest_sensor[2] is not None else val
+                elif any(kw in fd_lower for kw in ['current', 'amperage', 'stator']):
+                    sensor_label = "Motor Current"
+                    unit = "A"
+                    threshold = float(nom_current) if nom_current else 38.0
+                    val = float(latest_sensor[1]) if latest_sensor and latest_sensor[1] is not None else val
+                elif any(kw in fd_lower for kw in ['vibration', 'vib ']):
+                    sensor_label = "Vibration"
+                    unit = "mm/s"
+                    threshold = float(max_vib) if max_vib else 4.5
+                    val = float(latest_sensor[0]) if latest_sensor and latest_sensor[0] is not None else val
+                elif any(kw in fd_lower for kw in ['rpm', 'rotation', 'speed']):
+                    sensor_label = "Rotation Speed"
+                    unit = "RPM"
+                    threshold = 3000.0
+                    val = float(latest_sensor[0]) if latest_sensor and latest_sensor[0] is not None else val
+                elif any(kw in fd_lower for kw in ['torque']):
+                    sensor_label = "Torque Load"
+                    unit = "Nm"
+                    threshold = 120.0
+                    val = float(latest_sensor[0]) if latest_sensor and latest_sensor[0] is not None else val
+                elif any(kw in fd_lower for kw in ['power', 'load ratio', 'load']):
+                    sensor_label = "Power Estimate"
+                    unit = "kW"
+                    threshold = 18.0
+                    val = float(latest_sensor[0]) if latest_sensor and latest_sensor[0] is not None else val
+                elif any(kw in fd_lower for kw in ['kurtosis', 'crest', 'skewness']):
+                    sensor_label = "Vibration Quality"
+                    unit = "mm/s"
+                    threshold = float(max_vib) if max_vib else 4.5
+                    val = float(latest_sensor[0]) if latest_sensor and latest_sensor[0] is not None else val
+                elif any(kw in fd_lower for kw in ['fft']):
+                    sensor_label = "FFT Energy"
+                    unit = "mm/s"
+                    threshold = float(max_vib) if max_vib else 4.5
+                    val = float(latest_sensor[0]) if latest_sensor and latest_sensor[0] is not None else val
+                else:
+                    # Fallback: use vibration_x as default sensor
+                    val = float(latest_sensor[0]) if latest_sensor and latest_sensor[0] is not None else val
+                
+                # Sanity limit on display value
+                if val > 5000 or val <= 0:
+                    val = float(anomaly) if anomaly and float(anomaly) > 0 else 1.0
+                
+                # ── Parse recommendations from cause body ──
+                parsed_recs = []
+                if cause_str:
+                    for line in cause_str.split('\n'):
+                        stripped = line.strip()
+                        if stripped.startswith('-') and '[' in stripped:
+                            # Remove the "- [Tag]: " prefix for clean display
+                            content = stripped.lstrip('-').strip()
+                            if ']: ' in content:
+                                content = content.split(']: ', 1)[1]
+                            parsed_recs.append(content)
+                
+                # Fallback recommendations
+                if not parsed_recs:
+                    parsed_recs = [
+                        rec if rec else "Inspect equipment and verify sensor readings.",
+                        "Check base alignment and tighten mounting bolts.",
+                        "Verify phase current balance using clamp meter."
+                    ]
+                
+                # ── Build SHAP-style feature impacts ──
+                features = []
+                # Primary cause gets highest impact
+                primary_impact = 0.85 if severity == "CRITICAL" else 0.65
+                if "vibration" in fd_lower or "vib" in fd_lower:
+                    features = [
+                        {"name": "Radial Vibration", "impact": primary_impact, "color": "red"},
+                        {"name": "Stator Current", "impact": 0.15, "color": "muted"},
+                        {"name": "Motor Temperature", "impact": 0.10, "color": "muted"}
+                    ]
+                elif "current" in fd_lower:
+                    features = [
+                        {"name": "Stator Current", "impact": primary_impact, "color": "red"},
+                        {"name": "Radial Vibration", "impact": 0.20, "color": "muted"},
+                        {"name": "Motor Temperature", "impact": 0.10, "color": "muted"}
+                    ]
+                elif "temp" in fd_lower:
+                    features = [
+                        {"name": "Motor Temperature", "impact": primary_impact, "color": "red"},
+                        {"name": "Stator Current", "impact": 0.15, "color": "muted"},
+                        {"name": "Radial Vibration", "impact": 0.10, "color": "muted"}
+                    ]
+                elif "torque" in fd_lower:
+                    features = [
+                        {"name": "Torque Load", "impact": primary_impact, "color": "red"},
+                        {"name": "Stator Current", "impact": 0.25, "color": "amber"},
+                        {"name": "Motor Temperature", "impact": 0.10, "color": "muted"}
+                    ]
+                elif "power" in fd_lower or "load" in fd_lower:
+                    features = [
+                        {"name": "Power / Load", "impact": primary_impact, "color": "red"},
+                        {"name": "Stator Current", "impact": 0.30, "color": "amber"},
+                        {"name": "Motor Temperature", "impact": 0.15, "color": "muted"}
+                    ]
+                elif "rpm" in fd_lower or "speed" in fd_lower:
+                    features = [
+                        {"name": "Rotation Speed", "impact": primary_impact, "color": "red"},
+                        {"name": "Stator Current", "impact": 0.20, "color": "muted"},
+                        {"name": "Radial Vibration", "impact": 0.10, "color": "muted"}
+                    ]
+                else:
+                    features = [
+                        {"name": feature_desc or "Primary Sensor", "impact": primary_impact, "color": "red"},
+                        {"name": "Stator Current", "impact": 0.15, "color": "muted"},
+                        {"name": "Motor Temperature", "impact": 0.10, "color": "muted"}
+                    ]
+                
+                # Confidence from consensus votes
+                conf = 0.92 if consensus and consensus >= 3 else (0.78 if consensus and consensus >= 2 else 0.55)
+                
+                alerts_list.append({
+                    "id": r_id,
+                    "asset_id": motor_id,
+                    "asset_name": motor_name,
+                    "severity": severity.lower(),
+                    "title": short_title,
+                    "sensor_label": sensor_label,
+                    "minutes_ago": minutes_ago,
+                    "value": round(val, 1),
+                    "unit": unit,
+                    "threshold": threshold,
+                    "confidence": conf,
+                    "health_score": round(float(health), 1) if health else 100.0,
+                    "feature_impacts": features,
+                    "recommendations": parsed_recs
+                })
+            return {"alerts": alerts_list}
+    except Exception as e:
+        print(f"[API Error] /api/alerts exception: {e}")
+        return {"alerts": []}
 
 @app.get("/api/simulate/step", response_model=SimulateStepResponse)
 def simulate_step() -> SimulateStepResponse:
@@ -1094,6 +1218,85 @@ def get_downtime_report(format: str = "csv"):
         except Exception as e:
             safe_close_and_unlink(temp_file)
             raise HTTPException(status_code=500, detail=f"Failed to generate downtime report: {str(e)}")
+
+
+@app.get("/api/reports/alerts")
+@app.get("/api/reports/critical")
+def get_alerts_report(format: str = "pdf"):
+    if format.lower() == "pdf":
+        temp_file = tempfile.NamedTemporaryFile(mode='wb', delete=False, suffix='.pdf')
+        try:
+            headers = ["ID", "Asset ID", "Asset Name", "Severity", "Anomaly", "Detected At", "Primary Cause / Action"]
+            col_widths = [15, 20, 25, 20, 20, 30, 60]
+            rows = []
+            with engine.connect() as conn:
+                query = text("""
+                    SELECT r.id, r.motor_id, m.name, r.severity, r.anomaly_score, r.predicted_at, r.top_cause, r.recommendation
+                    FROM prediction_results r
+                    JOIN motors m ON r.motor_id = m.motor_id
+                    WHERE r.severity IN ('WARNING', 'HIGH_WARNING', 'CRITICAL')
+                    ORDER BY r.predicted_at DESC LIMIT 50
+                """)
+                res = conn.execute(query).fetchall()
+                for row in res:
+                    r_id, mid, m_name, sev, anomaly, pat, cause, rec = row
+                    cause_first = cause.split('\n')[0] if cause else rec
+                    if len(cause_first) > 55:
+                        cause_first = cause_first[:52] + "..."
+                    rows.append([
+                        str(r_id), str(mid), str(m_name), str(sev),
+                        f"{float(anomaly):.1f}",
+                        pat.strftime('%Y-%m-%d %H:%M') if pat else "N/A",
+                        str(cause_first)
+                    ])
+                
+                if not rows:
+                    rows.append(["-", "-", "All Systems", "NORMAL", "0.0", datetime.now().strftime('%Y-%m-%d %H:%M'), "No critical event logs recorded."])
+            
+            pdf_bytes = generate_pdf_report(
+                title="ASTRA Critical Events & Predictive Alert Log",
+                subtitle=f"Generated on: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')} | Scope: All Active Assets",
+                headers=headers,
+                col_widths=col_widths,
+                rows=rows
+            )
+            temp_file.write(pdf_bytes)
+            temp_file.close()
+            return FileResponse(
+                temp_file.name,
+                media_type='application/pdf',
+                filename=f"Critical_Events_Report_{datetime.now().strftime('%Y%m%d')}.pdf"
+            )
+        except Exception as e:
+            safe_close_and_unlink(temp_file)
+            raise HTTPException(status_code=500, detail=f"Failed to generate alerts PDF report: {str(e)}")
+    else:
+        temp_file = tempfile.NamedTemporaryFile(mode='w', delete=False, suffix='.csv', newline='')
+        try:
+            writer = csv.writer(temp_file)
+            writer.writerow(["Alert ID", "Asset ID", "Asset Name", "Severity", "Anomaly Score", "Detected At", "Primary Cause / Recommendation"])
+            with engine.connect() as conn:
+                query = text("""
+                    SELECT r.id, r.motor_id, m.name, r.severity, r.anomaly_score, r.predicted_at, r.top_cause, r.recommendation
+                    FROM prediction_results r
+                    JOIN motors m ON r.motor_id = m.motor_id
+                    WHERE r.severity IN ('WARNING', 'HIGH_WARNING', 'CRITICAL')
+                    ORDER BY r.predicted_at DESC LIMIT 50
+                """)
+                res = conn.execute(query).fetchall()
+                for row in res:
+                    r_id, mid, m_name, sev, anomaly, pat, cause, rec = row
+                    cause_first = cause.split('\n')[0] if cause else rec
+                    writer.writerow([r_id, mid, m_name, sev, f"{float(anomaly):.1f}", pat.isoformat() if pat else "", cause_first])
+            temp_file.close()
+            return FileResponse(
+                temp_file.name,
+                media_type='text/csv',
+                filename=f"Critical_Events_Report_{datetime.now().strftime('%Y%m%d')}.csv"
+            )
+        except Exception as e:
+            safe_close_and_unlink(temp_file)
+            raise HTTPException(status_code=500, detail=f"Failed to generate alerts CSV report: {str(e)}")
 
 
 # Serving the original static HTML dashboard pages
