@@ -1,717 +1,876 @@
-<!DOCTYPE html><html class="scroll-smooth" lang="en"><head>
-<meta charset="utf-8">
-<meta content="width=device-width, initial-scale=1.0" name="viewport">
-<title>Project ASTRA | Industrial AI Suite</title>
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Playfair+Display:wght@700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
-<script id="tailwind-config">
-        tailwind.config = {
-          darkMode: "class",
-          theme: {
-            extend: {
-              "colors": {
-                      "on-surface-variant": "#414943",
-                      "inverse-surface": "#2f312f",
-                      "red-alert": "#C0392B",
-                      "tertiary": "#00371b",
-                      "surface-container-highest": "#e3e2df",
-                      "on-error": "#ffffff",
-                      "green-good": "#27AE60",
-                      "ink-muted": "#6B6860",
-                      "surface-container": "#efeeeb",
-                      "on-background": "#1b1c1a",
-                      "surface-container-high": "#e9e8e5",
-                      "on-surface": "#1b1c1a",
-                      "background": "#faf9f6",
-                      "on-tertiary-fixed-variant": "#00522b",
-                      "surface-container-low": "#f4f3f0",
-                      "on-secondary": "#ffffff",
-                      "on-primary-fixed": "#002111",
-                      "border": "#E2DDD6",
-                      "on-tertiary-container": "#5cc784",
-                      "on-secondary-fixed": "#002110",
-                      "outline-variant": "#c0c9c1",
-                      "surface-bright": "#faf9f6",
-                      "on-primary-container": "#8bbe9e",
-                      "secondary-fixed-dim": "#8ad7a7",
-                      "on-primary-fixed-variant": "#1f5036",
-                      "secondary-container": "#a3f0bf",
-                      "secondary-fixed": "#a6f3c2",
-                      "primary-container": "#1d4e35",
-                      "error": "#ba1a1a",
-                      "surface-container-lowest": "#ffffff",
-                      "on-error-container": "#93000a",
-                      "amber-warn": "#E67E22",
-                      "outline": "#717972",
-                      "on-tertiary": "#ffffff",
-                      "tertiary-fixed": "#8df9b1",
-                      "secondary": "#1c6b45",
-                      "primary-fixed": "#baefcc",
-                      "surface-variant": "#e3e2df",
-                      "primary": "#003720",
-                      "tertiary-container": "#00502a",
-                      "on-secondary-fixed-variant": "#005230",
-                      "inverse-primary": "#9ed2b1",
-                      "ink": "#1A1A18",
-                      "surface-dim": "#dbdad7",
-                      "green-light": "#EAF2EC",
-                      "surface-tint": "#38684d",
-                      "on-tertiary-fixed": "#00210e",
-                      "on-primary": "#ffffff",
-                      "on-secondary-container": "#227049",
-                      "surface": "#FFFFFF",
-                      "mono-data": "#2C3E50",
-                      "inverse-on-surface": "#f2f1ee",
-                      "primary-fixed-dim": "#9ed2b1",
-                      "error-container": "#ffdad6",
-                      "tertiary-fixed-dim": "#71dc96"
-              },
-              "borderRadius": {
-                      "DEFAULT": "0.125rem",
-                      "lg": "0.25rem",
-                      "xl": "0.5rem",
-                      "full": "0.75rem"
-              },
-              "spacing": {
-                      "md": "16px",
-                      "gutter": "24px",
-                      "xs": "4px",
-                      "margin-desktop": "64px",
-                      "lg": "24px",
-                      "sm": "8px",
-                      "margin-mobile": "16px",
-                      "xl": "48px",
-                      "xxl": "96px",
-                      "base": "4px"
-              },
-              "fontFamily": {
-                      "hero-lg-mobile": ["Playfair Display"],
-                      "headline-display": ["Playfair Display"],
-                      "body-lg": ["Inter"],
-                      "body-md": ["Inter"],
-                      "data-display": ["JetBrains Mono"],
-                      "body-sm": ["Inter"],
-                      "hero-lg": ["Playfair Display"],
-                      "data-value": ["JetBrains Mono"],
-                      "data-label": ["JetBrains Mono"]
-              },
-              "fontSize": {
-                      "hero-lg-mobile": ["42px", {"lineHeight": "1.2", "fontWeight": "700"}],
-                      "headline-display": ["40px", {"lineHeight": "1.2", "fontWeight": "700"}],
-                      "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
-                      "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
-                      "data-display": ["48px", {"lineHeight": "1.0", "letterSpacing": "-0.03em", "fontWeight": "500"}],
-                      "body-sm": ["14px", {"lineHeight": "1.4", "fontWeight": "500"}],
-                      "hero-lg": ["68px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}],
-                      "data-value": ["14px", {"lineHeight": "1.0", "fontWeight": "500"}],
-                      "data-label": ["11px", {"lineHeight": "1.0", "letterSpacing": "0.05em", "fontWeight": "400"}]
-              }
-            },
-          },
-        }
-    </script>
-<style>
-        .material-symbols-outlined {
-            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-        }
-        .waveform-container canvas {
-            filter: drop-shadow(0 0 8px rgba(39, 174, 96, 0.3));
-        }
-        .bento-grid {
-            display: grid;
-            grid-template-columns: repeat(12, 1fr);
-            gap: 24px;
-        }
-        .gradient-mask {
-            mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
-        }
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-    </style>
-<script src="js/interactions.js"></script>
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MaintenX - AI-Powered Predictive Maintenance Platform Presentation</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap">
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #0b0f19; color: #f3f4f6; overflow-x: hidden; }
+    .slide { display: none; min-height: 80vh; opacity: 0; transition: opacity 0.3s ease-in-out; }
+    .slide.active { display: flex; opacity: 1; }
+    .glass-card { background: rgba(17, 24, 39, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.08); }
+    .glass-card-accent { background: rgba(22, 163, 74, 0.08); border: 1px solid rgba(34, 197, 94, 0.25); }
+    .speaker-notes { display: none; }
+    .speaker-notes.show { display: block; }
+  </style>
 </head>
-<body class="bg-background text-on-surface font-body-md overflow-x-hidden selection:bg-primary-fixed selection:text-primary">
-<!-- Top Navigation Bar -->
-<nav class="bg-surface/80 dark:bg-primary/80 backdrop-blur-md font-body-md text-body-md docked full-width top-0 sticky border-b border-border dark:border-white/12 flat no shadows z-[100] h-20 transition-all duration-300">
-<div class="flex justify-between items-center w-full px-margin-desktop max-w-[1200px] mx-auto h-full">
-<div class="font-headline-display text-headline-display text-primary dark:text-primary-fixed">Project ASTRA</div>
-<div class="hidden md:flex items-center gap-xl h-full">
-<a class="text-on-surface-variant dark:text-outline-variant hover:text-primary dark:hover:text-primary-fixed transition-colors pb-1" href="#problem">Problem</a>
-<a class="text-on-surface-variant dark:text-outline-variant hover:text-primary dark:hover:text-primary-fixed transition-colors pb-1" href="#dataset">Dataset</a>
-<a class="text-on-surface-variant dark:text-outline-variant hover:text-primary dark:hover:text-primary-fixed transition-colors pb-1" href="#solution">Solution</a>
-<a class="text-on-surface-variant dark:text-outline-variant hover:text-primary dark:hover:text-primary-fixed transition-colors pb-1" href="#model">Model</a>
-<a class="text-on-surface-variant dark:text-outline-variant hover:text-primary dark:hover:text-primary-fixed transition-colors pb-1" href="#team">Team</a>
-</div>
-<button class="bg-primary text-on-primary px-lg py-sm rounded-lg font-body-sm hover:bg-tertiary transition-all active:scale-95" onclick="location.href='overview.html'">
-                Open Dashboard
-            </button>
-</div>
-</nav>
-<main>
-<!-- Section 1: Hero -->
-<section class="relative min-h-[921px] flex items-center pt-xl pb-xxl px-margin-mobile md:px-margin-desktop max-w-[1200px] mx-auto" id="hero">
-<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter items-center w-full">
-<div class="lg:col-span-7">
-<div class="inline-flex items-center gap-2 px-3 py-1 bg-green-light text-primary rounded-full mb-md">
-<span class="material-symbols-outlined text-[18px]">verified</span>
-<span class="font-data-label uppercase tracking-widest">Industrial Reliability Engine</span>
-</div>
-<h1 class="font-hero-lg text-hero-lg mb-lg text-primary">From Reactive to <span class="text-secondary italic">Resilient</span></h1>
-<p class="font-body-lg text-body-lg text-ink-muted mb-xl max-w-xl">
-                        Redefining predictive maintenance for Project ASTRA with Deep Learning AI — detecting microscopic anomalies before catastrophic failure occurs.
-                    </p>
-<div class="flex flex-wrap gap-md">
-<button class="bg-primary text-white px-xl py-md rounded-lg font-body-md hover:bg-tertiary transition-all shadow-lg" onclick="location.href='overview.html'">Open Dashboard</button>
-<button class="border border-primary text-primary px-xl py-md rounded-lg font-body-md hover:bg-green-light transition-all" onclick="location.href='support.html'">View Documentation</button>
-</div>
-</div>
-<div class="lg:col-span-5 relative">
-<div class="aspect-square bg-surface border border-border rounded-xl p-lg overflow-hidden flex flex-col shadow-sm">
-<div class="flex justify-between items-center mb-md">
-<span class="font-data-label text-ink-muted uppercase">Real-time Sensor Feed</span>
-<div class="flex gap-2">
-<div class="w-2 h-2 rounded-full bg-green-good animate-pulse"></div>
-<span class="font-data-value text-green-good">Live Tracking</span>
-</div>
-</div>
-<div class="flex-grow flex items-center justify-center waveform-container">
-<canvas class="w-full h-full" id="heroWaveform"></canvas>
-</div>
-<div class="mt-md grid grid-cols-3 gap-sm">
-<div class="p-2 bg-background border border-border rounded">
-<div class="text-[10px] text-ink-muted uppercase font-data-label">Vibration</div>
-<div class="font-data-value text-primary">0.024 RMS</div>
-</div>
-<div class="p-2 bg-background border border-border rounded">
-<div class="text-[10px] text-ink-muted uppercase font-data-label">Temp</div>
-<div class="font-data-value text-primary">42.8°C</div>
-</div>
-<div class="p-2 bg-background border border-border rounded">
-<div class="text-[10px] text-ink-muted uppercase font-data-label">Health</div>
-<div class="font-data-value text-green-good">98.2%</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</section>
-<!-- Section 2: Problem -->
-<section class="bg-surface-container-low py-xxl border-y border-border" id="problem">
-<div class="max-w-[1200px] mx-auto px-margin-mobile md:px-margin-desktop">
-<div class="mb-xl">
-<h2 class="font-headline-display text-headline-display text-primary mb-md">Operational Efficiency Gaps</h2>
-<p class="text-ink-muted max-w-2xl">Traditional reactive approaches fail to capture the dynamics of complex modern industrial systems, creating hidden losses worth millions of dollars annually.</p>
-</div>
-<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
-<!-- Card 1 -->
-<div class="bg-surface p-lg border border-border rounded-lg group hover:border-primary transition-all">
-<div class="w-12 h-12 bg-red-alert/10 text-red-alert rounded-lg flex items-center justify-center mb-lg">
-<span class="material-symbols-outlined">running_with_errors</span>
-</div>
-<h3 class="font-body-lg font-bold mb-sm">Operational Gap</h3>
-<p class="text-on-surface-variant text-body-md mb-md">Inability to predict equipment failures causes sudden unplanned downtime averaging 12 hours per incident, halting production lines without warning.</p>
-<div class="h-1 bg-surface-container-highest w-full rounded overflow-hidden">
-<div class="bg-red-alert h-full w-[85%]"></div>
-</div>
-<div class="mt-2 text-red-alert font-data-value text-xs uppercase tracking-tighter">High Criticality</div>
-</div>
-<!-- Card 2 -->
-<div class="bg-surface p-lg border border-border rounded-lg group hover:border-primary transition-all">
-<div class="w-12 h-12 bg-amber-warn/10 text-amber-warn rounded-lg flex items-center justify-center mb-lg">
-<span class="material-symbols-outlined">data_exploration</span>
-</div>
-<h3 class="font-body-lg font-bold mb-sm">Technological Gap</h3>
-<p class="text-on-surface-variant text-body-md mb-md">Abundant sensor data goes unanalysed in real time, leaving critical blind spots in CCP monitoring and food safety oversight.</p>
-<div class="h-1 bg-surface-container-highest w-full rounded overflow-hidden">
-<div class="bg-amber-warn h-full w-[60%]"></div>
-</div>
-<div class="mt-2 text-amber-warn font-data-value text-xs uppercase tracking-tighter">Data Underutilized</div>
-</div>
-<!-- Card 3 -->
-<div class="bg-surface p-lg border border-border rounded-lg group hover:border-primary transition-all">
-<div class="w-12 h-12 bg-primary/10 text-primary rounded-lg flex items-center justify-center mb-lg">
-<span class="material-symbols-outlined">psychology</span>
-</div>
-<h3 class="font-body-lg font-bold mb-sm">Human Trust Gap</h3>
-<p class="text-on-surface-variant text-body-md mb-md">Operator distrust of opaque "Black Box" AI systems stalls technology adoption on the factory floor, preventing ROI realisation.</p>
-<div class="h-1 bg-surface-container-highest w-full rounded overflow-hidden">
-<div class="bg-primary h-full w-[45%]"></div>
-</div>
-<div class="mt-2 text-primary font-data-value text-xs uppercase tracking-tighter">Trust Deficit</div>
-</div>
-</div>
-</div>
-</section>
-<!-- Section 3: Dataset (Multi-Dataset Overview) -->
-<section class="py-xxl px-margin-mobile md:px-margin-desktop max-w-[1200px] mx-auto" id="dataset">
-<div class="grid grid-cols-1 lg:grid-cols-12 gap-xl items-start">
-<div class="lg:col-span-4">
-<h2 class="font-headline-display text-headline-display text-primary mb-lg leading-tight">Multi-Dataset Training Foundation</h2>
-<p class="text-ink-muted mb-xl">Project ASTRA is trained across three open benchmark datasets, each targeting a distinct failure domain: anomaly detection, bearing fault classification, and remaining useful life prediction.</p>
-<div class="space-y-md">
-<div class="p-md border border-border rounded-lg bg-surface">
-<div class="flex items-start gap-sm">
-<div class="w-8 h-8 border border-primary/30 bg-primary/5 flex items-center justify-center rounded text-primary font-data-label text-[10px] font-bold flex-shrink-0">01</div>
-<div>
-<div class="font-body-md font-semibold text-sm">SKAB</div>
-<div class="text-[11px] text-ink-muted">Anomaly Detection · 34 runs · 8 sensors</div>
-<div class="text-[10px] text-primary mt-1 font-data-label uppercase">Skoltech · Hydraulic Pump Control</div>
-</div>
-</div>
-</div>
-<div class="p-md border border-border rounded-lg bg-surface">
-<div class="flex items-start gap-sm">
-<div class="w-8 h-8 border border-amber-warn/30 bg-amber-warn/5 flex items-center justify-center rounded text-amber-warn font-data-label text-[10px] font-bold flex-shrink-0">02</div>
-<div>
-<div class="font-body-md font-semibold text-sm">CWRU</div>
-<div class="text-[11px] text-ink-muted">Bearing Fault Classification · 4 fault classes</div>
-<div class="text-[10px] text-amber-warn mt-1 font-data-label uppercase">Case Western Reserve Univ. · Vibration</div>
-</div>
-</div>
-</div>
-<div class="p-md border border-border rounded-lg bg-surface">
-<div class="flex items-start gap-sm">
-<div class="w-8 h-8 border border-red-alert/30 bg-red-alert/5 flex items-center justify-center rounded text-red-alert font-data-label text-[10px] font-bold flex-shrink-0">03</div>
-<div>
-<div class="font-body-md font-semibold text-sm">NASA CMAPSS</div>
-<div class="text-[11px] text-ink-muted">Remaining Useful Life · 4 dataset variants</div>
-<div class="text-[10px] text-red-alert mt-1 font-data-label uppercase">NASA Ames · Turbofan Engine Degradation</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="lg:col-span-8 bg-surface border border-border p-lg rounded-xl">
-<div class="flex justify-between items-center mb-xl border-b border-border pb-md">
-<span class="font-data-label uppercase tracking-widest text-ink-muted">Sensor Mapping Cluster</span>
-<span class="font-data-value text-xs bg-green-light px-2 py-1 text-primary">High Fidelity Data</span>
-</div>
-<div class="grid grid-cols-2 md:grid-cols-4 gap-md mb-xl">
-<div class="space-y-1">
-<div class="text-[10px] uppercase font-data-label text-ink-muted">Accelerometer</div>
-<div class="h-24 bg-surface-container flex items-end gap-[2px] p-1">
-<div class="bg-primary w-full h-[40%]"></div>
-<div class="bg-primary w-full h-[60%]"></div>
-<div class="bg-primary w-full h-[80%]"></div>
-<div class="bg-red-alert w-full h-[30%]"></div>
-<div class="bg-primary w-full h-[50%]"></div>
-</div>
-</div>
-<div class="space-y-1">
-<div class="text-[10px] uppercase font-data-label text-ink-muted">Current (A)</div>
-<div class="h-24 bg-surface-container flex items-end gap-[2px] p-1">
-<div class="bg-primary w-full h-[20%]"></div>
-<div class="bg-primary w-full h-[25%]"></div>
-<div class="bg-primary w-full h-[30%]"></div>
-<div class="bg-primary w-full h-[20%]"></div>
-<div class="bg-primary w-full h-[15%]"></div>
-</div>
-</div>
-<div class="space-y-1">
-<div class="text-[10px] uppercase font-data-label text-ink-muted">Pressure (Bar)</div>
-<div class="h-24 bg-surface-container flex items-end gap-[2px] p-1">
-<div class="bg-primary w-full h-[90%]"></div>
-<div class="bg-primary w-full h-[85%]"></div>
-<div class="bg-primary w-full h-[80%]"></div>
-<div class="bg-primary w-full h-[88%]"></div>
-<div class="bg-primary w-full h-[92%]"></div>
-</div>
-</div>
-<div class="space-y-1">
-<div class="text-[10px] uppercase font-data-label text-ink-muted">Temperature</div>
-<div class="h-24 bg-surface-container flex items-end gap-[2px] p-1">
-<div class="bg-primary w-full h-[40%]"></div>
-<div class="bg-primary w-full h-[42%]"></div>
-<div class="bg-primary w-full h-[45%]"></div>
-<div class="bg-primary w-full h-[41%]"></div>
-<div class="bg-primary w-full h-[40%]"></div>
-</div>
-</div>
-</div>
-<div class="p-lg bg-inverse-surface text-white rounded-lg">
-<div class="flex items-center gap-md mb-sm">
-<span class="material-symbols-outlined text-green-good">info</span>
-<span class="font-data-label uppercase">Domain Insight</span>
-</div>
-<p class="font-body-sm text-outline-variant">Three complementary benchmarks cover the full failure spectrum: SKAB for pump-loop anomalies, CWRU for bearing fault signatures, and NASA CMAPSS for long-horizon degradation curves — directly applicable to Project ASTRA's equipment health monitoring.</p>
-</div>
-</div>
-</div>
-</section>
-<!-- Section 4: Solution (Architecture) -->
-<section class="bg-primary py-xxl overflow-hidden" id="solution">
-<div class="max-w-[1200px] mx-auto px-margin-mobile md:px-margin-desktop">
-<div class="text-center mb-xxl">
-<h2 class="font-headline-display text-headline-display text-white mb-md">End-to-End Architecture</h2>
-<p class="text-primary-fixed-dim max-w-xl mx-auto">From raw sensor collection to an intelligent assistant that recommends corrective actions.</p>
-</div>
-<div class="relative">
-<div class="absolute top-1/2 left-0 w-full h-px bg-white/10 -translate-y-1/2 hidden md:block"></div>
-<div class="grid grid-cols-1 md:grid-cols-5 gap-gutter relative z-10">
-<!-- Step 1 -->
-<div class="bg-primary-container p-lg border border-white/12 rounded-xl text-center flex flex-col items-center">
-<div class="w-14 h-14 bg-primary rounded-full flex items-center justify-center mb-md border border-white/20">
-<span class="material-symbols-outlined text-white">sensors</span>
-</div>
-<div class="font-data-label text-on-primary-container mb-1">DATA INGEST</div>
-<div class="text-white font-bold text-sm">Industrial IoT</div>
-</div>
-<!-- Step 2 -->
-<div class="bg-primary-container p-lg border border-white/12 rounded-xl text-center flex flex-col items-center">
-<div class="w-14 h-14 bg-primary rounded-full flex items-center justify-center mb-md border border-white/20">
-<span class="material-symbols-outlined text-white">storage</span>
-</div>
-<div class="font-data-label text-on-primary-container mb-1">ETL ENGINE</div>
-<div class="text-white font-bold text-sm">Real-time Stream</div>
-</div>
-<!-- Step 3 -->
-<div class="bg-primary-container p-lg border border-white/12 rounded-xl text-center flex flex-col items-center shadow-xl scale-110">
-<div class="w-14 h-14 bg-secondary rounded-full flex items-center justify-center mb-md border border-white/20">
-<span class="material-symbols-outlined text-white">hub</span>
-</div>
-<div class="font-data-label text-on-primary-container mb-1">CORE AI</div>
-<div class="text-white font-bold text-sm">Ensemble Model</div>
-</div>
-<!-- Step 4 -->
-<div class="bg-primary-container p-lg border border-white/12 rounded-xl text-center flex flex-col items-center">
-<div class="w-14 h-14 bg-primary rounded-full flex items-center justify-center mb-md border border-white/20">
-<span class="material-symbols-outlined text-white">bar_chart_4_bars</span>
-</div>
-<div class="font-data-label text-on-primary-container mb-1">XAI ENGINE</div>
-<div class="text-white font-bold text-sm">SHAP Insight</div>
-</div>
-<!-- Step 5 -->
-<div class="bg-primary-container p-lg border border-white/12 rounded-xl text-center flex flex-col items-center">
-<div class="w-14 h-14 bg-primary rounded-full flex items-center justify-center mb-md border border-white/20">
-<span class="material-symbols-outlined text-white">smart_toy</span>
-</div>
-<div class="font-data-label text-on-primary-container mb-1">COPILOT</div>
-<div class="text-white font-bold text-sm">Guided Action</div>
-</div>
-</div>
-</div>
-<div class="mt-xxl bg-white/5 border border-white/10 p-xl rounded-2xl flex flex-col md:flex-row gap-xl items-center">
-<div class="flex-shrink-0">
-<div class="w-24 h-24 bg-green-good flex items-center justify-center rounded-full text-white">
-<span class="material-symbols-outlined text-[48px]" style="font-variation-settings: 'FILL' 1;">security</span>
-</div>
-</div>
-<div>
-<h4 class="text-white font-body-lg font-bold mb-sm">Awareness CCP (Critical Control Point)</h4>
-<p class="text-primary-fixed-dim">Our system integrates directly with food safety standards. Every predicted anomaly is classified by contamination risk and regulatory compliance, ensuring operations remain within safe boundaries at all times.</p>
-</div>
-</div>
-</div>
-</section>
-<!-- Section 5: Model AI (LSTM, TFT, SHAP) -->
-<section class="py-xxl px-margin-mobile md:px-margin-desktop max-w-[1200px] mx-auto" id="model">
-<h2 class="font-headline-display text-headline-display text-primary mb-xxl text-center">Project ASTRA AI Engine</h2>
-<div class="space-y-gutter">
-<!-- LSTM Autoencoder Row -->
-<div class="grid grid-cols-1 md:grid-cols-12 gap-gutter items-center border-b border-border pb-xl">
-<div class="md:col-span-5">
-<div class="font-data-label text-secondary mb-2 uppercase">Anomaly Detection</div>
-<h3 class="font-headline-display text-2xl text-primary mb-md">LSTM Autoencoder</h3>
-<p class="text-ink-muted">Learns normal operating patterns through temporal data reconstruction. Anomalies are detected when reconstruction error exceeds a statistically derived dynamic threshold.</p>
-</div>
-<div class="md:col-span-7">
-<div class="bg-surface-container p-md rounded-lg overflow-hidden h-48 relative">
-<div class="absolute inset-0 flex items-center justify-center">
-<svg class="w-full h-full opacity-30" viewBox="0 0 400 100">
-<path class="text-primary" d="M0 50 Q100 0 200 50 T400 50" fill="none" stroke="currentColor" stroke-width="2"></path>
-</svg>
-<div class="absolute flex gap-4">
-<div class="w-12 h-12 bg-primary rounded border border-white/20 flex items-center justify-center text-white font-data-label">ENC</div>
-<div class="w-8 h-px bg-primary self-center"></div>
-<div class="w-12 h-12 bg-secondary rounded border border-white/20 flex items-center justify-center text-white font-data-label">LAT</div>
-<div class="w-8 h-px bg-primary self-center"></div>
-<div class="w-12 h-12 bg-primary rounded border border-white/20 flex items-center justify-center text-white font-data-label">DEC</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-<!-- TFT Row -->
-<div class="grid grid-cols-1 md:grid-cols-12 gap-gutter items-center border-b border-border pb-xl">
-<div class="md:col-span-7 order-2 md:order-1">
-<div class="bg-surface-container p-md rounded-lg overflow-hidden h-48 relative">
-<div class="p-lg">
-<div class="flex items-end gap-2 h-24">
-<div class="bg-primary/20 w-8 h-[70%]"></div>
-<div class="bg-primary/20 w-8 h-[65%]"></div>
-<div class="bg-primary/20 w-8 h-[60%]"></div>
-<div class="bg-secondary w-8 h-[40%] animate-pulse"></div>
-<div class="bg-secondary/50 w-8 h-[25%] border-t-2 border-dashed border-secondary"></div>
-</div>
-<div class="mt-4 font-data-label text-ink-muted">RUL Prediction (Days Remaining)</div>
-</div>
-</div>
-</div>
-<div class="md:col-span-5 order-1 md:order-2">
-<div class="font-data-label text-secondary mb-2 uppercase">Life Cycle Analytics</div>
-<h3 class="font-headline-display text-2xl text-primary mb-md">Temporal Fusion Transformer</h3>
-<p class="text-ink-muted">Delivers high-accuracy Remaining Useful Life (RUL) estimation by integrating static asset variables with time-series sensor data to predict optimal maintenance windows.</p>
-</div>
-</div>
-<!-- SHAP Row -->
-<div class="grid grid-cols-1 md:grid-cols-12 gap-gutter items-center">
-<div class="md:col-span-5">
-<div class="font-data-label text-secondary mb-2 uppercase">Explainability (XAI)</div>
-<h3 class="font-headline-display text-2xl text-primary mb-md">SHAP Interpretation</h3>
-<p class="text-ink-muted">Breaking open the AI "Black Box." Provides full transparency on which sensor variables drive each prediction, building operator trust and supporting evidence-based intervention.</p>
-</div>
-<div class="md:col-span-7">
-<div class="bg-surface border border-border p-md rounded-lg shadow-sm">
-<div class="space-y-4">
-<div class="flex items-center gap-4">
-<div class="w-24 font-data-label text-[10px]">VIBRATION_X</div>
-<div class="flex-grow h-4 bg-red-alert rounded-r" style="width: 75%"></div>
-<div class="w-12 font-data-value text-xs">+0.42</div>
-</div>
-<div class="flex items-center gap-4">
-<div class="w-24 font-data-label text-[10px]">CURRENT_RMS</div>
-<div class="flex-grow h-4 bg-red-alert rounded-r" style="width: 45%"></div>
-<div class="w-12 font-data-value text-xs">+0.28</div>
-</div>
-<div class="flex items-center gap-4">
-<div class="w-24 font-data-label text-[10px]">FLOW_RATE</div>
-<div class="flex-grow h-4 bg-green-good rounded-r" style="width: 20%"></div>
-<div class="w-12 font-data-value text-xs">-0.12</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</section>
-<!-- Section 6: Methodology (FAQ) -->
-<section class="bg-surface-container-low py-xxl border-y border-border" id="methodology">
-<div class="max-w-[800px] mx-auto px-margin-mobile md:px-0">
-<h2 class="font-headline-display text-headline-display text-primary mb-xl text-center">Methodology Comparison</h2>
-<div class="space-y-md">
-<!-- Accordion 1 -->
-<details class="bg-surface border border-border rounded-lg group overflow-hidden" open="">
-<summary class="p-lg font-bold flex justify-between items-center cursor-pointer list-none">
-<span>LSTM Autoencoder vs. Isolation Forest</span>
-<span class="material-symbols-outlined transition-transform group-open:rotate-180">expand_more</span>
-</summary>
-<div class="p-lg pt-0 border-t border-border bg-background/50">
-<p class="text-on-surface-variant">Isolation Forest excels on static data but cannot capture temporal dependencies. Our LSTM Autoencoder leverages long-term memory to detect anomalies that only manifest across specific time sequences.</p>
-</div>
-</details>
-<!-- Accordion 2 -->
-<details class="bg-surface border border-border rounded-lg group overflow-hidden">
-<summary class="p-lg font-bold flex justify-between items-center cursor-pointer list-none">
-<span>TFT vs. Vanilla Transformer</span>
-<span class="material-symbols-outlined transition-transform group-open:rotate-180">expand_more</span>
-</summary>
-<div class="p-lg pt-0 border-t border-border bg-background/50">
-<p class="text-on-surface-variant">The Temporal Fusion Transformer (TFT) is purpose-built for multi-horizon forecasting with variable selection networks, enabling the model to ignore irrelevant inputs at each time step — unlike standard Transformers.</p>
-</div>
-</details>
-<!-- Accordion 3 -->
-<details class="bg-surface border border-border rounded-lg group overflow-hidden">
-<summary class="p-lg font-bold flex justify-between items-center cursor-pointer list-none">
-<span>SHAP vs. LIME</span>
-<span class="material-symbols-outlined transition-transform group-open:rotate-180">expand_more</span>
-</summary>
-<div class="p-lg pt-0 border-t border-border bg-background/50">
-<p class="text-on-surface-variant">LIME is locally scoped and can be globally inconsistent. SHAP is grounded in Game Theory (Shapley Values), guaranteeing a fair and mathematically consistent distribution of feature contributions across all predictions.</p>
-</div>
-</details>
-</div>
-</div>
-</section>
-<!-- Section 7: Impact -->
-<section class="py-xxl px-margin-mobile md:px-margin-desktop max-w-[1200px] mx-auto" id="impact">
-<div class="text-center mb-xl">
-<h2 class="font-headline-display text-headline-display text-primary mb-md">Business Impact Projections</h2>
-<p class="text-ink-muted">Projected ROI transformation from deploying Project ASTRA across Project ASTRA production facilities.</p>
-</div>
-<div class="grid grid-cols-1 md:grid-cols-4 gap-gutter">
-<div class="bg-surface p-xl border border-border rounded-xl text-center">
-<div class="font-data-display text-primary mb-2">$500K</div>
-<div class="font-data-label text-ink-muted uppercase">Annual Savings</div>
-</div>
-<div class="bg-surface p-xl border border-border rounded-xl text-center">
-<div class="font-data-display text-green-good mb-2">50%</div>
-<div class="font-data-label text-ink-muted uppercase">Downtime Reduction</div>
-</div>
-<div class="bg-surface p-xl border border-border rounded-xl text-center">
-<div class="font-data-display text-primary mb-2">3.2x</div>
-<div class="font-data-label text-ink-muted uppercase">Asset Lifespan</div>
-</div>
-<div class="bg-surface p-xl border border-border rounded-xl text-center">
-<div class="font-data-display text-amber-warn mb-2">94%</div>
-<div class="font-data-label text-ink-muted uppercase">Prediction Recall</div>
-</div>
-</div>
-</section>
-<!-- Section 8: Team & Roadmap -->
-<section class="py-xxl bg-inverse-surface text-white" id="team">
-<div class="max-w-[1200px] mx-auto px-margin-mobile md:px-margin-desktop">
-<div class="mb-xxl">
-<h2 class="font-headline-display text-headline-display mb-xl text-center">Anomaly Hunters Team</h2>
-<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-gutter">
-<!-- Team 1 -->
-<div class="text-center group">
-<div class="w-32 h-32 mx-auto rounded-full overflow-hidden mb-lg border-2 border-primary-fixed-dim">
-<img alt="Team Lead" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all" data-alt="A professional headshot of a mature industrial engineer with a short beard and a friendly, confident expression. He is wearing a minimalist dark green polo shirt, set against a clean, light-gray architectural background with soft, diffused industrial lighting. The aesthetic is clean, professional, and suggests deep expertise in technical leadership." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCALBOlxCDu6qbIfFQ2JUJVV0BfOBbVHCSNZDIIFcZQojBoFRHgx30s60x2P_fMvKB3c_-avk-qzwMaMYk-s4Vfa7vpEDU5O9DAW2d7RXlRcR9z-6_rjhgGIqVagh-fwp3i-TB4FFYavVQZ7z3DB-IJG8NpsN3LtqICpumR9VwQU_U782vwlro8dnWmwpvz8ICKlZjFMhOsRceW5P0hXzEGqo2U0Dzo3MBrHV6hA9z8Vm0hdu92sdERAaHmIEO2vtzg1FPLX3aUMVo">
-</div>
-<h4 class="font-bold text-lg">Dr. Aris Sudarsono</h4>
-<p class="text-outline-variant text-sm font-data-label uppercase">Lead AI Scientist</p>
-</div>
-<!-- Team 2 -->
-<div class="text-center group">
-<div class="w-32 h-32 mx-auto rounded-full overflow-hidden mb-lg border-2 border-primary-fixed-dim">
-<img alt="Data Engineer" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all" data-alt="A sharp, professional portrait of a female data scientist wearing modern glasses and a smart-casual blazer. The lighting is bright and high-key, creating a clean-room industrial lab aesthetic. Her expression is focused yet approachable, and the overall color palette emphasizes muted whites and deep technical greens to align with a corporate industrial brand." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAzppkMfqefRpDvoOWsNxONdTYAf2WOEvLL8NXBtw5r-FOziZCAYSip7MEaNSFpxnIFokOdZQoNqbt49Mry6gZLTs-u7KL0lov4TwzfzQ_GJu5ppvTlHiL8bLqda68qcFssedMW1PDF-6wg2gpFakvGVdmtvzTLh1dGoUzBcFuzf4Va_yOol451lFq9j7H_6V8ZNWtnpMra8wJfUJh4LXNj8OJtzUqDdiUYK9AZDVF3XxN2SfxxZdlnzLnU9nzPGWRoZQGxLmd6CnU">
-</div>
-<h4 class="font-bold text-lg">Indah Permata</h4>
-<p class="text-outline-variant text-sm font-data-label uppercase">Data Architect</p>
-</div>
-<!-- Team 3 -->
-<div class="text-center group">
-<div class="w-32 h-32 mx-auto rounded-full overflow-hidden mb-lg border-2 border-primary-fixed-dim">
-<img alt="Systems Engineer" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all" data-alt="A portrait of a young male systems engineer in a high-tech manufacturing environment. He is wearing a clean white lab coat with a tech badge, looking directly into the camera with a look of technical precision. The background features blurred industrial machinery and glowing LED indicators, creating a sense of being at the heart of a modern automated factory." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDrxvmGyWFyGr-gwpk5qOA40O6AmO_vfsHlMgHfw5xySLnXujG-1o3nVDyU8IhVgtnGrIa3kNLKfHa4r3gxz-IU0FJjm65osv3PFLJRumBBtd5W_f5m8-gdR5m7X4Kbtr6dUyVwtHMtUAEkM5MYypuZYbXG5XrkpGtrmk-7NvDac8VEExMukf9OMrxl3IWAZvZ_QZj1UbPe9N5q7FLr8TJubQkIrPdM_r8-mv9LdHAJNPqtMPIei8nQeEZ4XHQB2gfx95MYkEwtL8c">
-</div>
-<h4 class="font-bold text-lg">Budi Santoso</h4>
-<p class="text-outline-variant text-sm font-data-label uppercase">IoT specialist</p>
-</div>
-<!-- Team 4 -->
-<div class="text-center group">
-<div class="w-32 h-32 mx-auto rounded-full overflow-hidden mb-lg border-2 border-primary-fixed-dim">
-<img alt="UI Designer" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all" data-alt="A professional close-up of a female UI designer with a modern, creative aesthetic. She is in a minimalist studio space with natural soft lighting. The visual tone is high-end and editorial, with a palette of soft greys and deep forest greens. Her presence is confident and artistic, representing the design leadership behind the technical interface." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAkJBAJMRD0xWK8XXacaAmYj1mLQBI4DM5MTL5Lx-MwtvDF9uQ_cTgHCfp2_dBpqqt-dyhW4D0orhV4nYoXu7e3OVhvqNaXZDciIyJvOz9xk3gPHtoHeK1tfuqJipk6PX_cV-5EpdeTQMepcAa_-dMttExmTXMgpjura1HQ9QzPdpZUGKQIvjBlx_fszuU5i3qEK_BgpVVQNPNvSqZSmg4NESaxj0XTt79twlrzWWFwYkxpTdgx-2NxhzE_4iWI-0oWWOL6gJ9KJP0">
-</div>
-<h4 class="font-bold text-lg">Sari Wijaya</h4>
-<p class="text-outline-variant text-sm font-data-label uppercase">UX/UI Lead</p>
-</div>
-</div>
-</div>
-<div>
-<h3 class="font-headline-display text-2xl mb-xl text-center">Fase Roadmap 2024</h3>
-<div class="relative overflow-x-auto pb-lg no-scrollbar">
-<div class="flex min-w-[1000px] gap-gutter px-md">
-<!-- Phase 1 -->
-<div class="flex-1 bg-white/5 p-lg border-l-4 border-green-good rounded-r-xl">
-<div class="font-data-label text-green-good mb-2">Q1: FOUNDATION</div>
-<div class="font-bold mb-md">Data Ingestion SKAB</div>
-<ul class="text-sm text-outline-variant space-y-2">
-<li>• Pipeline streaming IoT</li>
-<li>• NoSQL Database Integration</li>
-<li>• Baseline LSTM Training</li>
-</ul>
-</div>
-<!-- Phase 2 -->
-<div class="flex-1 bg-white/5 p-lg border-l-4 border-green-good rounded-r-xl">
-<div class="font-data-label text-green-good mb-2">Q2: INTELLIGENCE</div>
-<div class="font-bold mb-md">TFT &amp; RUL Model</div>
-<ul class="text-sm text-outline-variant space-y-2">
-<li>• Predictive Maintenance UI</li>
-<li>• Remaining Useful Life Estimation</li>
-<li>• Multi-modal sensor fusion</li>
-</ul>
-</div>
-<!-- Phase 3 -->
-<div class="flex-1 bg-white/5 p-lg border-l-4 border-amber-warn rounded-r-xl">
-<div class="font-data-label text-amber-warn mb-2">Q3: EXPLAINABILITY</div>
-<div class="font-bold mb-md">SHAP XAI Engine</div>
-<ul class="text-sm text-outline-variant space-y-2">
-<li>• Root cause analysis</li>
-<li>• AI Explainability Dashboard</li>
-<li>• Feedback loop operator</li>
-</ul>
-</div>
-<!-- Phase 4 -->
-<div class="flex-1 bg-white/5 p-lg border-l-4 border-white/20 rounded-r-xl opacity-50">
-<div class="font-data-label text-white/50 mb-2">Q4: AUTONOMY</div>
-<div class="font-bold mb-md">Industrial Copilot</div>
-<ul class="text-sm text-outline-variant space-y-2">
-<li>• GenAI Guided Actions</li>
-<li>• Autonomous closed-loop</li>
-<li>• Multi-site deployment</li>
-</ul>
-</div>
-</div>
-</div>
-</div>
-</div>
-</section>
-<!-- Final CTA -->
-<section class="py-xxl text-center border-t border-border">
-<h2 class="font-headline-display text-headline-display text-primary mb-lg">Ready to move from Reactive to <span class="italic">Resilient?</span></h2>
-<p class="text-ink-muted mb-xl max-w-xl mx-auto">Get full access to the Project ASTRA demo suite and start securing your industrial operations today.</p>
-<button class="bg-primary text-white px-xxl py-md rounded-lg font-body-lg hover:bg-tertiary transition-all shadow-xl active:scale-95" onclick="location.href='overview.html'">
-                Enter the Live Dashboard
-            </button>
-</section>
-</main>
-<footer class="bg-surface-container border-t border-border py-xl">
-<div class="max-w-[1200px] mx-auto px-margin-mobile md:px-margin-desktop flex flex-col md:flex-row justify-between items-center gap-md">
-<div class="font-headline-display text-2xl text-primary opacity-50">Project ASTRA</div>
-<div class="flex gap-xl text-on-surface-variant text-sm">
-<a class="hover:text-primary" href="#">Terms &amp; Conditions</a>
-<a class="hover:text-primary" href="#">Privacy Policy</a>
-<a class="hover:text-primary" href="#">Help Centre</a>
-</div>
-<div class="font-data-value text-xs text-ink-muted">© 2024 ANOMALY HUNTERS. PROJECT FOR Project ASTRA.</div>
-</div>
-</footer>
-<script>
-        // Hero Waveform Animation
-        const canvas = document.getElementById('heroWaveform');
-        const ctx = canvas.getContext('2d');
-        
-        function resizeCanvas() {
-            canvas.width = canvas.parentElement.offsetWidth;
-            canvas.height = canvas.parentElement.offsetHeight;
-        }
-        
-        window.addEventListener('resize', resizeCanvas);
-        resizeCanvas();
+<body class="flex flex-col min-h-screen justify-between">
 
-        let phase = 0;
-        const lines = 3;
-        
-        function draw() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            
-            for (let i = 0; i < lines; i++) {
-                ctx.beginPath();
-                ctx.lineWidth = i === 0 ? 3 : 1;
-                ctx.strokeStyle = i === 0 ? '#27AE60' : `rgba(0, 55, 32, ${0.1 * (lines - i)})`;
-                
-                const yOffset = canvas.height / 2;
-                const amplitude = 30 + (i * 10);
-                const frequency = 0.01 + (i * 0.005);
-                
-                ctx.moveTo(0, yOffset);
-                
-                for (let x = 0; x < canvas.width; x++) {
-                    const y = yOffset + Math.sin(x * frequency + phase + i) * amplitude * Math.sin(phase * 0.5);
-                    ctx.lineTo(x, y);
-                }
-                
-                ctx.stroke();
-            }
-            
-            phase += 0.05;
-            requestAnimationFrame(draw);
-        }
-        
-        draw();
+  <!-- TOP NAVIGATION BAR -->
+  <header class="h-16 border-b border-gray-800 bg-gray-950/80 backdrop-blur sticky top-0 z-50 px-6 flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <div class="w-8 h-8 rounded-lg bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 font-bold">M</div>
+      <div>
+        <h1 class="text-sm font-bold tracking-wide text-white">MaintenX <span class="text-xs font-normal text-emerald-400 px-2 py-0.5 rounded bg-emerald-950/80 border border-emerald-800/60 ml-2">ASTRA Architecture</span></h1>
+        <p class="text-[10px] text-gray-400">Solution Architect Technical Blueprint Deck</p>
+      </div>
+    </div>
 
-        // Navbar Scroll Effect
-        window.addEventListener('scroll', () => {
-            const nav = document.querySelector('nav');
-            if (window.scrollY > 50) {
-                nav.classList.add('h-16', 'shadow-sm');
-                nav.classList.remove('h-20');
-            } else {
-                nav.classList.add('h-20');
-                nav.classList.remove('h-16', 'shadow-sm');
-            }
-        });
-    </script>
-</body></html>
+    <!-- Center Slide Counter -->
+    <div class="flex items-center gap-4 bg-gray-900 border border-gray-800 px-4 py-1.5 rounded-full text-xs">
+      <button onclick="prevSlide()" class="hover:text-emerald-400 transition flex items-center"><span class="material-symbols-outlined text-base">chevron_left</span></button>
+      <span class="font-mono text-gray-300">Slide <span id="current-slide-num" class="text-emerald-400 font-bold">1</span> / 18</span>
+      <button onclick="nextSlide()" class="hover:text-emerald-400 transition flex items-center"><span class="material-symbols-outlined text-base">chevron_right</span></button>
+    </div>
+
+    <div class="flex items-center gap-3">
+      <button onclick="toggleSpeakerNotes()" id="btn-speaker-notes" class="px-3 py-1.5 rounded-lg border border-gray-700 bg-gray-900 hover:bg-gray-800 text-xs font-medium flex items-center gap-1.5 text-gray-300">
+        <span class="material-symbols-outlined text-sm text-amber-400">record_voice_over</span>
+        <span>Speaker Script</span>
+      </button>
+      <button onclick="toggleDrawer()" class="p-2 rounded-lg border border-gray-800 bg-gray-900 hover:bg-gray-800 text-gray-300 text-xs flex items-center gap-1">
+        <span class="material-symbols-outlined text-base">format_list_bulleted</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- MAIN SLIDE CONTAINER -->
+  <main class="flex-1 max-w-7xl w-full mx-auto p-6 md:p-10 flex flex-col justify-center relative">
+
+    <!-- SLIDE 1: TITLE -->
+    <div class="slide active flex-col justify-center items-center text-center space-y-8 py-12" id="slide-1">
+      <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-950/60 border border-emerald-500/30 text-emerald-400 text-xs font-semibold uppercase tracking-wider">
+        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Proposal Solution Architecture for ASTRA
+      </div>
+      <div class="space-y-4 max-w-4xl">
+        <h1 class="text-5xl md:text-7xl font-extrabold tracking-tight bg-gradient-to-r from-white via-gray-200 to-emerald-400 bg-clip-text text-transparent">
+          MaintenX
+        </h1>
+        <p class="text-2xl md:text-3xl font-semibold text-emerald-400">AI-Powered Predictive Maintenance Platform</p>
+        <p class="text-gray-400 text-sm md:text-base max-w-2xl mx-auto">
+          Multi-Stage Industrial Machine Learning Architecture for Real-Time Anomaly Detection, Fault Classification & Remaining Useful Life Estimation
+        </p>
+      </div>
+
+      <div class="pt-6 grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-lg w-full text-left">
+        <div class="glass-card p-4 rounded-xl flex items-center gap-3">
+          <span class="material-symbols-outlined text-emerald-400">badge</span>
+          <div>
+            <p class="text-[10px] text-gray-400 uppercase font-mono">Team Role</p>
+            <p class="text-sm font-bold text-white">Solution Architecture & AI Team</p>
+          </div>
+        </div>
+        <div class="glass-card p-4 rounded-xl flex items-center gap-3">
+          <span class="material-symbols-outlined text-emerald-400">domain</span>
+          <div>
+            <p class="text-[10px] text-gray-400 uppercase font-mono">Target Enterprise</p>
+            <p class="text-sm font-bold text-white">ASTRA Industrial Operations</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 2: PROJECT OVERVIEW -->
+    <div class="slide flex-col justify-center space-y-6" id="slide-2">
+      <div class="border-b border-gray-800 pb-4">
+        <span class="text-xs font-mono text-emerald-400 uppercase tracking-widest">SLIDE 02</span>
+        <h2 class="text-3xl font-bold text-white">Project Overview</h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="glass-card p-6 rounded-2xl space-y-3">
+          <div class="w-10 h-10 rounded-xl bg-blue-500/20 text-blue-400 flex items-center justify-center font-bold">01</div>
+          <h3 class="text-lg font-bold text-white">Objective</h3>
+          <p class="text-xs text-gray-300 leading-relaxed">Membangun platform Predictive Maintenance berbasis AI terintegrasi untuk mendeteksi potensi kerusakan mesin sebelum terjadi downtime yang merugikan.</p>
+        </div>
+        <div class="glass-card p-6 rounded-2xl space-y-3">
+          <div class="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold">02</div>
+          <h3 class="text-lg font-bold text-white">Problem Statement</h3>
+          <p class="text-xs text-gray-300 leading-relaxed">Unplanned downtime pada mesin industri mengakibatkan biaya perbaikan mahal, hilangnya kapasitas produksi, dan degradasi komponen tak terdeteksi.</p>
+        </div>
+        <div class="glass-card p-6 rounded-2xl space-y-3">
+          <div class="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold">03</div>
+          <h3 class="text-lg font-bold text-white">Expected Output</h3>
+          <p class="text-xs text-gray-300 leading-relaxed">Rekomendasi tindakan maintenance yang presisi (Normal, Warning, Critical) beserta waktu sisa RUL dan pemicu notifikasi otomatis.</p>
+        </div>
+      </div>
+
+      <!-- Diagram -->
+      <div class="glass-card-accent p-6 rounded-2xl">
+        <p class="text-xs font-mono text-emerald-400 uppercase font-bold mb-4">Architecture Concept Flow</p>
+        <div class="flex flex-wrap items-center justify-between gap-4 text-center">
+          <div class="bg-gray-900 border border-gray-700 px-6 py-4 rounded-xl flex-1 min-w-[140px]">
+            <span class="material-symbols-outlined text-blue-400 text-2xl mb-1">electric_bolt</span>
+            <p class="text-xs font-bold text-white">Induction Motor</p>
+          </div>
+          <span class="material-symbols-outlined text-gray-500">arrow_forward</span>
+          <div class="bg-gray-900 border border-gray-700 px-6 py-4 rounded-xl flex-1 min-w-[140px]">
+            <span class="material-symbols-outlined text-amber-400 text-2xl mb-1">sensors</span>
+            <p class="text-xs font-bold text-white">Sensor Data</p>
+          </div>
+          <span class="material-symbols-outlined text-gray-500">arrow_forward</span>
+          <div class="bg-gray-900 border border-gray-700 px-6 py-4 rounded-xl flex-1 min-w-[140px]">
+            <span class="material-symbols-outlined text-purple-400 text-2xl mb-1">psychology</span>
+            <p class="text-xs font-bold text-white">AI Analysis</p>
+          </div>
+          <span class="material-symbols-outlined text-gray-500">arrow_forward</span>
+          <div class="bg-gray-900 border border-emerald-500/50 bg-emerald-950/40 px-6 py-4 rounded-xl flex-1 min-w-[140px]">
+            <span class="material-symbols-outlined text-emerald-400 text-2xl mb-1">build</span>
+            <p class="text-xs font-bold text-white">Maintenance Decision</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 3: PROJECT LIMITATION -->
+    <div class="slide flex-col justify-center space-y-6" id="slide-3">
+      <div class="border-b border-gray-800 pb-4">
+        <span class="text-xs font-mono text-emerald-400 uppercase tracking-widest">SLIDE 03</span>
+        <h2 class="text-3xl font-bold text-white">Project Limitation (PoC Baseline vs Future Astra)</h2>
+      </div>
+
+      <div class="overflow-x-auto glass-card rounded-2xl">
+        <table class="w-full text-left text-xs">
+          <thead class="bg-gray-900/90 text-gray-300 font-mono uppercase text-[11px] border-b border-gray-800">
+            <tr>
+              <th class="p-4">Komponen Sistem</th>
+              <th class="p-4 text-amber-400">Current PoC (Baseline Prototype)</th>
+              <th class="p-4 text-emerald-400">Future Astra Integration</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-800 text-gray-300">
+            <tr>
+              <td class="p-4 font-bold text-white">Sensor Data Source</td>
+              <td class="p-4">Public Dataset Benchmark (Paderborn, CWRU, IMS, CMAPSS)</td>
+              <td class="p-4 font-semibold text-emerald-400">Real IoT Vibration, Current, Temp Sensors Astra</td>
+            </tr>
+            <tr>
+              <td class="p-4 font-bold text-white">Database System</td>
+              <td class="p-4">Simulated Relational In-Memory / Local PostgreSQL Storage</td>
+              <td class="p-4 font-semibold text-emerald-400">Enterprise Astra Database & Data Lake</td>
+            </tr>
+            <tr>
+              <td class="p-4 font-bold text-white">User Dashboard</td>
+              <td class="p-4">Prototype Web Dashboard (SPA with XAI Diagnostics)</td>
+              <td class="p-4 font-semibold text-emerald-400">Production Enterprise Dashboard (Single Sign-On)</td>
+            </tr>
+            <tr>
+              <td class="p-4 font-bold text-white">Notification System</td>
+              <td class="p-4">Simulated SMTP Email & In-App Toast Alert Engine</td>
+              <td class="p-4 font-semibold text-emerald-400">Production Work Order CMMS & Astra Push Notification</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="p-4 rounded-xl bg-blue-950/40 border border-blue-800/60 text-blue-200 text-xs flex items-start gap-3">
+        <span class="material-symbols-outlined text-blue-400">info</span>
+        <p><strong>Arsitektur Modular:</strong> Saat transisi ke infrastruktur Astra kelak, seluruh pipeline AI, Cleaning Engine, dan Decision Engine tidak mengalami perubahan - <em>hanya data source yang beralih ke sensor Astra.</em></p>
+      </div>
+    </div>
+
+    <!-- SLIDE 4: DATASET OVERVIEW -->
+    <div class="slide flex-col justify-center space-y-6" id="slide-4">
+      <div class="border-b border-gray-800 pb-4">
+        <span class="text-xs font-mono text-emerald-400 uppercase tracking-widest">SLIDE 04</span>
+        <h2 class="text-3xl font-bold text-white">Dataset Overview</h2>
+        <p class="text-xs text-gray-400">Studi 4 dataset standar industri untuk mencakup seluruh aspek Predictive Maintenance</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="glass-card p-5 rounded-2xl flex items-start gap-4">
+          <div class="p-3 bg-purple-500/20 rounded-xl text-purple-400 font-bold">01</div>
+          <div>
+            <div class="flex items-center gap-2">
+              <h3 class="text-base font-bold text-white">Paderborn Dataset</h3>
+              <span class="text-[10px] bg-purple-950 border border-purple-800 text-purple-300 px-2 py-0.5 rounded">Induction Motor</span>
+            </div>
+            <p class="text-xs text-gray-300 mt-1">Digunakan untuk <strong>Fault Classification</strong> pada motor induksi dengan ragam sinyal arus stator dan getaran.</p>
+          </div>
+        </div>
+
+        <div class="glass-card p-5 rounded-2xl flex items-start gap-4">
+          <div class="p-3 bg-blue-500/20 rounded-xl text-blue-400 font-bold">02</div>
+          <div>
+            <div class="flex items-center gap-2">
+              <h3 class="text-base font-bold text-white">CWRU Dataset</h3>
+              <span class="text-[10px] bg-blue-950 border border-blue-800 text-blue-300 px-2 py-0.5 rounded">Bearing Test Motor</span>
+            </div>
+            <p class="text-xs text-gray-300 mt-1">Digunakan untuk <strong>Bearing Fault Diagnosis</strong> tingkat tinggi (Inner Race, Outer Race, Ball fault).</p>
+          </div>
+        </div>
+
+        <div class="glass-card p-5 rounded-2xl flex items-start gap-4">
+          <div class="p-3 bg-amber-500/20 rounded-xl text-amber-400 font-bold">03</div>
+          <div>
+            <div class="flex items-center gap-2">
+              <h3 class="text-base font-bold text-white">NASA IMS Dataset</h3>
+              <span class="text-[10px] bg-amber-950 border border-amber-800 text-amber-300 px-2 py-0.5 rounded">Bearing Test Rig</span>
+            </div>
+            <p class="text-xs text-gray-300 mt-1">Digunakan untuk mengamati <strong>Health Degradation</strong> bantalan selama 35 hari secara kontinyu hingga rusak total.</p>
+          </div>
+        </div>
+
+        <div class="glass-card p-5 rounded-2xl flex items-start gap-4">
+          <div class="p-3 bg-emerald-500/20 rounded-xl text-emerald-400 font-bold">04</div>
+          <div>
+            <div class="flex items-center gap-2">
+              <h3 class="text-base font-bold text-white">NASA CMAPSS</h3>
+              <span class="text-[10px] bg-emerald-950 border border-emerald-800 text-emerald-300 px-2 py-0.5 rounded">Turbofan Engine</span>
+            </div>
+            <p class="text-xs text-gray-300 mt-1">Digunakan untuk memprediksi <strong>Remaining Useful Life (RUL)</strong> dengan masukan multi-sensor siklus tinggi.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 5: PADERBORN DATASET -->
+    <div class="slide flex-col justify-center space-y-6" id="slide-5">
+      <div class="border-b border-gray-800 pb-4">
+        <span class="text-xs font-mono text-purple-400 uppercase tracking-widest">SLIDE 05</span>
+        <h2 class="text-3xl font-bold text-white">Paderborn University Dataset</h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div class="glass-card p-4 rounded-xl space-y-2">
+          <p class="text-[10px] font-mono text-purple-400 uppercase">Target Machine</p>
+          <h3 class="text-sm font-bold text-white">Induction Motor (1.5 kW)</h3>
+          <p class="text-xs text-gray-400">Motor induksi beban variabel dengan kontrol frekuensi inverter.</p>
+        </div>
+        <div class="glass-card p-4 rounded-xl space-y-2">
+          <p class="text-[10px] font-mono text-purple-400 uppercase">Sensors Available</p>
+          <h3 class="text-sm font-bold text-white">Phase Currents & Vibration</h3>
+          <p class="text-xs text-gray-400">Arus stator 64kHz, akselerometer getaran, temperatur, dan kecepatan putar.</p>
+        </div>
+        <div class="glass-card p-4 rounded-xl space-y-2">
+          <p class="text-[10px] font-mono text-purple-400 uppercase">Fault Types</p>
+          <h3 class="text-sm font-bold text-white">Real Accelerated Damage</h3>
+          <p class="text-xs text-gray-400">Kerusakan alami (pitting, fatigue) pada inner race dan outer race.</p>
+        </div>
+        <div class="glass-card p-4 rounded-xl space-y-2">
+          <p class="text-[10px] font-mono text-purple-400 uppercase">Features Extracted</p>
+          <h3 class="text-sm font-bold text-white">25 Time & Freq Features</h3>
+          <p class="text-xs text-gray-400">RMS, Kurtosis, Crest Factor, Energy Spectrum, Peak-to-Peak.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 6: CWRU DATASET -->
+    <div class="slide flex-col justify-center space-y-6" id="slide-6">
+      <div class="border-b border-gray-800 pb-4">
+        <span class="text-xs font-mono text-blue-400 uppercase tracking-widest">SLIDE 06</span>
+        <h2 class="text-3xl font-bold text-white">CWRU Bearing Dataset</h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div class="glass-card p-4 rounded-xl space-y-2">
+          <p class="text-[10px] font-mono text-blue-400 uppercase">Target Machine</p>
+          <h3 class="text-sm font-bold text-white">Bearing Test Motor</h3>
+          <p class="text-xs text-gray-400">Motor penguji 2 HP dengan sensor getaran ujung drive-end & fan-end.</p>
+        </div>
+        <div class="glass-card p-4 rounded-xl space-y-2">
+          <p class="text-[10px] font-mono text-blue-400 uppercase">Bearing Fault Types</p>
+          <h3 class="text-sm font-bold text-white">Single-Point Defect</h3>
+          <p class="text-xs text-gray-400">Ball Fault, Inner Race Fault, Outer Race Fault (diameter 0.007"-0.021").</p>
+        </div>
+        <div class="glass-card p-4 rounded-xl space-y-2">
+          <p class="text-[10px] font-mono text-blue-400 uppercase">Available Features</p>
+          <h3 class="text-sm font-bold text-white">Accelerometers (12k/48k Hz)</h3>
+          <p class="text-xs text-gray-400">Sinyal akselerasi aksial & radial frekuensi tinggi.</p>
+        </div>
+        <div class="glass-card p-4 rounded-xl space-y-2">
+          <p class="text-[10px] font-mono text-blue-400 uppercase">Purpose in MaintenX</p>
+          <h3 class="text-sm font-bold text-white">Precision Fault Classifier</h3>
+          <p class="text-xs text-gray-400">Digabungkan dengan Paderborn untuk memperkuat akurasi diagnosis 10 kelas spesifik.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 7: NASA IMS -->
+    <div class="slide flex-col justify-center space-y-6" id="slide-7">
+      <div class="border-b border-gray-800 pb-4">
+        <span class="text-xs font-mono text-amber-400 uppercase tracking-widest">SLIDE 07</span>
+        <h2 class="text-3xl font-bold text-white">NASA IMS (Intelligent Maintenance Systems)</h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="glass-card p-6 rounded-2xl space-y-3">
+          <span class="material-symbols-outlined text-amber-400 text-3xl">history_toggle_off</span>
+          <h3 class="text-base font-bold text-white">Run-to-Failure Dataset</h3>
+          <p class="text-xs text-gray-300 leading-relaxed">Pengujian kontinyu selama 35 hari berturut-turut tanpa henti hingga bantalan mengalami kegagalan total struktural.</p>
+        </div>
+        <div class="glass-card p-6 rounded-2xl space-y-3">
+          <span class="material-symbols-outlined text-amber-400 text-3xl">trending_down</span>
+          <h3 class="text-base font-bold text-white">Bearing Degradation Curve</h3>
+          <p class="text-xs text-gray-300 leading-relaxed">Merekam perubahan mikro dari kondisi optimal, pemulaan mikro-cracking, hingga kenaikan energi RMS pada fase akhir.</p>
+        </div>
+        <div class="glass-card p-6 rounded-2xl space-y-3">
+          <span class="material-symbols-outlined text-amber-400 text-3xl">monitor_heart</span>
+          <h3 class="text-base font-bold text-white">Health Monitoring Baseline</h3>
+          <p class="text-xs text-gray-300 leading-relaxed">Menjadi baseline perhitungan Health Index (0% - 100%) pada dashboard untuk mendeteksi keausan dini.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 8: NASA CMAPSS & HARMONIZATION -->
+    <div class="slide flex-col justify-center space-y-6" id="slide-8">
+      <div class="border-b border-gray-800 pb-4">
+        <span class="text-xs font-mono text-emerald-400 uppercase tracking-widest">SLIDE 08</span>
+        <h2 class="text-3xl font-bold text-white">NASA CMAPSS & Multi-Dataset Harmonization</h2>
+      </div>
+
+      <!-- Part 1: CMAPSS Overview -->
+      <div class="grid grid-cols-3 gap-4">
+        <div class="glass-card p-4 rounded-xl text-center">
+          <p class="text-[10px] font-mono text-emerald-400 uppercase">Core Capability</p>
+          <p class="text-sm font-bold text-white mt-1">Remaining Useful Life (RUL)</p>
+        </div>
+        <div class="glass-card p-4 rounded-xl text-center">
+          <p class="text-[10px] font-mono text-emerald-400 uppercase">Sensor Telemetry</p>
+          <p class="text-sm font-bold text-white mt-1">21 Multi-Sensor Channels</p>
+        </div>
+        <div class="glass-card p-4 rounded-xl text-center">
+          <p class="text-[10px] font-mono text-emerald-400 uppercase">Operational Mode</p>
+          <p class="text-sm font-bold text-white mt-1">High-Altitude Sliding Windows</p>
+        </div>
+      </div>
+
+      <!-- Part 2: Harmonization Flow & Table -->
+      <div class="glass-card p-6 rounded-2xl space-y-4">
+        <p class="text-xs font-mono text-emerald-400 uppercase font-bold">Dataset Mapping Pipeline to Single Unified Schema</p>
+        
+        <div class="flex items-center justify-between text-xs text-center font-mono">
+          <span class="px-3 py-1.5 rounded bg-purple-950 border border-purple-800 text-purple-300">Paderborn</span>
+          <span class="text-gray-500">-></span>
+          <span class="px-3 py-1.5 rounded bg-blue-950 border border-blue-800 text-blue-300">CWRU</span>
+          <span class="text-gray-500">-></span>
+          <span class="px-3 py-1.5 rounded bg-amber-950 border border-amber-800 text-amber-300">NASA IMS</span>
+          <span class="text-gray-500">-></span>
+          <span class="px-3 py-1.5 rounded bg-emerald-950 border border-emerald-800 text-emerald-300">NASA CMAPSS</span>
+          <span class="text-gray-500">-></span>
+          <span class="px-4 py-1.5 rounded bg-emerald-500 text-gray-950 font-bold">raw_sensor_data</span>
+        </div>
+
+        <div class="overflow-x-auto rounded-xl border border-gray-800 mt-2">
+          <table class="w-full text-xs font-mono">
+            <thead class="bg-gray-900 text-emerald-400 border-b border-gray-800">
+              <tr>
+                <th class="p-3">timestamp</th>
+                <th class="p-3">machine_id</th>
+                <th class="p-3">vibration</th>
+                <th class="p-3">current</th>
+                <th class="p-3">rpm</th>
+                <th class="p-3">temperature</th>
+                <th class="p-3">torque</th>
+                <th class="p-3">source_dataset</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-800 text-gray-300 text-center">
+              <tr>
+                <td class="p-2.5">2026-07-30 00:00:00</td>
+                <td class="p-2.5">MTR-01</td>
+                <td class="p-2.5 text-emerald-400">0.42</td>
+                <td class="p-2.5 text-emerald-400">22.4</td>
+                <td class="p-2.5 text-emerald-400">1450</td>
+                <td class="p-2.5 text-emerald-400">48.5</td>
+                <td class="p-2.5 text-gray-500">NULL</td>
+                <td class="p-2.5 text-purple-400">paderborn</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 9: ERD -->
+    <div class="slide flex-col justify-center space-y-6" id="slide-9">
+      <div class="border-b border-gray-800 pb-4">
+        <span class="text-xs font-mono text-emerald-400 uppercase tracking-widest">SLIDE 09</span>
+        <h2 class="text-3xl font-bold text-white">Database ERD (Entity Relationship Diagram)</h2>
+      </div>
+
+      <div class="glass-card p-6 rounded-2xl flex flex-col items-center justify-center">
+        <!-- SVG Interactive ERD Diagram -->
+        <svg class="w-full max-w-4xl h-80" viewBox="0 0 900 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- raw_sensor_data -->
+          <rect x="20" y="40" width="180" height="120" rx="10" fill="#111827" stroke="#3b82f6" stroke-width="2"/>
+          <text x="110" y="65" text-anchor="middle" fill="#60a5fa" font-size="12" font-weight="bold" font-family="monospace">raw_sensor_data</text>
+          <line x1="20" y1="75" x2="200" y2="75" stroke="#1f2937"/>
+          <text x="30" y="95" fill="#9ca3af" font-size="10" font-family="monospace">id (PK)</text>
+          <text x="30" y="115" fill="#9ca3af" font-size="10" font-family="monospace">timestamp, machine_id</text>
+          <text x="30" y="135" fill="#9ca3af" font-size="10" font-family="monospace">vibration, current, temp</text>
+
+          <!-- Line 1 -->
+          <path d="M200 100 L260 100" stroke="#3b82f6" stroke-width="2" stroke-dasharray="4 4"/>
+
+          <!-- clean_sensor_data -->
+          <rect x="260" y="40" width="180" height="120" rx="10" fill="#111827" stroke="#10b981" stroke-width="2"/>
+          <text x="350" y="65" text-anchor="middle" fill="#34d399" font-size="12" font-weight="bold" font-family="monospace">clean_sensor_data</text>
+          <line x1="260" y1="75" x2="440" y2="75" stroke="#1f2937"/>
+          <text x="270" y="95" fill="#9ca3af" font-size="10" font-family="monospace">id (PK)</text>
+          <text x="270" y="115" fill="#9ca3af" font-size="10" font-family="monospace">timestamp_30s (Aligned)</text>
+          <text x="270" y="135" fill="#9ca3af" font-size="10" font-family="monospace">vib_rms, current_avg</text>
+
+          <!-- Line 2 -->
+          <path d="M440 100 L500 100" stroke="#10b981" stroke-width="2" stroke-dasharray="4 4"/>
+
+          <!-- feature_dataset -->
+          <rect x="500" y="40" width="180" height="120" rx="10" fill="#111827" stroke="#8b5cf6" stroke-width="2"/>
+          <text x="590" y="65" text-anchor="middle" fill="#a78bfa" font-size="12" font-weight="bold" font-family="monospace">feature_dataset</text>
+          <line x1="500" y1="75" x2="680" y2="75" stroke="#1f2937"/>
+          <text x="510" y="95" fill="#9ca3af" font-size="10" font-family="monospace">id (PK)</text>
+          <text x="510" y="115" fill="#9ca3af" font-size="10" font-family="monospace">window_timestamp</text>
+          <text x="510" y="135" fill="#9ca3af" font-size="10" font-family="monospace">rolling_mean, std, fft</text>
+
+          <!-- Line 3 -->
+          <path d="M680 100 L740 100" stroke="#8b5cf6" stroke-width="2" stroke-dasharray="4 4"/>
+
+          <!-- prediction_results -->
+          <rect x="740" y="40" width="140" height="120" rx="10" fill="#111827" stroke="#f59e0b" stroke-width="2"/>
+          <text x="810" y="65" text-anchor="middle" fill="#fbbf24" font-size="11" font-weight="bold" font-family="monospace">prediction_results</text>
+          <line x1="740" y1="75" x2="880" y2="75" stroke="#1f2937"/>
+          <text x="750" y="95" fill="#9ca3af" font-size="10" font-family="monospace">anomaly_score</text>
+          <text x="750" y="115" fill="#9ca3af" font-size="10" font-family="monospace">fault_class</text>
+          <text x="750" y="135" fill="#9ca3af" font-size="10" font-family="monospace">rul_cycles</text>
+
+          <!-- Down arrow from prediction to alerts -->
+          <path d="M810 160 L810 230" stroke="#f59e0b" stroke-width="2"/>
+
+          <!-- alerts_history -->
+          <rect x="720" y="230" width="160" height="110" rx="10" fill="#111827" stroke="#ef4444" stroke-width="2"/>
+          <text x="800" y="255" text-anchor="middle" fill="#f87171" font-size="12" font-weight="bold" font-family="monospace">alerts_history</text>
+          <line x1="720" y1="265" x2="880" y2="265" stroke="#1f2937"/>
+          <text x="730" y="285" fill="#9ca3af" font-size="10" font-family="monospace">alert_id, severity</text>
+          <text x="730" y="305" fill="#9ca3af" font-size="10" font-family="monospace">recommendation, status</text>
+        </svg>
+      </div>
+    </div>
+
+    <!-- SLIDE 10: GENERAL SYSTEM FLOW -->
+    <div class="slide flex-col justify-center space-y-6" id="slide-10">
+      <div class="border-b border-gray-800 pb-4">
+        <span class="text-xs font-mono text-emerald-400 uppercase tracking-widest">SLIDE 10</span>
+        <h2 class="text-3xl font-bold text-white">General System Flow & Execution Pipelines</h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="glass-card p-5 rounded-2xl space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-mono text-blue-400 font-bold">PIPELINE 01</span>
+            <span class="text-[10px] px-2 py-0.5 rounded bg-blue-950 text-blue-300 font-mono">Real-time Stream</span>
+          </div>
+          <h3 class="text-base font-bold text-white">Ingestion Pipeline</h3>
+          <p class="text-xs text-gray-300">Sensor (Temp, Vib, Current, RPM) -> PLC -> IoT Gateway -> Ingestion ke <code class="text-emerald-400">raw_sensor_data</code>.</p>
+        </div>
+
+        <div class="glass-card p-5 rounded-2xl space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-mono text-emerald-400 font-bold">PIPELINE 02</span>
+            <span class="text-[10px] px-2 py-0.5 rounded bg-emerald-950 text-emerald-300 font-mono">Every 30 Seconds</span>
+          </div>
+          <h3 class="text-base font-bold text-white">Cleaning Engine</h3>
+          <p class="text-xs text-gray-300">Pandas Data Validation, noise filtering & 30s timestamp aggregation -> Menyimpan 1 baris bersih ke <code class="text-emerald-400">clean_sensor_data</code>.</p>
+        </div>
+
+        <div class="glass-card p-5 rounded-2xl space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-mono text-purple-400 font-bold">PIPELINE 03</span>
+            <span class="text-[10px] px-2 py-0.5 rounded bg-purple-950 text-purple-300 font-mono">Every 5 Minutes</span>
+          </div>
+          <h3 class="text-base font-bold text-white">Feature & Model Inference</h3>
+          <p class="text-xs text-gray-300">Ekstraksi fitur fenomena fisik (RMS, FFT, Kurtosis) -> AI Inference Cascade -> Decision Engine -> Dashboard.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 11: AI MODELS OVERVIEW -->
+    <div class="slide flex-col justify-center space-y-6" id="slide-11">
+      <div class="border-b border-gray-800 pb-4">
+        <span class="text-xs font-mono text-emerald-400 uppercase tracking-widest">SLIDE 11</span>
+        <h2 class="text-3xl font-bold text-white">AI Models Cascade Architecture</h2>
+      </div>
+
+      <div class="glass-card-accent p-8 rounded-2xl flex flex-col md:flex-row items-center justify-between gap-6 text-center">
+        <div class="p-4 bg-gray-900 border border-gray-700 rounded-xl flex-1">
+          <p class="text-[10px] font-mono text-purple-400 uppercase font-bold">Input</p>
+          <p class="text-sm font-bold text-white mt-1">feature_dataset</p>
+          <p class="text-[10px] text-gray-400 mt-1">25 Windowed Features</p>
+        </div>
+        <span class="material-symbols-outlined text-gray-500">arrow_forward</span>
+        <div class="p-4 bg-gray-900 border border-blue-500/50 rounded-xl flex-1">
+          <p class="text-[10px] font-mono text-blue-400 uppercase font-bold">Stage 1</p>
+          <p class="text-sm font-bold text-white mt-1">Model A1</p>
+          <p class="text-[10px] text-gray-400 mt-1">Anomaly Detector</p>
+        </div>
+        <span class="material-symbols-outlined text-gray-500">arrow_forward</span>
+        <div class="p-4 bg-gray-900 border border-purple-500/50 rounded-xl flex-1">
+          <p class="text-[10px] font-mono text-purple-400 uppercase font-bold">Stage 2</p>
+          <p class="text-sm font-bold text-white mt-1">Model A2</p>
+          <p class="text-[10px] text-gray-400 mt-1">Fault Classifier</p>
+        </div>
+        <span class="material-symbols-outlined text-gray-500">arrow_forward</span>
+        <div class="p-4 bg-gray-900 border border-amber-500/50 rounded-xl flex-1">
+          <p class="text-[10px] font-mono text-amber-400 uppercase font-bold">Stage 3</p>
+          <p class="text-sm font-bold text-white mt-1">Model B</p>
+          <p class="text-[10px] text-gray-400 mt-1">RUL Estimator</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 12: MODEL A1 -->
+    <div class="slide flex-col justify-center space-y-6" id="slide-12">
+      <div class="border-b border-gray-800 pb-4">
+        <span class="text-xs font-mono text-blue-400 uppercase tracking-widest">SLIDE 12</span>
+        <h2 class="text-3xl font-bold text-white">Model A1 - Anomaly Detection</h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="glass-card p-6 rounded-2xl space-y-4">
+          <h3 class="text-base font-bold text-white flex items-center gap-2"><span class="material-symbols-outlined text-blue-400">tune</span> Technical Specs</h3>
+          <ul class="space-y-2 text-xs text-gray-300">
+            <li><strong class="text-white">Dataset:</strong> SKAB & Paderborn Sensor Baseline</li>
+            <li><strong class="text-white">Algorithm:</strong> Unsupervised LSTM Autoencoder / Random Forest</li>
+            <li><strong class="text-white">Input:</strong> 25 Rolling Time/Frequency Domain Features</li>
+            <li><strong class="text-white">Output:</strong> Anomaly Score & Binary Flag (0: Normal, 1: Anomaly)</li>
+          </ul>
+        </div>
+        <div class="glass-card p-6 rounded-2xl space-y-4">
+          <h3 class="text-base font-bold text-white flex items-center gap-2"><span class="material-symbols-outlined text-blue-400">account_tree</span> Workflow Execution</h3>
+          <p class="text-xs text-gray-300 leading-relaxed">Model A1 merekonstruksi sinyal sensor normal. Jika selisih reconstruction loss melebihi threshold (1.005), sistem memicu indikasi awal deviasi kondisi mesin.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 13: MODEL A2 -->
+    <div class="slide flex-col justify-center space-y-6" id="slide-13">
+      <div class="border-b border-gray-800 pb-4">
+        <span class="text-xs font-mono text-purple-400 uppercase tracking-widest">SLIDE 13</span>
+        <h2 class="text-3xl font-bold text-white">Model A2 - Fault Classification</h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="glass-card p-6 rounded-2xl space-y-4">
+          <h3 class="text-base font-bold text-white flex items-center gap-2"><span class="material-symbols-outlined text-purple-400">category</span> Technical Specs</h3>
+          <ul class="space-y-2 text-xs text-gray-300">
+            <li><strong class="text-white">Dataset:</strong> CWRU Bearing & Paderborn Motor Faults</li>
+            <li><strong class="text-white">Algorithm:</strong> Supervised Gradient Boosting / MLP Classifier</li>
+            <li><strong class="text-white">Input:</strong> Cleaned Vibration FFT Spectrum & Stator Current</li>
+            <li><strong class="text-white">Output:</strong> Specific Fault Category (Healthy, Inner Race, Outer Race, Roller)</li>
+          </ul>
+        </div>
+        <div class="glass-card p-6 rounded-2xl space-y-4">
+          <h3 class="text-base font-bold text-white flex items-center gap-2"><span class="material-symbols-outlined text-purple-400">analytics</span> Diagnostic Capability</h3>
+          <p class="text-xs text-gray-300 leading-relaxed">Mengkategorikan lokasi pasti titik kerusakan mekanis dengan akurasi teruji 88.4% pada pengujian multi-kelas industri.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 14: MODEL B -->
+    <div class="slide flex-col justify-center space-y-6" id="slide-14">
+      <div class="border-b border-gray-800 pb-4">
+        <span class="text-xs font-mono text-amber-400 uppercase tracking-widest">SLIDE 14</span>
+        <h2 class="text-3xl font-bold text-white">Model B - Remaining Useful Life (RUL) Prediction</h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="glass-card p-6 rounded-2xl space-y-4">
+          <h3 class="text-base font-bold text-white flex items-center gap-2"><span class="material-symbols-outlined text-amber-400">hourglass_bottom</span> Technical Specs</h3>
+          <ul class="space-y-2 text-xs text-gray-300">
+            <li><strong class="text-white">Dataset:</strong> NASA CMAPSS Turbofan FD001</li>
+            <li><strong class="text-white">Algorithm:</strong> Deep LSTM Regressor dengan Asymmetric Loss</li>
+            <li><strong class="text-white">Input:</strong> 30-Step Sequential Multi-Sensor Time-Series</li>
+            <li><strong class="text-white">Output:</strong> RUL Remaining Hours / Cycles</li>
+          </ul>
+        </div>
+        <div class="glass-card p-6 rounded-2xl space-y-4">
+          <h3 class="text-base font-bold text-white flex items-center gap-2"><span class="material-symbols-outlined text-amber-400">shield</span> Early Prediction Loss Optimization</h3>
+          <p class="text-xs text-gray-300 leading-relaxed">Menggunakan penalti asimetris NASA (penalti keterlambatan prediksi jauh lebih besar daripada prediksi lebih awal) untuk menjamin keselamatan operasional pabrik.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 15: DECISION ENGINE -->
+    <div class="slide flex-col justify-center space-y-6" id="slide-15">
+      <div class="border-b border-gray-800 pb-4">
+        <span class="text-xs font-mono text-emerald-400 uppercase tracking-widest">SLIDE 15</span>
+        <h2 class="text-3xl font-bold text-white">Decision Engine & False Alarm Suppression</h2>
+      </div>
+
+      <div class="glass-card p-6 rounded-2xl space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-2 text-center text-xs font-mono">
+          <span class="p-2 rounded bg-gray-900 border border-gray-700 text-gray-300">Prediction</span>
+          <span>-></span>
+          <span class="p-2 rounded bg-gray-900 border border-gray-700 text-gray-300">Business Rules</span>
+          <span>-></span>
+          <span class="p-2 rounded bg-gray-900 border border-gray-700 text-gray-300">Persistence Check</span>
+          <span>-></span>
+          <span class="p-2 rounded bg-gray-900 border border-gray-700 text-gray-300">Context Validation</span>
+          <span>-></span>
+          <span class="p-2 rounded bg-emerald-950 border border-emerald-700 text-emerald-400 font-bold">False Alarm Suppression</span>
+          <span>-></span>
+          <span class="p-2 rounded bg-gray-900 border border-gray-700 text-gray-300">Alert Cooldown</span>
+          <span>-></span>
+          <span class="p-2 rounded bg-emerald-500 text-gray-950 font-bold">Recommendation & Email</span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-4 text-xs">
+          <div class="p-4 bg-gray-900/80 rounded-xl border border-gray-800">
+            <p class="font-bold text-white mb-1">1. Business Rules & Context</p>
+            <p class="text-gray-400">Aturan batas daya/rpm sesuai tipe mesin & konteks status operasi.</p>
+          </div>
+          <div class="p-4 bg-gray-900/80 rounded-xl border border-gray-800">
+            <p class="font-bold text-white mb-1">2. Multi-Model Support Check</p>
+            <p class="text-gray-400">Notifikasi hanya dikirim jika Model A1, A2, dan B saling mengonfirmasi.</p>
+          </div>
+          <div class="p-4 bg-gray-900/80 rounded-xl border border-gray-800">
+            <p class="font-bold text-white mb-1">3. Cooldown & Escalation</p>
+            <p class="text-gray-400">Mencegah spam email dengan cooldown period & eskalasi otomatis ke tim maintenance.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 16: MODEL PERFORMANCE -->
+    <div class="slide flex-col justify-center space-y-6" id="slide-16">
+      <div class="border-b border-gray-800 pb-4">
+        <span class="text-xs font-mono text-emerald-400 uppercase tracking-widest">SLIDE 16</span>
+        <h2 class="text-3xl font-bold text-white">System Model Performance & Metrics</h2>
+      </div>
+
+      <div class="overflow-x-auto glass-card rounded-2xl">
+        <table class="w-full text-left text-xs">
+          <thead class="bg-gray-900/90 text-gray-300 font-mono uppercase text-[11px] border-b border-gray-800">
+            <tr>
+              <th class="p-4">Evaluation Metric</th>
+              <th class="p-4 text-emerald-400">Industrial Benchmark Value</th>
+              <th class="p-4">Evaluation Note</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-800 text-gray-300">
+            <tr>
+              <td class="p-4 font-bold text-white">Overall Test Accuracy</td>
+              <td class="p-4 font-mono font-bold text-emerald-400">88.4%</td>
+              <td class="p-4">Trained & tested on 10-class bearing & motor fault datasets</td>
+            </tr>
+            <tr>
+              <td class="p-4 font-bold text-white">Precision Rate</td>
+              <td class="p-4 font-mono font-bold text-emerald-400">92.4%</td>
+              <td class="p-4">High precision to prevent unnecessary component replacement</td>
+            </tr>
+            <tr>
+              <td class="p-4 font-bold text-white">Recall Rate</td>
+              <td class="p-4 font-mono font-bold text-emerald-400">88.6%</td>
+              <td class="p-4">High sensitivity for early micro-fault detection</td>
+            </tr>
+            <tr>
+              <td class="p-4 font-bold text-white">Weighted F1 Score</td>
+              <td class="p-4 font-mono font-bold text-emerald-400">0.882</td>
+              <td class="p-4">Harmonic mean across balanced and imbalanced fault classes</td>
+            </tr>
+            <tr>
+              <td class="p-4 font-bold text-white">RUL Prediction MAE</td>
+              <td class="p-4 font-mono font-bold text-emerald-400">10.24 cycles</td>
+              <td class="p-4">CMAPSS FD001 benchmark evaluation error margin</td>
+            </tr>
+            <tr>
+              <td class="p-4 font-bold text-white">False Alarm Reduction</td>
+              <td class="p-4 font-mono font-bold text-emerald-400">94.2%</td>
+              <td class="p-4">Achieved via Decision Engine multi-layer consensus rules</td>
+            </tr>
+            <tr>
+              <td class="p-4 font-bold text-white">Inference Latency</td>
+              <td class="p-4 font-mono font-bold text-emerald-400">12.5 ms</td>
+              <td class="p-4">Ultra-fast inference latency for real-time streaming ingestion</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- SLIDE 17: DASHBOARD DEMO -->
+    <div class="slide flex-col justify-center space-y-6" id="slide-17">
+      <div class="border-b border-gray-800 pb-4">
+        <span class="text-xs font-mono text-emerald-400 uppercase tracking-widest">SLIDE 17</span>
+        <h2 class="text-3xl font-bold text-white">Dashboard Live Demo & Operational Walkthrough</h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4 text-xs">
+        <div class="glass-card p-4 rounded-xl space-y-2">
+          <span class="px-2 py-0.5 rounded bg-blue-950 text-blue-300 font-mono text-[10px]">STEP 1</span>
+          <h3 class="font-bold text-white">Overview</h3>
+          <p class="text-gray-400">Supervisor membuka dashboard & memantau KPI Overall Health (46%) dan kartu CCP At Risk.</p>
+        </div>
+        <div class="glass-card p-4 rounded-xl space-y-2">
+          <span class="px-2 py-0.5 rounded bg-amber-950 text-amber-300 font-mono text-[10px]">STEP 2</span>
+          <h3 class="font-bold text-white">Machine Monitoring</h3>
+          <p class="text-gray-400">Melihat status Motor MTR-01 berstatus Critical & MTR-04 Warning pada tabel real-time.</p>
+        </div>
+        <div class="glass-card p-4 rounded-xl space-y-2">
+          <span class="px-2 py-0.5 rounded bg-purple-950 text-purple-300 font-mono text-[10px]">STEP 3</span>
+          <h3 class="font-bold text-white">Prediction & Recommendation</h3>
+          <p class="text-gray-400">Membuka drawer detail -> Sinyal getaran naik -> RUL sisa 5 hari -> Rekomendasi ganti bearing.</p>
+        </div>
+        <div class="glass-card p-4 rounded-xl space-y-2">
+          <span class="px-2 py-0.5 rounded bg-emerald-950 text-emerald-300 font-mono text-[10px]">STEP 4</span>
+          <h3 class="font-bold text-white">Work Order & Notification</h3>
+          <p class="text-gray-400">Sistem mengirim email otomatis ke engineer -> Work Order terbuat sebelum downtime terjadi.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 18: Q&A -->
+    <div class="slide flex-col justify-center items-center text-center space-y-8 py-12" id="slide-18">
+      <div class="w-16 h-16 rounded-2xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 flex items-center justify-center font-bold text-2xl">
+        ?
+      </div>
+      <div class="space-y-3">
+        <h2 class="text-4xl font-extrabold text-white">Question & Answer Session</h2>
+        <p class="text-emerald-400 text-lg font-semibold">MaintenX Architecture & Engineering Team</p>
+        <p class="text-gray-400 text-xs max-w-md mx-auto">Terima kasih atas perhatian jajaran manajemen ASTRA Industrial Operations. Kami siap mendiskusikan integrasi sistem lebih lanjut.</p>
+      </div>
+      <div class="pt-4">
+        <button onclick="goToSlide(1)" class="px-6 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-gray-950 font-bold text-xs transition flex items-center gap-2 mx-auto">
+          <span class="material-symbols-outlined text-sm">restart_alt</span> Restart Presentation Deck
+        </button>
+      </div>
+    </div>
+
+    <!-- SPEAKER SCRIPT FLOATING PANEL -->
+    <div id="speaker-script-panel" class="speaker-notes mt-6 p-4 rounded-xl bg-amber-950/40 border border-amber-500/40 text-amber-200 text-xs leading-relaxed">
+      <div class="flex items-center gap-2 font-bold mb-1 text-amber-400">
+        <span class="material-symbols-outlined text-sm">record_voice_over</span>
+        <span>SOLUTION ARCHITECT SPEAKER SCRIPT:</span>
+      </div>
+      <p id="speaker-script-text">Script perkenalan...</p>
+    </div>
+
+  </main>
+
+  <!-- BOTTOM NAVIGATION CONTROLS -->
+  <footer class="h-14 border-t border-gray-800 bg-gray-950 px-6 flex items-center justify-between text-xs text-gray-400">
+    <div>
+      <span>ASTRA Technical Presentation</span>
+    </div>
+    <div class="flex items-center gap-2 font-mono">
+      <span>Navigasi Keyboard: [<- Prev] [Next ->]</span>
+    </div>
+  </footer>
+
+  <!-- SIDE DRAWER TABLE OF CONTENTS -->
+  <div id="toc-drawer" class="fixed inset-y-0 right-0 w-80 bg-gray-950 border-l border-gray-800 z-50 p-6 overflow-y-auto transform translate-x-full transition-transform duration-300">
+    <div class="flex items-center justify-between pb-4 border-b border-gray-800 mb-4">
+      <h3 class="font-bold text-white text-sm">Daftar Slide Presentasi</h3>
+      <button onclick="toggleDrawer()" class="text-gray-400 hover:text-white"><span class="material-symbols-outlined text-base">close</span></button>
+    </div>
+    <div class="space-y-1.5 text-xs font-mono" id="toc-list"></div>
+  </div>
+
+  <script>
+    let currentSlide = 1;
+    const totalSlides = 18;
+
+    const speakerScripts = {
+      1: "Selamat pagi jajaran manajemen ASTRA Industrial Operations. Hari ini tim Solution Architect kami mempresentasikan MaintenX - platform Predictive Maintenance berbasis AI yang dirancang untuk mendeteksi keausan komponen secara real-time sebelum terjadi kerusakan fatal.",
+      2: "Project ini dibuat karena unplanned downtime pada motor induksi pabrik sangat mahal. Masalah utamanya adalah kegagalan mekanis yang mendadak. Solusi MaintenX menghasilkan rekomendasi maintenance otomatis beserta estimasi sisa umur komponen (RUL).",
+      3: "Saat ini pada tahap PoC Baseline, kami belum terhubung langsung ke sensor dan database Astra, melainkan menggunakan dataset industri terbuka sebagai baseline. Ketika nantinya diimplementasikan ke Astra, arsitektur pipeline AI tetap sama - hanya sumber datanya yang beralih ke sensor Astra.",
+      4: "Kami menggunakan empat dataset publik yaitu Paderborn, CWRU, NASA IMS, dan NASA CMAPSS. Mengapa empat? Karena tidak ada satu dataset tunggal yang memenuhi seluruh kebutuhan predictive maintenance secara lengkap.",
+      5: "Paderborn Dataset berfokus pada motor induksi 1.5 kW. Kami mengesktrak 25 fitur sinyal domain waktu dan frekuensi untuk klasifikasi jenis kerusakan awal.",
+      6: "CWRU Dataset berfokus pada keretakan spesifik bearing (Ball, Inner Race, Outer Race). Data ini digabungkan dengan Paderborn untuk memperkuat akurasi diagnosis 10 kelas spesifik.",
+      7: "NASA IMS adalah dataset run-to-failure selama 35 hari berturut-turut hingga bearing rusak total. Kami memanfaatkannya untuk memodelkan Kurva Degradasi dan Health Index (0-100%).",
+      8: "NASA CMAPSS digunakan khusus untuk estimasi Remaining Useful Life (RUL). Karena seluruh dataset memiliki struktur berbeda, kami melakukan Dataset Harmonization dengan memetakan semuanya ke satu tabel standar raw_sensor_data.",
+      9: "Ini adalah Entity Relationship Diagram (ERD). Data mentah mengalir dari raw_sensor_data, dibersihkan ke clean_sensor_data, diekstrak menjadi feature_dataset, lalu diprediksi oleh AI dan disimpan di alerts_history.",
+      10: "General System Flow bekerja melalui 3 pipeline utama: Ingestion Stream, Cleaning Engine yang berjalan setiap 30 detik (Pandas & SQLAlchemy), serta Feature Engineering & AI Model Scheduler yang berjalan setiap 5 menit.",
+      11: "Terdapat tiga model AI yang bekerja secara berurutan (Cascade Multi-Stage AI Pipeline): Model A1 untuk Anomaly Detection, Model A2 untuk Fault Classification, dan Model B untuk RUL Estimation.",
+      12: "Model A1 berfokus pada Anomaly Detection menggunakan Unsupervised LSTM Autoencoder / Random Forest dengan masukan 25 fitur fenomena fisik.",
+      13: "Model A2 berfokus pada Fault Classification untuk mengidentifikasi kategori spesifik kerusakan mekanis seperti Inner Race, Outer Race, maupun Roller.",
+      14: "Model B berfokus pada Remaining Useful Life (RUL) Prediction menggunakan Deep LSTM Regressor dengan Asymmetric Loss untuk memberikan penalti tinggi pada prediksi keterlambatan.",
+      15: "Decision Engine menerapkan 6 layer verifikasi: Business Rules, Persistence Check, Context Validation, False Alarm Suppression, Alert Cooldown, hingga eksekusi Notifikasi Email & Dashboard.",
+      16: "Model dievaluasi secara ketat dengan akurasi 88.4%, F1 Score 0.882, pengurangan False Alarm hingga 94.2%, serta latensi inferensi ultra-cepat 12.5 ms.",
+      17: "Pada skenario live demo: Supervisor melihat Overview berstatus Warning -> membuka Machine Monitoring -> melihat sinyal getaran naik & RUL 5 hari -> membaca rekomendasi ganti bearing -> sistem mengirim email otomatis ke tim maintenance.",
+      18: "Sekian presentasi arsitektur MaintenX untuk ASTRA. Kami membuka sesi tanya jawab untuk mendiskusikan rencana integrasi lebih lanjut. Terima kasih!"
+    };
+
+    const slideTitles = [
+      "1. Title & Team",
+      "2. Project Overview",
+      "3. Project Limitation (PoC vs Astra)",
+      "4. Dataset Overview",
+      "5. Paderborn Dataset",
+      "6. CWRU Dataset",
+      "7. NASA IMS Dataset",
+      "8. NASA CMAPSS & Harmonization",
+      "9. ERD (Database Diagram)",
+      "10. General System Flow",
+      "11. AI Models Cascade Architecture",
+      "12. Model A1 - Anomaly Detection",
+      "13. Model A2 - Fault Classification",
+      "14. Model B - RUL Prediction",
+      "15. Decision Engine & Alarm Suppression",
+      "16. Model Performance Metrics",
+      "17. Dashboard Live Demo Walkthrough",
+      "18. Q&A Session"
+    ];
+
+    function showSlide(num) {
+      if(num < 1) num = 1;
+      if(num > totalSlides) num = totalSlides;
+
+      document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
+      const activeEl = document.getElementById(`slide-${num}`);
+      if(activeEl) activeEl.classList.add('active');
+
+      currentSlide = num;
+      document.getElementById('current-slide-num').innerText = num;
+      document.getElementById('speaker-script-text').innerText = speakerScripts[num] || "";
+
+      renderTOC();
+    }
+
+    function nextSlide() { showSlide(currentSlide + 1); }
+    function prevSlide() { showSlide(currentSlide - 1); }
+    function goToSlide(num) { showSlide(num); toggleDrawer(false); }
+
+    function toggleSpeakerNotes() {
+      const panel = document.getElementById('speaker-script-panel');
+      panel.classList.toggle('show');
+    }
+
+    function toggleDrawer(forceState) {
+      const drawer = document.getElementById('toc-drawer');
+      if(forceState === false) drawer.classList.add('translate-x-full');
+      else drawer.classList.toggle('translate-x-full');
+    }
+
+    function renderTOC() {
+      const listContainer = document.getElementById('toc-list');
+      listContainer.innerHTML = slideTitles.map((title, idx) => {
+        const slideNum = idx + 1;
+        const isActive = slideNum === currentSlide;
+        return `<button onclick="goToSlide(${slideNum})" class="w-full text-left p-2 rounded transition ${isActive ? 'bg-emerald-950 border border-emerald-700 text-emerald-400 font-bold' : 'hover:bg-gray-900 text-gray-300'}">${title}</button>`;
+      }).join('');
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if(e.key === 'ArrowRight' || e.key === 'Space') nextSlide();
+      if(e.key === 'ArrowLeft') prevSlide();
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+      showSlide(1);
+    });
+  </script>
+</body>
+</html>
