@@ -302,7 +302,7 @@
             { id: 'MIX-101-SEAL1', name: 'Agitator Viton Lip Seal', asset: 'M-101 (Mixer Motor)', category: 'Seals & Gaskets', stock: 5, min_stock: 3, unit_cost: 85.00, supplier: 'Freudenberg', status: 'AVAILABLE' },
             { id: 'COMP-204-FLT01', name: 'HEPA Air Intake Filter Element', asset: 'MTR-02 (Utility Compressor)', category: 'Filters', stock: 8, min_stock: 4, unit_cost: 35.00, supplier: 'Atlas Copco', status: 'AVAILABLE' }
           ];
-          var csvLines = ['Part Number,Component Description,Target Asset,Category,In-Stock Qty,Min Stock Level,Unit Price (USD),Supplier OEM,Inventory Status'];
+          var csvLines = ['Part Number,Component Description,Target Asset,Category,In-Stock Qty,Min Stock Level,Unit Price (IDR),Supplier OEM,Inventory Status'];
           defaultParts.forEach(function(p) {
             var row = [
               '"' + p.id + '"',
@@ -311,7 +311,7 @@
               '"' + p.category + '"',
               p.stock,
               p.min_stock,
-              '$' + p.unit_cost.toFixed(2),
+              '"Rp ' + (p.unit_cost * 16000).toLocaleString('id-ID') + '"',
               '"' + p.supplier + '"',
               '"' + p.status + '"'
             ];

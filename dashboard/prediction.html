@@ -361,7 +361,7 @@ Similar Historical Failure Pattern
 </div>
 <div class="p-xs rounded bg-surface-container">
 <p class="font-data-label text-[9px] uppercase text-ink-muted">Cost if Ignored</p>
-<p class="font-data-value text-red-alert font-bold" id="rec-cost">$2,500</p>
+<p class="font-data-value text-red-alert font-bold" id="rec-cost">Rp 40.000.000</p>
 </div>
 <div class="p-xs rounded bg-surface-container">
 <p class="font-data-label text-[9px] uppercase text-ink-muted">Est. Downtime</p>
@@ -477,7 +477,7 @@ Similar Historical Failure Pattern
             displays.recAction.innerText = rec.action || '';
             displays.recPart.innerText = rec.part_number || rec.partNumber || '';
             const cost = rec.cost_if_ignored_usd || rec.costIfIgnoredUsd || 0;
-            displays.recCost.innerText = cost > 0 ? '$' + cost.toLocaleString() : 'N/A';
+            displays.recCost.innerText = cost > 0 ? 'Rp ' + (cost * 16000).toLocaleString('id-ID') : 'N/A';
             displays.recDowntime.innerText = (rec.downtime_hours || rec.downtimeHours || 0) + 'h';
             displays.recWindow.innerText = rec.maintenance_window || rec.maintenanceWindow || '';
         }
