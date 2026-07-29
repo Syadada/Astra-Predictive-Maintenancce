@@ -191,7 +191,7 @@
 
   // ─── ROLE-BASED ACCESS CONTROL PERMISSIONS ────────────────────────────────
   var ROLE_PERMISSIONS = {
-    "Super Admin": ["overview", "predictions", "equipment", "alerts", "maintenance", "maintenance_crud", "reports", "simulation", "settings", "support"],
+    "Super Admin": ["overview", "predictions", "equipment", "alerts", "maintenance", "maintenance_crud", "reports", "simulation", "settings", "support", "accounts"],
     "Admin": ["overview", "predictions", "alerts", "reports", "simulation", "settings", "support", "maintenance_crud"],
     "Maintenance": ["overview", "alerts", "equipment", "maintenance", "maintenance_crud", "settings", "support"],
     "Operator": ["overview", "alerts", "settings", "support"]
@@ -209,7 +209,8 @@
     "maintenance_crud": 2,
     "predictions": 3,
     "reports": 3,
-    "simulation": 3
+    "simulation": 3,
+    "accounts": 4
   };
 
   function getUserClearanceLevel(clearanceStr) {
@@ -229,6 +230,7 @@
   ];
 
   var BOTTOM_ITEMS = [
+    { id: 'accounts', label: 'Accounts', icon: 'manage_accounts', href: 'accounts.html' },
     { id: 'support',  label: 'Support',  icon: 'support_agent', href: 'support.html'           },
     { id: 'settings', label: 'Settings', icon: 'settings',      href: 'profilensettings.html'  },
   ];

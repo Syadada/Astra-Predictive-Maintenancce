@@ -118,6 +118,15 @@ class UpdateProfileRequest(BaseModel):
     new_email: str
     avatar: Optional[str] = None
 
+class CreateUserRequest(BaseModel):
+    email: str
+    password: str
+    name: str
+    role: str
+    clearance: str
+    title: str
+    avatar: Optional[str] = None
+
 class NotificationSettingsRequest(BaseModel):
     smtp_server: str
     smtp_port: int
@@ -184,6 +193,72 @@ def update_user_profile_route(email: str, req: UpdateProfileRequest):
         if row:
             return dict(row._mapping)
     raise HTTPException(status_code=404, detail="User profile not found after update")
+
+@app.post("/api/users")
+def create_user(req: CreateUserRequest, requester_email: str):
+    db: DBManager = state.get("db")
+    if db is None:
+        raise HTTPException(status_code=503, detail="Database not initialized")
+        
+    # Verify the requester is a Super Admin
+    with engine.connect() as conn:
+        requester = conn.execute(
+            text("SELECT role FROM users WHERE LOWER(email) = LOWER(:email)"),
+            {"email": requester_email.strip()}
+        ).fetchone()
+        
+        if not requester or requester[0] != "Super Admin":
+            raise HTTPException(status_code=403, detail="Access denied. Super Admin role required.")
+            
+        # Check if user already exists
+        exists = conn.execute(
+            text("SELECT 1 FROM users WHERE LOWER(email) = LOWER(:email)"),
+            {"email": req.email.strip()}
+        ).fetchone()
+        if exists:
+            raise HTTPException(status_code=400, detail="A user with this email already exists.")
+            
+        # Insert new user
+        conn.execute(
+            text("""
+                INSERT INTO users (email, password, name, role, clearance, title, avatar)
+                VALUES (:email, :password, :name, :role, :clearance, :title, :avatar)
+            """),
+            {
+                "email": req.email.strip(),
+                "password": req.password,
+                "name": req.name.strip(),
+                "role": req.role.strip(),
+                "clearance": req.clearance.strip(),
+                "title": req.title.strip(),
+                "avatar": req.avatar.strip() if req.avatar else None
+            }
+        )
+        conn.commit()
+        
+    return {"message": "User created successfully"}
+
+@app.get("/api/users")
+def list_users(requester_email: str):
+    db: DBManager = state.get("db")
+    if db is None:
+        raise HTTPException(status_code=503, detail="Database not initialized")
+        
+    # Verify the requester is a Super Admin
+    with engine.connect() as conn:
+        requester = conn.execute(
+            text("SELECT role FROM users WHERE LOWER(email) = LOWER(:email)"),
+            {"email": requester_email.strip()}
+        ).fetchone()
+        
+        if not requester or requester[0] != "Super Admin":
+            raise HTTPException(status_code=403, detail="Access denied. Super Admin role required.")
+            
+        users = conn.execute(
+            text("SELECT email, name, role, clearance, title, avatar FROM users ORDER BY name ASC")
+        ).fetchall()
+        
+        return [dict(row._mapping) for row in users]
 
 @app.post("/api/predict/inference", response_model=InferenceResponse)
 def predict_inference(req: InferenceRequest) -> InferenceResponse:

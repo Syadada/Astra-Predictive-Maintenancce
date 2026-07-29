@@ -63,6 +63,16 @@ export default function App() {
   // Trigger data reload
   const triggerRefresh = () => setRefreshTrigger(prev => prev + 1);
 
+  // User Management States
+  const [accounts, setAccounts] = useState<any[]>([]);
+  const [newUserName, setNewUserName] = useState('');
+  const [newUserEmail, setNewUserEmail] = useState('');
+  const [newUserPassword, setNewUserPassword] = useState('');
+  const [newUserRole, setNewUserRole] = useState('Operator');
+  const [newUserClearance, setNewUserClearance] = useState('Level 1');
+  const [newUserTitle, setNewUserTitle] = useState('');
+  const [newUserAvatar, setNewUserAvatar] = useState('');
+
   // Authentication Flow
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -83,7 +93,9 @@ export default function App() {
         setProfileAvatar(userData.avatar || '');
       } else {
         // Local pre-seeded checks if backend is down
-        const match = PRESEEDED_ACCOUNTS.find(a => a.email.toLowerCase() === emailInput.toLowerCase() && passwordInput !== '');
+        let localUsers = JSON.parse(localStorage.getItem('ASTRA_LOCAL_ACCOUNTS') || 'null');
+        if (!localUsers) localUsers = PRESEEDED_ACCOUNTS;
+        const match = localUsers.find((a: any) => a.email.toLowerCase() === emailInput.toLowerCase() && passwordInput !== '');
         if (match) {
           setUser(match);
           setProfileName(match.name);
@@ -96,7 +108,9 @@ export default function App() {
       }
     } catch {
       // Fallback
-      const match = PRESEEDED_ACCOUNTS.find(a => a.email.toLowerCase() === emailInput.toLowerCase());
+      let localUsers = JSON.parse(localStorage.getItem('ASTRA_LOCAL_ACCOUNTS') || 'null');
+      if (!localUsers) localUsers = PRESEEDED_ACCOUNTS;
+      const match = localUsers.find((a: any) => a.email.toLowerCase() === emailInput.toLowerCase());
       if (match) {
         setUser(match);
         setProfileName(match.name);
@@ -198,6 +212,66 @@ export default function App() {
     }
   };
 
+  // Create User Account (Super Admin Only)
+  const handleCreateUser = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newUserName || !newUserEmail || !newUserPassword || !newUserTitle) {
+      alert('Please fill out all required fields.');
+      return;
+    }
+    
+    const payload = {
+      name: newUserName,
+      email: newUserEmail,
+      password: newUserPassword,
+      role: newUserRole,
+      clearance: newUserClearance,
+      title: newUserTitle,
+      avatar: newUserAvatar || null
+    };
+
+    try {
+      const res = await fetch(`${API_BASE}/users?requester_email=${encodeURIComponent(user.email)}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      if (res.ok) {
+        alert('User account provisioned successfully!');
+        setNewUserName('');
+        setNewUserEmail('');
+        setNewUserPassword('');
+        setNewUserTitle('');
+        setNewUserAvatar('');
+        triggerRefresh();
+      } else {
+        const errData = await res.json();
+        alert('Failed to provision user: ' + (errData.detail || 'Access Denied'));
+      }
+    } catch {
+      // Offline fallback simulation
+      let localUsers = JSON.parse(localStorage.getItem('ASTRA_LOCAL_ACCOUNTS') || 'null');
+      if (!localUsers) localUsers = PRESEEDED_ACCOUNTS;
+      
+      if (localUsers.some((u: any) => u.email.toLowerCase() === newUserEmail.toLowerCase())) {
+        alert('An account with this email already exists.');
+        return;
+      }
+
+      const newUserObj = { ...payload };
+      localUsers.push(newUserObj);
+      localStorage.setItem('ASTRA_LOCAL_ACCOUNTS', JSON.stringify(localUsers));
+      setAccounts(localUsers);
+
+      alert('Simulated user account provisioned locally (offline)!');
+      setNewUserName('');
+      setNewUserEmail('');
+      setNewUserPassword('');
+      setNewUserTitle('');
+      setNewUserAvatar('');
+    }
+  };
+
   // Load Database Data
   useEffect(() => {
     if (!user) return;
@@ -242,6 +316,15 @@ export default function App() {
           const riskData = await riskRes.json();
           setProductionRisk(riskData);
         }
+
+        // Fetch Users (Super Admin Only)
+        if (user.role === 'Super Admin') {
+          const usersRes = await fetch(`${API_BASE}/users?requester_email=${encodeURIComponent(user.email)}`);
+          if (usersRes.ok) {
+            const usersData = await usersRes.json();
+            setAccounts(usersData);
+          }
+        }
       } catch (err) {
         console.log("Using synthetic local fallback data due to backend offline:", err);
         setIsBackendConnected(false);
@@ -280,6 +363,15 @@ export default function App() {
         { motor_id: 'MTR-04', name: 'Pump', location: 'Utility', severity: 'CRITICAL', recommendation: 'Inspect immediately — shutdown risk', is_critical: true },
         { motor_id: 'MTR-02', name: 'Compressor', location: 'Utility', severity: 'WARNING', recommendation: 'Plan bearing maintenance', is_critical: true }
       ]);
+
+      if (user?.role === 'Super Admin') {
+        let localUsers = JSON.parse(localStorage.getItem('ASTRA_LOCAL_ACCOUNTS') || 'null');
+        if (!localUsers) {
+          localUsers = PRESEEDED_ACCOUNTS;
+          localStorage.setItem('ASTRA_LOCAL_ACCOUNTS', JSON.stringify(localUsers));
+        }
+        setAccounts(localUsers);
+      }
     };
 
     fetchData();
@@ -501,6 +593,11 @@ export default function App() {
           <button className={`btn ${activeTab === 'feedback' ? 'btn-primary' : 'btn-secondary'}`} style={{ border: 'none', justifyContent: 'flex-start' }} onClick={() => setActiveTab('feedback')}>
             <CheckSquare size={18} /> Feedback Center
           </button>
+          {user.role === 'Super Admin' && (
+            <button className={`btn ${activeTab === 'accounts' ? 'btn-primary' : 'btn-secondary'}`} style={{ border: 'none', justifyContent: 'flex-start' }} onClick={() => setActiveTab('accounts')}>
+              <User size={18} /> User Accounts
+            </button>
+          )}
           <button className={`btn ${activeTab === 'notifications' ? 'btn-primary' : 'btn-secondary'}`} style={{ border: 'none', justifyContent: 'flex-start' }} onClick={() => setActiveTab('notifications')}>
             <Settings size={18} /> Notification Config
           </button>
@@ -1327,6 +1424,160 @@ export default function App() {
                     </div>
                   </div>
                 </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* ─── TAB: USER ACCOUNTS DIRECTORY (Super Admin Only) ─── */}
+        {activeTab === 'accounts' && (
+          <div>
+            {user.role !== 'Super Admin' ? renderDenied() : (
+              <div style={{ display: 'grid', gridTemplateColumns: '1.5fr 1fr', gap: '30px' }}>
+                
+                {/* Accounts Table List */}
+                <div className="glass-panel" style={{ padding: '30px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+                    <h3 style={{ color: 'var(--text-bright)', fontSize: '1.3rem' }}>Authorized System Users</h3>
+                    <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>{accounts.length} Profiles Loaded</span>
+                  </div>
+
+                  <div style={{ overflowX: 'auto' }}>
+                    <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
+                      <thead>
+                        <tr style={{ borderBottom: '1px solid var(--border-color)', color: 'var(--text-muted)', fontSize: '0.85rem' }}>
+                          <th style={{ padding: '12px 8px' }}>User Details</th>
+                          <th style={{ padding: '12px 8px' }}>System Role</th>
+                          <th style={{ padding: '12px 8px' }}>Clearance</th>
+                          <th style={{ padding: '12px 8px' }}>Specialty / Job Title</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {accounts.map(acc => {
+                          const avatarSrc = acc.avatar || 'https://lh3.googleusercontent.com/aida-public/AB6AXuAJB3nF963ZDZN5AzByGsqb2MxVyIvYYJZPDV3NOPF900ug_3y-d7MEHM9IcmdVDLg62EThO7ZZgtVfPH2qBLypFdU6CntX3pU3T1JaCfwVtgGdlrtJC5dzHHTfJxSNG-UN1NvfxKBe1DzYgQaD3aqaZg3Xxnt5j4CGxyaLfpyjHJO3tUUkGQIBvHZZAZPScXVH5c1S1afsZtZtXFKb6SEtVWsYVchjtnhJNUrqnmceziBRB5_XQGZV4hDOih0mFzLsvnv-I80nDtU';
+                          return (
+                            <tr key={acc.email} style={{ borderBottom: '1px solid var(--border-color)', fontSize: '0.9rem' }}>
+                              <td style={{ padding: '16px 8px', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                <img src={avatarSrc} alt={acc.name} style={{ width: '32px', height: '32px', borderRadius: '50%', objectFit: 'cover', border: '1px solid var(--border-color)' }} />
+                                <div>
+                                  <div style={{ fontWeight: 600, color: 'var(--text-bright)' }}>{acc.name}</div>
+                                  <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{acc.email}</div>
+                                </div>
+                              </td>
+                              <td style={{ padding: '16px 8px' }}>
+                                <span style={{
+                                  padding: '2px 8px',
+                                  borderRadius: '4px',
+                                  fontSize: '0.75rem',
+                                  fontWeight: 600,
+                                  background: 'rgba(28, 107, 69, 0.12)',
+                                  color: 'var(--primary)',
+                                  border: '1px solid rgba(28, 107, 69, 0.2)'
+                                }}>
+                                  {acc.role}
+                                </span>
+                              </td>
+                              <td style={{ padding: '16px 8px', color: 'var(--text-bright)' }}>{acc.clearance}</td>
+                              <td style={{ padding: '16px 8px', color: 'var(--text-muted)' }}>{acc.title}</td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                {/* Provision Account Form */}
+                <div className="glass-panel" style={{ padding: '30px' }}>
+                  <h3 style={{ color: 'var(--text-bright)', fontSize: '1.3rem', marginBottom: '20px' }}>Register New User Profile</h3>
+                  
+                  <form onSubmit={handleCreateUser}>
+                    <div style={{ marginBottom: '15px' }}>
+                      <label style={{ display: 'block', fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '6px' }}>Full Name</label>
+                      <input 
+                        type="text" 
+                        value={newUserName}
+                        onChange={e => setNewUserName(e.target.value)}
+                        required
+                        placeholder="e.g. John Doe"
+                        style={{ width: '100%', padding: '10px', borderRadius: '8px', background: '#FFFFFF', border: '1px solid var(--border-color)', color: 'var(--text-main)', outline: 'none' }}
+                      />
+                    </div>
+
+                    <div style={{ marginBottom: '15px' }}>
+                      <label style={{ display: 'block', fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '6px' }}>Work Email</label>
+                      <input 
+                        type="email" 
+                        value={newUserEmail}
+                        onChange={e => setNewUserEmail(e.target.value)}
+                        required
+                        placeholder="johndoe@ASTRA.com"
+                        style={{ width: '100%', padding: '10px', borderRadius: '8px', background: '#FFFFFF', border: '1px solid var(--border-color)', color: 'var(--text-main)', outline: 'none' }}
+                      />
+                    </div>
+
+                    <div style={{ marginBottom: '15px' }}>
+                      <label style={{ display: 'block', fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '6px' }}>Initial Password</label>
+                      <input 
+                        type="password" 
+                        value={newUserPassword}
+                        onChange={e => setNewUserPassword(e.target.value)}
+                        required
+                        placeholder="••••••••"
+                        style={{ width: '100%', padding: '10px', borderRadius: '8px', background: '#FFFFFF', border: '1px solid var(--border-color)', color: 'var(--text-main)', outline: 'none' }}
+                      />
+                    </div>
+
+                    <div style={{ marginBottom: '15px' }}>
+                      <label style={{ display: 'block', fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '6px' }}>Clearance / Role</label>
+                      <select 
+                        value={newUserRole}
+                        onChange={e => {
+                          setNewUserRole(e.target.value);
+                          let clearance = 'Level 1';
+                          if (e.target.value === 'Super Admin') clearance = 'Level 4';
+                          else if (e.target.value === 'Admin') clearance = 'Level 3';
+                          else if (e.target.value === 'Maintenance') clearance = 'Level 2';
+                          setNewUserClearance(clearance);
+                        }}
+                        style={{ width: '100%', padding: '10px', borderRadius: '8px', background: '#FFFFFF', border: '1px solid var(--border-color)', color: 'var(--text-main)', outline: 'none' }}
+                      >
+                        <option value="Operator">Operator (Level 1 Clearance)</option>
+                        <option value="Maintenance">Maintenance (Level 2 Clearance)</option>
+                        <option value="Admin">Admin (Level 3 Clearance)</option>
+                        <option value="Super Admin">Super Admin (Level 4 Clearance)</option>
+                      </select>
+                    </div>
+
+                    <div style={{ marginBottom: '15px' }}>
+                      <label style={{ display: 'block', fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '6px' }}>Professional Specialty / Title</label>
+                      <input 
+                        type="text" 
+                        value={newUserTitle}
+                        onChange={e => setNewUserTitle(e.target.value)}
+                        required
+                        placeholder="e.g. Lead Control Specialist"
+                        style={{ width: '100%', padding: '10px', borderRadius: '8px', background: '#FFFFFF', border: '1px solid var(--border-color)', color: 'var(--text-main)', outline: 'none' }}
+                      />
+                    </div>
+
+                    <div style={{ marginBottom: '20px' }}>
+                      <label style={{ display: 'block', fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '6px' }}>Avatar Image URL (Optional)</label>
+                      <input 
+                        type="text" 
+                        value={newUserAvatar}
+                        onChange={e => setNewUserAvatar(e.target.value)}
+                        placeholder="https://image-url.com"
+                        style={{ width: '100%', padding: '10px', borderRadius: '8px', background: '#FFFFFF', border: '1px solid var(--border-color)', color: 'var(--text-main)', outline: 'none' }}
+                      />
+                    </div>
+
+                    <button type="submit" className="btn btn-primary" style={{ width: '100%', justifyContent: 'center' }}>
+                      Register User Account
+                    </button>
+                  </form>
+                </div>
+                
               </div>
             )}
           </div>

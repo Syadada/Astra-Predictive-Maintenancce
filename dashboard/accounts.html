@@ -1,0 +1,428 @@
+<!DOCTYPE html><html class="light" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Project ASTRA | User Accounts Directory</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Playfair+Display:wght@700&amp;display=swap" rel="stylesheet">
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                "inverse-primary": "#9ed2b1",
+                "on-primary-fixed": "#002111",
+                "on-error": "#ffffff",
+                "error-container": "#ffdad6",
+                "on-secondary-fixed": "#002110",
+                "on-primary": "#ffffff",
+                "primary-fixed": "#baefcc",
+                "surface-tint": "#38684d",
+                "on-primary-container": "#8bbe9e",
+                "surface-variant": "#e3e2df",
+                "on-secondary-container": "#227049",
+                "secondary-container": "#a3f0bf",
+                "on-tertiary-fixed-variant": "#00522b",
+                "amber-warn": "#E67E22",
+                "green-good": "#27AE60",
+                "on-background": "#1b1c1a",
+                "on-primary-fixed-variant": "#1f5036",
+                "tertiary-fixed-dim": "#71dc96",
+                "outline-variant": "#c0c9c1",
+                "surface-container": "#efeeeb",
+                "tertiary": "#00371b",
+                "surface": "#FFFFFF",
+                "red-alert": "#C0392B",
+                "surface-container-highest": "#e3e2df",
+                "surface-bright": "#faf9f6",
+                "on-secondary-fixed-variant": "#005230",
+                "primary": "#003720",
+                "surface-dim": "#dbdad7",
+                "primary-container": "#1d4e35",
+                "on-tertiary-fixed": "#00210e",
+                "on-tertiary-container": "#5cc784",
+                "secondary-fixed-dim": "#8ad7a7",
+                "border": "#E2DDD6",
+                "tertiary-fixed": "#8df9b1",
+                "on-tertiary": "#ffffff",
+                "on-surface-variant": "#414943",
+                "surface-container-high": "#e9e8e5",
+                "inverse-on-surface": "#f2f1ee",
+                "secondary": "#1c6b45",
+                "on-surface": "#1b1c1a",
+                "on-secondary": "#ffffff",
+                "surface-container-lowest": "#ffffff",
+                "primary-fixed-dim": "#9ed2b1",
+                "ink": "#1A1A18",
+                "tertiary-container": "#00502a",
+                "green-light": "#EAF2EC",
+                "surface-container-low": "#f4f3f0",
+                "secondary-fixed": "#a6f3c2",
+                "outline": "#717972",
+                "inverse-surface": "#2f312f",
+                "error": "#ba1a1a",
+                "background": "#faf9f6",
+                "on-error-container": "#93000a",
+                "ink-muted": "#6B6860",
+                "mono-data": "#2C3E50"
+            },
+            "borderRadius": {
+                "DEFAULT": "0.125rem",
+                "lg": "0.25rem",
+                "xl": "0.5rem",
+                "full": "0.75rem"
+            },
+            "spacing": {
+                "margin-desktop": "64px",
+                "xl": "48px",
+                "xxl": "96px",
+                "md": "16px",
+                "lg": "24px",
+                "base": "4px",
+                "sm": "8px",
+                "gutter": "24px",
+                "xs": "4px",
+                "margin-mobile": "16px"
+            },
+            "fontFamily": {
+                "hero-lg-mobile": ["Playfair Display"],
+                "body-sm": ["Inter"],
+                "headline-display": ["Playfair Display"],
+                "body-md": ["Inter"],
+                "data-value": ["JetBrains Mono"],
+                "data-display": ["JetBrains Mono"],
+                "hero-lg": ["Playfair Display"],
+                "data-label": ["JetBrains Mono"],
+                "body-lg": ["Inter"]
+            },
+            "fontSize": {
+                "hero-lg-mobile": ["42px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                "body-sm": ["14px", {"lineHeight": "1.4", "fontWeight": "500"}],
+                "headline-display": ["40px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                "data-value": ["14px", {"lineHeight": "1.0", "fontWeight": "500"}],
+                "data-display": ["48px", {"lineHeight": "1.0", "letterSpacing": "-0.03em", "fontWeight": "500"}],
+                "hero-lg": ["68px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                "data-label": ["11px", {"lineHeight": "1.0", "letterSpacing": "0.05em", "fontWeight": "400"}],
+                "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: #faf9f6;
+            color: #1b1c1a;
+            -webkit-font-smoothing: antialiased;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #717972;
+            border-radius: 10px;
+        }
+    </style>
+<link rel="stylesheet" href="css/styles.css">
+<script src="js/interactions.js"></script>
+</head>
+<body class="bg-background text-on-background font-body-md flex h-screen overflow-hidden">
+<!-- Main Canvas -->
+<main class="flex-1 md:ml-64 h-screen bg-background overflow-y-auto custom-scrollbar">
+<!-- TopAppBar -->
+<header class="flex justify-between items-center px-lg h-16 w-full z-[100] backdrop-blur-md border-b border-border bg-surface/80 sticky top-0">
+<div class="flex items-center gap-md md:hidden">
+<span class="material-symbols-outlined text-primary cursor-pointer" data-sidebar-toggle aria-label="Open navigation menu">menu</span>
+<span class="font-hero-lg text-body-lg text-primary font-bold">Project ASTRA</span>
+</div>
+<div class="hidden md:flex items-center gap-md">
+<h2 class="font-hero-lg text-body-lg text-primary font-bold">User Directory</h2>
+<div class="h-4 w-[1px] bg-outline-variant mx-sm"></div>
+<p class="font-body-sm text-body-sm text-on-surface-variant italic">Super Admin Console</p>
+</div>
+<div class="flex items-center gap-md">
+<div class="flex items-center gap-sm px-md py-base bg-surface-container-low rounded-full border border-border">
+<span class="w-2 h-2 rounded-full bg-green-good animate-pulse"></span>
+<span class="font-data-label text-data-label text-primary" id="db-status-chip">DATABASE CONNECTED</span>
+</div>
+</div>
+</header>
+
+<!-- Content Area -->
+<div class="max-w-[1200px] mx-auto py-xxl px-margin-mobile md:px-margin-desktop space-y-xl">
+    
+    <!-- Title / Description banner -->
+    <div class="bg-primary/5 border border-primary/10 p-lg rounded-xl flex items-center justify-between">
+        <div>
+            <h1 class="font-headline-display text-headline-display text-primary mb-1">User Account Directory</h1>
+            <p class="font-body-md text-on-surface-variant">Manage role-based clearances, credentials, and staff assignments.</p>
+        </div>
+        <div class="bg-primary text-white p-4 rounded-xl shadow-lg">
+            <span class="material-symbols-outlined text-3xl">manage_accounts</span>
+        </div>
+    </div>
+
+    <!-- Bento Grid Section -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-gutter items-start">
+        
+        <!-- Table Column (2/3 width) -->
+        <div class="lg:col-span-2 bg-surface border border-border rounded-xl p-lg space-y-md shadow-sm">
+            <div class="flex justify-between items-center border-b border-border pb-md">
+                <div class="flex items-center gap-sm">
+                    <span class="material-symbols-outlined text-primary">group</span>
+                    <h3 class="font-body-md text-body-md font-bold text-primary">Active Authorization Profiles</h3>
+                </div>
+                <span class="font-data-label text-data-label text-ink-muted" id="user-count-label">5 Accounts</span>
+            </div>
+            
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="border-b border-border font-data-label text-data-label text-ink-muted">
+                            <th class="py-sm px-xs">User</th>
+                            <th class="py-sm px-xs">Role</th>
+                            <th class="py-sm px-xs">Clearance</th>
+                            <th class="py-sm px-xs">Job Title</th>
+                        </tr>
+                    </thead>
+                    <tbody id="users-table-body">
+                        <!-- Loaded dynamically -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Creation Form Column (1/3 width) -->
+        <div class="bg-surface border border-border rounded-xl p-lg space-y-md shadow-sm">
+            <div class="flex items-center gap-sm border-b border-border pb-md">
+                <span class="material-symbols-outlined text-primary">person_add</span>
+                <h3 class="font-body-md text-body-md font-bold text-primary">Register New Account</h3>
+            </div>
+
+            <form id="create-user-form" class="space-y-md">
+                <div>
+                    <label class="block font-data-label text-data-label text-on-surface-variant mb-1 uppercase">Full Name</label>
+                    <input id="new-name" required class="w-full bg-surface-container-low border-border rounded-lg text-ink font-body-sm focus:ring-primary focus:border-primary px-md py-sm" type="text" placeholder="e.g. John Doe">
+                </div>
+                <div>
+                    <label class="block font-data-label text-data-label text-on-surface-variant mb-1 uppercase">Work Email</label>
+                    <input id="new-email" required class="w-full bg-surface-container-low border-border rounded-lg text-ink font-body-sm focus:ring-primary focus:border-primary px-md py-sm" type="email" placeholder="johndoe@ASTRA.com">
+                </div>
+                <div>
+                    <label class="block font-data-label text-data-label text-on-surface-variant mb-1 uppercase">Password</label>
+                    <input id="new-password" required class="w-full bg-surface-container-low border-border rounded-lg text-ink font-body-sm focus:ring-primary focus:border-primary px-md py-sm" type="password" placeholder="••••••••">
+                </div>
+                <div>
+                    <label class="block font-data-label text-data-label text-on-surface-variant mb-1 uppercase">System Role</label>
+                    <select id="new-role" onchange="syncClearanceLevel()" class="w-full bg-surface-container-low border-border rounded-lg text-ink font-body-sm focus:ring-primary focus:border-primary px-md py-sm">
+                        <option value="Operator">Operator</option>
+                        <option value="Maintenance">Maintenance</option>
+                        <option value="Admin">Admin</option>
+                        <option value="Super Admin">Super Admin</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block font-data-label text-data-label text-on-surface-variant mb-1 uppercase">Clearance level (Auto)</label>
+                    <select id="new-clearance" disabled class="w-full bg-surface-container-highest border-border rounded-lg text-ink-muted font-body-sm px-md py-sm cursor-not-allowed">
+                        <option value="Level 1">Level 1 (Operator)</option>
+                        <option value="Level 2">Level 2 (Maintenance)</option>
+                        <option value="Level 3">Level 3 (Admin)</option>
+                        <option value="Level 4">Level 4 (Super Admin)</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block font-data-label text-data-label text-on-surface-variant mb-1 uppercase">Professional Title</label>
+                    <input id="new-title" required class="w-full bg-surface-container-low border-border rounded-lg text-ink font-body-sm focus:ring-primary focus:border-primary px-md py-sm" type="text" placeholder="e.g. Mechanical Specialist">
+                </div>
+                <div>
+                    <label class="block font-data-label text-data-label text-on-surface-variant mb-1 uppercase">Avatar URL (Optional)</label>
+                    <input id="new-avatar" class="w-full bg-surface-container-low border-border rounded-lg text-ink font-body-sm focus:ring-primary focus:border-primary px-md py-sm" type="text" placeholder="https://image-url.com">
+                </div>
+
+                <button type="submit" class="w-full bg-primary hover:bg-primary-container text-white py-md rounded-lg font-bold transition-all flex items-center justify-center gap-sm shadow-md active:scale-95">
+                    <span class="material-symbols-outlined">save</span>
+                    PROVISION ACCOUNT
+                </button>
+            </form>
+        </div>
+
+    </div>
+</div>
+
+</main>
+
+<script>
+    // Seeding mock accounts when database is offline or for fallback simulation
+    const PRESEEDED_ACCOUNTS = [
+      { email: 'superadmin@ASTRA.com', name: 'Justin Bieber', role: 'Super Admin', clearance: 'Level 4', title: 'Lead Engineer', avatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAJB3nF963ZDZN5AzByGsqb2MxVyIvYYJZPDV3NOPF900ug_3y-d7MEHM9IcmdVDLg62EThO7ZZgtVfPH2qBLypFdU6CntX3pU3T1JaCfwVtgGdlrtJC5dzHHTfJxSNG-UN1NvfxKBe1DzYgQaD3aqaZg3Xxnt5j4CGxyaLfpyjHJO3tUUkGQIBvHZZAZPScXVH5c1S1afsZtZtXFKb6SEtVWsYVchjtnhJNUrqnmceziBRB5_XQGZV4hDOih0mFzLsvnv-I80nDtU' },
+      { email: 'rasyaad@ASTRA.com', name: 'Rasyaad P. REDIANTO', role: 'Super Admin', clearance: 'Level 4', title: 'Lead Systems Architect', avatar: 'https://lh3.googleusercontent.com/a/ACg8ocIS0G1jJt84nO4VvHspYqR64m3s8QjI1KjR2-i6mUuG0w=s96-c' },
+      { email: 'admin@ASTRA.com', name: 'Operational Manager', role: 'Admin', clearance: 'Level 3', title: 'Plant Operations Coordinator', avatar: '' },
+      { email: 'maint@ASTRA.com', name: 'Ronny Prasad', role: 'Maintenance', clearance: 'Level 2', title: 'Lead Maintenance Specialist', avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=256&h=256' },
+      { email: 'operator@ASTRA.com', name: 'Floor Operator', role: 'Operator', clearance: 'Level 1', title: 'Field Systems Operator', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=256&h=256' }
+    ];
+
+    let activeUser = JSON.parse(localStorage.getItem('currentUser'));
+    let isOffline = false;
+
+    function syncClearanceLevel() {
+        const role = document.getElementById('new-role').value;
+        const clearanceSelect = document.getElementById('new-clearance');
+        if (role === 'Super Admin') clearanceSelect.value = 'Level 4';
+        else if (role === 'Admin') clearanceSelect.value = 'Level 3';
+        else if (role === 'Maintenance') clearanceSelect.value = 'Level 2';
+        else clearanceSelect.value = 'Level 1';
+    }
+
+    async function loadAccounts() {
+        if (!activeUser) {
+            window.location.href = 'login.html';
+            return;
+        }
+
+        const tableBody = document.getElementById('users-table-body');
+        const userCountLabel = document.getElementById('user-count-label');
+        const dbChip = document.getElementById('db-status-chip');
+        const apiBase = window.location.protocol === 'file:' ? 'http://127.0.0.1:8000' : '';
+
+        try {
+            const res = await fetch(`${apiBase}/api/users?requester_email=${encodeURIComponent(activeUser.email)}`);
+            if (res.ok) {
+                const usersList = await res.json();
+                renderUsers(usersList);
+                dbChip.innerText = "DATABASE ONLINE";
+                dbChip.className = "font-data-label text-data-label text-primary";
+                dbChip.previousElementSibling.className = "w-2 h-2 rounded-full bg-green-good animate-pulse";
+                isOffline = false;
+            } else {
+                throw new Error("HTTP Status " + res.status);
+            }
+        } catch (err) {
+            console.warn("FastAPI backend users route unavailable. Using offline simulation data:", err);
+            dbChip.innerText = "SIMULATION OFFLINE FALLBACK";
+            dbChip.className = "font-data-label text-data-label text-amber-warn";
+            dbChip.previousElementSibling.className = "w-2 h-2 rounded-full bg-amber-warn animate-pulse";
+            isOffline = true;
+
+            // Load from localStorage or seed it
+            let localUsers = JSON.parse(localStorage.getItem('ASTRA_LOCAL_ACCOUNTS'));
+            if (!localUsers) {
+                localUsers = PRESEEDED_ACCOUNTS;
+                localStorage.setItem('ASTRA_LOCAL_ACCOUNTS', JSON.stringify(localUsers));
+            }
+            renderUsers(localUsers);
+        }
+    }
+
+    function renderUsers(usersList) {
+        const tableBody = document.getElementById('users-table-body');
+        const userCountLabel = document.getElementById('user-count-label');
+        
+        tableBody.innerHTML = '';
+        userCountLabel.innerText = `${usersList.length} Accounts`;
+
+        usersList.forEach(u => {
+            const tr = document.createElement('tr');
+            tr.className = "border-b border-border/40 hover:bg-surface-container-lowest transition-colors font-body-sm text-sm";
+            
+            const avatarUrl = u.avatar || 'https://lh3.googleusercontent.com/aida-public/AB6AXuAJB3nF963ZDZN5AzByGsqb2MxVyIvYYJZPDV3NOPF900ug_3y-d7MEHM9IcmdVDLg62EThO7ZZgtVfPH2qBLypFdU6CntX3pU3T1JaCfwVtgGdlrtJC5dzHHTfJxSNG-UN1NvfxKBe1DzYgQaD3aqaZg3Xxnt5j4CGxyaLfpyjHJO3tUUkGQIBvHZZAZPScXVH5c1S1afsZtZtXFKb6SEtVWsYVchjtnhJNUrqnmceziBRB5_XQGZV4hDOih0mFzLsvnv-I80nDtU';
+            
+            tr.innerHTML = `
+                <td class="py-md px-xs flex items-center gap-sm">
+                    <img src="${avatarUrl}" alt="${u.name}" class="w-8 h-8 rounded-full object-cover border border-outline/10">
+                    <div>
+                        <p class="font-semibold text-ink leading-tight">${u.name}</p>
+                        <p class="text-[11px] text-ink-muted">${u.email}</p>
+                    </div>
+                </td>
+                <td class="py-md px-xs">
+                    <span class="px-sm py-base rounded font-data-label text-[10px] uppercase font-bold bg-primary/10 text-primary border border-primary/20">${u.role}</span>
+                </td>
+                <td class="py-md px-xs">
+                    <span class="text-xs font-semibold text-on-surface-variant">${u.clearance}</span>
+                </td>
+                <td class="py-md px-xs font-medium text-ink-muted text-xs">${u.title}</td>
+            `;
+            tableBody.appendChild(tr);
+        });
+    }
+
+    document.getElementById('create-user-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const email = document.getElementById('new-email').value.trim();
+        const password = document.getElementById('new-password').value;
+        const name = document.getElementById('new-name').value.trim();
+        const role = document.getElementById('new-role').value;
+        const clearance = document.getElementById('new-clearance').value;
+        const title = document.getElementById('new-title').value.trim();
+        const avatar = document.getElementById('new-avatar').value.trim() || null;
+
+        if (!email || !password || !name || !title) {
+            pgToast('Please fill out all required fields.', 'error');
+            return;
+        }
+
+        pgToast('Provisioning new credentials...', 'info', 1500);
+
+        if (isOffline) {
+            // Simulated local storage write
+            let localUsers = JSON.parse(localStorage.getItem('ASTRA_LOCAL_ACCOUNTS')) || PRESEEDED_ACCOUNTS;
+            
+            // Check existence
+            if (localUsers.some(u => u.email.toLowerCase() === email.toLowerCase())) {
+                pgToast('An account with this email already exists.', 'error');
+                return;
+            }
+
+            localUsers.push({ email, name, role, clearance, title, avatar });
+            localStorage.setItem('ASTRA_LOCAL_ACCOUNTS', JSON.stringify(localUsers));
+            pgToast('Simulated account provisioned locally!', 'success');
+            document.getElementById('create-user-form').reset();
+            syncClearanceLevel();
+            renderUsers(localUsers);
+        } else {
+            const apiBase = window.location.protocol === 'file:' ? 'http://127.0.0.1:8000' : '';
+            try {
+                const res = await fetch(`${apiBase}/api/users?requester_email=${encodeURIComponent(activeUser.email)}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password, name, role, clearance, title, avatar })
+                });
+
+                if (res.ok) {
+                    pgToast('Account created successfully in database!', 'success');
+                    document.getElementById('create-user-form').reset();
+                    syncClearanceLevel();
+                    loadAccounts();
+                } else {
+                    const data = await res.json();
+                    throw new Error(data.detail || 'HTTP ' + res.status);
+                }
+            } catch (err) {
+                console.error('Failed to create account:', err);
+                pgToast('Provisioning failed: ' + err.message, 'error');
+            }
+        }
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+        syncClearanceLevel();
+        loadAccounts();
+    });
+</script>
+<script src="js/sidebar.js"></script>
+<script>renderSidebar('accounts');</script>
+</body></html>
