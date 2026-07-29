@@ -220,6 +220,14 @@
         window.open(apiBase + '/api/reports/alerts' + queryFormat, '_blank');
         pgToast(filename + '.' + ext + ' downloaded from live database', 'success', 2500);
         return;
+      } else if (filename.toLowerCase().includes('asset') || filename.toLowerCase().includes('equipment')) {
+        window.open(apiBase + '/api/reports/assets' + queryFormat, '_blank');
+        pgToast(filename + '.' + ext + ' downloaded from live database', 'success', 2500);
+        return;
+      } else if (filename.toLowerCase().includes('part')) {
+        window.open(apiBase + '/api/reports/parts' + queryFormat, '_blank');
+        pgToast(filename + '.' + ext + ' downloaded from live database', 'success', 2500);
+        return;
       }
     }
 
@@ -227,10 +235,92 @@
     pgToast('Preparing ' + filename + '.' + ext + '…', 'info', 2000);
     setTimeout(function () {
       var content, mime;
-      if (ext === 'csv') {
-        content = 'Report,Generated,Status\n' + filename + ',' + new Date().toISOString().slice(0, 10) + ',Completed';
-        mime    = 'text/csv';
+      if (ext === 'csv' || ext === 'excel' || ext === 'xlsx') {
+        if (filename.toLowerCase().includes('asset') || filename.toLowerCase().includes('equipment')) {
+          var defaultAssets = [
+            { id: 'MTR-01', name: 'Conveyor Drive', location: 'Line 1', power_kw: 11, nominal_rpm: 1500, nominal_current: 22, latest_temperature: 48.5, latest_vibration: 0.42, health_index: 0.95, status: 'optimal' },
+            { id: 'MTR-02', name: 'Compressor', location: 'Utility', power_kw: 55, nominal_rpm: 2950, nominal_current: 98, latest_temperature: 55.0, latest_vibration: 0.65, health_index: 0.88, status: 'optimal' },
+            { id: 'MTR-03', name: 'Fan/Blower', location: 'Line 2', power_kw: 18.5, nominal_rpm: 1450, nominal_current: 35, latest_temperature: 72.0, latest_vibration: 2.10, health_index: 0.76, status: 'warning' },
+            { id: 'MTR-04', name: 'Pump', location: 'Utility', power_kw: 30, nominal_rpm: 1480, nominal_current: 58, latest_temperature: 88.0, latest_vibration: 4.85, health_index: 0.45, status: 'critical' },
+            { id: 'MTR-05', name: 'Mixer', location: 'Line 1', power_kw: 45, nominal_rpm: 980, nominal_current: 88, latest_temperature: 51.0, latest_vibration: 0.50, health_index: 0.92, status: 'optimal' },
+            { id: 'MTR-06', name: 'Spindle', location: 'Line 3', power_kw: 7.5, nominal_rpm: 3000, nominal_current: 15, latest_temperature: 42.0, latest_vibration: 0.35, health_index: 0.98, status: 'optimal' }
+          ];
+          var assets = (window._equipmentData && window._equipmentData.length) ? window._equipmentData : defaultAssets;
+          var csvLines = ['Asset ID,Asset Name,Location,Power (kW),Nominal RPM,Nominal Current (A),Latest Temp (C),Latest Vibration (mm/s),Health Index (%),Status'];
+          assets.forEach(function(a) {
+            var hVal = a.health_index !== undefined ? Math.round(a.health_index * 100) : 100;
+            var row = [
+              '"' + (a.id || '') + '"',
+              '"' + (a.name || '') + '"',
+              '"' + (a.location || '') + '"',
+              a.power_kw || 15,
+              a.nominal_rpm || 1450,
+              a.nominal_current || 38,
+              a.latest_temperature || 50,
+              a.latest_vibration || 0.4,
+              hVal + '%',
+              '"' + (a.status || 'optimal').toUpperCase() + '"'
+            ];
+            csvLines.push(row.join(','));
+          });
+          content = csvLines.join('\n');
+          mime    = 'text/csv';
+        } else if (filename.toLowerCase().includes('critical') || filename.toLowerCase().includes('alert') || filename.toLowerCase().includes('event')) {
+          var defaultAlerts = [
+            { asset_id: 'MTR-05', asset_name: 'Mixer', severity: 'HIGH_WARNING', title: 'Torque Peak — Below Normal', value: 5.0, unit: 'Nm', threshold: 120, minutes_ago: 4 },
+            { asset_id: 'MTR-04', asset_name: 'Pump', severity: 'CRITICAL', title: 'Average Rotation Speed — Abnormally High', value: 0.1, unit: 'RPM', threshold: 3000, minutes_ago: 4 },
+            { asset_id: 'MTR-01', asset_name: 'Conveyor Drive', severity: 'CRITICAL', title: 'Current-to-Speed Load Ratio — Below Normal', value: 1.2, unit: 'A', threshold: 22, minutes_ago: 4 }
+          ];
+          var alertList = (window._alertsData && window._alertsData.length) ? window._alertsData : defaultAlerts;
+          var csvLines = ['Alert ID,Asset ID,Asset Name,Severity,Event Description,Sensor Value,Unit,Threshold,Detected Time'];
+          alertList.forEach(function(a, idx) {
+            var row = [
+              '"ALT-' + (1001 + idx) + '"',
+              '"' + (a.asset_id || a.motor_id || 'MTR-01') + '"',
+              '"' + (a.asset_name || a.name || 'Equipment') + '"',
+              '"' + (a.severity || 'CRITICAL').toUpperCase() + '"',
+              '"' + (a.title || a.description || 'Anomalous condition') + '"',
+              a.value !== undefined ? a.value : 0.0,
+              '"' + (a.unit || '') + '"',
+              a.threshold !== undefined ? a.threshold : '-',
+              '"' + (a.minutes_ago ? a.minutes_ago + ' mins ago' : 'Recent') + '"'
+            ];
+            csvLines.push(row.join(','));
+          });
+          content = csvLines.join('\n');
+          mime    = 'text/csv';
+        } else if (filename.toLowerCase().includes('part')) {
+          var defaultParts = [
+            { id: 'MTR-101-OR21', name: 'Outer Race Bearing 21', asset: 'MTR-101 (Pasteurisation Motor)', category: 'Bearings', stock: 4, min_stock: 2, unit_cost: 245.00, supplier: 'SKF Bearings', status: 'AVAILABLE' },
+            { id: 'MTR-101-BLT14', name: 'Drive Belt 14mm Heavy-Duty', asset: 'MTR-01 (Conveyor Drive)', category: 'Transmission', stock: 12, min_stock: 5, unit_cost: 45.00, supplier: 'Gates Industrial', status: 'AVAILABLE' },
+            { id: 'PUMP-305-SEAL2', name: 'Mechanical Shaft Seal Sub-assembly', asset: 'PUMP-305 (Spray Dryer Pump)', category: 'Seals & Gaskets', stock: 1, min_stock: 2, unit_cost: 120.00, supplier: 'EagleBurgmann', status: 'LOW STOCK' },
+            { id: 'CENT-402-BRG03', name: 'Ceramic Hybrid Bearing Set', asset: 'C-402 (Centrifuge)', category: 'Bearings', stock: 2, min_stock: 1, unit_cost: 680.00, supplier: 'NSK Precision', status: 'CRITICAL REPLACEMENT' },
+            { id: 'MIX-101-SEAL1', name: 'Agitator Viton Lip Seal', asset: 'M-101 (Mixer Motor)', category: 'Seals & Gaskets', stock: 5, min_stock: 3, unit_cost: 85.00, supplier: 'Freudenberg', status: 'AVAILABLE' },
+            { id: 'COMP-204-FLT01', name: 'HEPA Air Intake Filter Element', asset: 'MTR-02 (Utility Compressor)', category: 'Filters', stock: 8, min_stock: 4, unit_cost: 35.00, supplier: 'Atlas Copco', status: 'AVAILABLE' }
+          ];
+          var csvLines = ['Part Number,Component Description,Target Asset,Category,In-Stock Qty,Min Stock Level,Unit Price (USD),Supplier OEM,Inventory Status'];
+          defaultParts.forEach(function(p) {
+            var row = [
+              '"' + p.id + '"',
+              '"' + p.name + '"',
+              '"' + p.asset + '"',
+              '"' + p.category + '"',
+              p.stock,
+              p.min_stock,
+              '$' + p.unit_cost.toFixed(2),
+              '"' + p.supplier + '"',
+              '"' + p.status + '"'
+            ];
+            csvLines.push(row.join(','));
+          });
+          content = csvLines.join('\n');
+          mime    = 'text/csv';
+        } else {
+          content = 'Report,Generated,Status\n' + filename + ',' + new Date().toISOString().slice(0, 10) + ',Completed';
+          mime    = 'text/csv';
+        }
       } else {
+
         // Construct a rich, mathematically valid 1-page PDF with complete industrial report sections
         var formattedTitle = 'PREDICTAGUARD INDUSTRIAL AI - ' + filename.replace(/_/g, ' ').toUpperCase();
         var dateStr = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: '2-digit' });
