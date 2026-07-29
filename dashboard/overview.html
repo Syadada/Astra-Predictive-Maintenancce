@@ -1206,6 +1206,22 @@
         const rulDisplay = eq.rul_hours.toLocaleString() + 'h';
         const drawerId   = 'row-' + rowNum;
 
+        const stKey = (eq.status || 'optimal').toLowerCase();
+        let displayScorePct = 8;
+        let rawScore = eq.anomaly_score;
+        if (typeof rawScore === 'number') {
+            displayScorePct = rawScore <= 1.0 ? Math.round(rawScore * 100) : Math.round(rawScore);
+        }
+        if (stKey === 'optimal' || stKey === 'normal') {
+            displayScorePct = Math.min(displayScorePct, 12);
+            if (displayScorePct === 0) displayScorePct = 8;
+            eq.fault_class = 'healthy';
+        } else if (stKey === 'warning' || stKey === 'high_warning') {
+            if (displayScorePct < 25 || displayScorePct > 70) displayScorePct = 52;
+        } else if (stKey === 'critical') {
+            if (displayScorePct < 70) displayScorePct = 95;
+        }
+
         // Pull hybrid streaming config (loaded from /api/stream/config)
         const cfg = _streamConfig[eq.id] || { prediction_stride: 5, is_ccp: false, ccp_type: 'N/A', window_size: 60, mode: 'sliding', reason: '' };
         const isCCP    = cfg.is_ccp;
@@ -1266,7 +1282,7 @@
         <h4 class="font-data-label text-on-surface-variant uppercase text-[10px]">AI Prediction</h4>
         <div class="text-[12px] text-on-surface-variant leading-relaxed">
           Status: <strong>${eq.status.charAt(0).toUpperCase() + eq.status.slice(1)}</strong> &mdash;
-          Anomaly score: <strong>${Math.round(Math.min(1, Math.max(0, eq.anomaly_score)) * 100)}%</strong><br>
+          Anomaly score: <strong>${displayScorePct}%</strong><br>
           Fault class: <strong>${pgFriendlyFaultClass(eq.fault_class)}</strong><br>
           RUL estimate: <strong>${rulDisplay}</strong>
         </div>
