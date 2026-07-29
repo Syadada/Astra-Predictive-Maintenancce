@@ -1328,6 +1328,8 @@
         ctx.fill();
     }
 
+    let _openDrawerId = null;
+
     // Override toggleXAI to also draw API sparklines
     const _origToggleXAI = typeof toggleXAI === 'function' ? toggleXAI : null;
     function toggleXAI(rowId) {
@@ -1336,11 +1338,14 @@
         document.querySelectorAll('.drawer-content').forEach(d => d.classList.remove('open'));
         if (!isOpen && drawer) {
             drawer.classList.add('open');
+            _openDrawerId = rowId;
             // Draw sparkline if live data is available
             const rowNum = parseInt(rowId.replace('row-', ''));
             const eq = _lastEquipmentData && _lastEquipmentData[rowNum - 1];
             if (eq && eq.sensor_sparkline) {
+                // Draw initially (50ms) and again after open transition completes (450ms) to ensure correct dimension calculations
                 setTimeout(() => _drawSparklineFromData('canvas-live-' + rowNum, eq.sensor_sparkline), 50);
+                setTimeout(() => _drawSparklineFromData('canvas-live-' + rowNum, eq.sensor_sparkline), 450);
             } else if (_origToggleXAI) {
                 // Fall back to original sparkline logic for static HTML rows
                 const isAnomaly = rowId === 'row-2' || rowId === 'row-4';
@@ -1351,6 +1356,8 @@
                     drawSparkline(canvasId, data, color);
                 }, 50);
             }
+        } else {
+            _openDrawerId = null;
         }
     }
 
@@ -1381,6 +1388,20 @@
                 tbody.innerHTML = data.equipment
                     .map((eq, idx) => _buildEquipmentRow(eq, idx + 1))
                     .join('');
+
+                // Preserve open drawer state and update sparkline immediately
+                if (_openDrawerId) {
+                    const drawer = document.getElementById(`${_openDrawerId}-drawer`);
+                    if (drawer) {
+                        drawer.classList.add('open');
+                        const rowNum = parseInt(_openDrawerId.replace('row-', ''));
+                        const eq = _lastEquipmentData && _lastEquipmentData[rowNum - 1];
+                        if (eq && eq.sensor_sparkline) {
+                            // Since drawer is already open, dimensions resolve correctly immediately
+                            _drawSparklineFromData('canvas-live-' + rowNum, eq.sensor_sparkline);
+                        }
+                    }
+                }
             }
         } catch (err) {
             console.warn('Dashboard API load failed:', err.message);
