@@ -95,8 +95,8 @@ class InferenceOrchestrator:
             try:
                 errors = self.model_a1.reconstruction_error(seq_tensor)
                 recon_err = float(errors[0].item())
-                # Anomaly score is ratio of reconstruction error to threshold
-                results['anomaly_score'] = recon_err / (self.threshold_a1 + 1e-8)
+                # Anomaly score is ratio of reconstruction error to threshold, capped at 1.0 (100% max)
+                results['anomaly_score'] = min(1.0, float(recon_err / (self.threshold_a1 + 1e-8)))
                 results['is_anomaly'] = bool(recon_err > self.threshold_a1)
             except Exception as e:
                 print(f"[Inference] Model A1 execution failed: {e}")

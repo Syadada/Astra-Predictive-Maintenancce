@@ -1585,9 +1585,10 @@
         if (resp.prediction_triggered && resp.prediction) {
             const p = resp.prediction;
             const risk = p.risk_level;
+            const scorePct = Math.min(100, Math.round(p.anomaly_score <= 1.0 ? p.anomaly_score * 100 : p.anomaly_score));
             
             // Show toast message to audibly alert user with synthesized chime sound
-            pgToast(`Stream Prediction: ${pgFriendlyFaultClass(p.fault_class)} (Score: ${Math.round(p.anomaly_score * 100)}%)`, risk === 'critical' ? 'error' : (risk === 'elevated' ? 'warning' : 'success'), 4000);
+            pgToast(`Stream Prediction: ${pgFriendlyFaultClass(p.fault_class)} (Score: ${scorePct}%)`, risk === 'critical' ? 'error' : (risk === 'elevated' ? 'warning' : 'success'), 4000);
 
             const rStyle = _TREND_STYLE[risk] || _TREND_STYLE.normal;
             const card = document.getElementById('stream-pred-card');
@@ -1597,7 +1598,7 @@
                 card.innerHTML = `
                   <p class="font-bold text-sm">${pgFriendlyFaultClass(p.fault_class)}</p>
                   <div class="flex gap-md text-[11px]">
-                    <span>Score: <strong>${Math.round(p.anomaly_score * 100)}%</strong></span>
+                    <span>Score: <strong>${scorePct}%</strong></span>
                     <span>RUL: <strong>${p.rul_hours}h</strong></span>
                   </div>
                   <p class="text-[11px] text-on-surface-variant">${p.recommendation}</p>`;

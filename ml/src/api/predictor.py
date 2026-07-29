@@ -201,6 +201,8 @@ class Predictor:
             if fault_class == "Normal_1":
                 fault_class = "OR_014_6_1"  # Force a warning class if classified as normal
 
+        anomaly_score = min(1.0, max(0.0, float(anomaly_score)))
+
         # --- CMAPSS 30×14 window for RUL ---
         deg = np.clip((rms - 0.188) / (0.60 - 0.188), 0.0, 1.0)
         sc  = self.cmapss_scaler
