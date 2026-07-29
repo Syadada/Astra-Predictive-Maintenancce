@@ -186,52 +186,60 @@
     <div class="slide flex-col justify-center space-y-6" id="slide-4">
       <div class="border-b border-gray-800 pb-4">
         <span class="text-xs font-mono text-emerald-400 uppercase tracking-widest">SLIDE 04</span>
-        <h2 class="text-3xl font-bold text-white">Dataset Overview</h2>
-        <p class="text-xs text-gray-400">Studi 4 dataset standar industri untuk mencakup seluruh aspek Predictive Maintenance</p>
+        <h2 class="text-3xl font-bold text-white">Dataset & Target Industrial Machine Overview</h2>
+        <p class="text-xs text-gray-400">Pemetaan 4 dataset terstandar terhadap jenis-jenis mesin industri utama pabrik ASTRA</p>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div class="glass-card p-5 rounded-2xl flex items-start gap-4">
+        <div class="glass-card p-5 rounded-2xl flex items-start gap-4 border-l-4 border-purple-500">
           <div class="p-3 bg-purple-500/20 rounded-xl text-purple-400 font-bold">01</div>
-          <div>
+          <div class="space-y-1">
             <div class="flex items-center gap-2">
               <h3 class="text-base font-bold text-white">Paderborn Dataset</h3>
-              <span class="text-[10px] bg-purple-950 border border-purple-800 text-purple-300 px-2 py-0.5 rounded">Induction Motor</span>
+              <span class="text-[10px] bg-purple-950 border border-purple-800 text-purple-300 px-2 py-0.5 rounded font-mono">Motor Induksi 1.5 kW</span>
             </div>
-            <p class="text-xs text-gray-300 mt-1">Digunakan untuk <strong>Fault Classification</strong> pada motor induksi dengan ragam sinyal arus stator dan getaran.</p>
+            <p class="text-xs font-semibold text-purple-400">Penggerak Utama Conveyor Line & Pompa Industri Astra</p>
+            <p class="text-[11px] text-gray-300"><strong>Fitur:</strong> Arus Stator Phase A/B (64kHz), Vibration RMS, Kurtosis, THD.</p>
+            <p class="text-[11px] text-gray-400"><strong>Alasan:</strong> Motor induksi adalah penggerak utama 80% mesin pabrik ASTRA; MCSA memungkinkan deteksi keausan via sinyal listrik tanpa sensor fisik panas.</p>
           </div>
         </div>
 
-        <div class="glass-card p-5 rounded-2xl flex items-start gap-4">
+        <div class="glass-card p-5 rounded-2xl flex items-start gap-4 border-l-4 border-blue-500">
           <div class="p-3 bg-blue-500/20 rounded-xl text-blue-400 font-bold">02</div>
-          <div>
+          <div class="space-y-1">
             <div class="flex items-center gap-2">
               <h3 class="text-base font-bold text-white">CWRU Dataset</h3>
-              <span class="text-[10px] bg-blue-950 border border-blue-800 text-blue-300 px-2 py-0.5 rounded">Bearing Test Motor</span>
+              <span class="text-[10px] bg-blue-950 border border-blue-800 text-blue-300 px-2 py-0.5 rounded font-mono">Bearing Motor 2 HP</span>
             </div>
-            <p class="text-xs text-gray-300 mt-1">Digunakan untuk <strong>Bearing Fault Diagnosis</strong> tingkat tinggi (Inner Race, Outer Race, Ball fault).</p>
+            <p class="text-xs font-semibold text-blue-400">Bearing System Conveyor & Gearbox Transmisi</p>
+            <p class="text-[11px] text-gray-300"><strong>Fitur:</strong> Getaran High-Freq (12k/48kHz), FFT Envelope, BPFO/BPFI.</p>
+            <p class="text-[11px] text-gray-400"><strong>Alasan:</strong> Kerusakan bearing menyumbang 45%-50% unplanned downtime conveyor; CWRU paling presisi untuk 10 kelas cacat.</p>
           </div>
         </div>
 
-        <div class="glass-card p-5 rounded-2xl flex items-start gap-4">
+        <div class="glass-card p-5 rounded-2xl flex items-start gap-4 border-l-4 border-amber-500">
           <div class="p-3 bg-amber-500/20 rounded-xl text-amber-400 font-bold">03</div>
-          <div>
+          <div class="space-y-1">
             <div class="flex items-center gap-2">
               <h3 class="text-base font-bold text-white">NASA IMS Dataset</h3>
-              <span class="text-[10px] bg-amber-950 border border-amber-800 text-amber-300 px-2 py-0.5 rounded">Bearing Test Rig</span>
+              <span class="text-[10px] bg-amber-950 border border-amber-800 text-amber-300 px-2 py-0.5 rounded font-mono">Heavy Shaft Rig</span>
             </div>
-            <p class="text-xs text-gray-300 mt-1">Digunakan untuk mengamati <strong>Health Degradation</strong> bantalan selama 35 hari secara kontinyu hingga rusak total.</p>
+            <p class="text-xs font-semibold text-amber-400">Poros Berputar Conveyor Beban Berat Astra</p>
+            <p class="text-[11px] text-gray-300"><strong>Fitur:</strong> Vibration Acceleration Trend, Crest Factor, Health Index (0-100%).</p>
+            <p class="text-[11px] text-gray-400"><strong>Alasan:</strong> Memodelkan degradasi alami 35 hari run-to-failure untuk pantau penurunan kondisi bertahap mingguan.</p>
           </div>
         </div>
 
-        <div class="glass-card p-5 rounded-2xl flex items-start gap-4">
+        <div class="glass-card p-5 rounded-2xl flex items-start gap-4 border-l-4 border-emerald-500">
           <div class="p-3 bg-emerald-500/20 rounded-xl text-emerald-400 font-bold">04</div>
-          <div>
+          <div class="space-y-1">
             <div class="flex items-center gap-2">
               <h3 class="text-base font-bold text-white">NASA CMAPSS</h3>
-              <span class="text-[10px] bg-emerald-950 border border-emerald-800 text-emerald-300 px-2 py-0.5 rounded">Turbofan Engine</span>
+              <span class="text-[10px] bg-emerald-950 border border-emerald-800 text-emerald-300 px-2 py-0.5 rounded font-mono">High-Cycle Rig</span>
             </div>
-            <p class="text-xs text-gray-300 mt-1">Digunakan untuk memprediksi <strong>Remaining Useful Life (RUL)</strong> dengan masukan multi-sensor siklus tinggi.</p>
+            <p class="text-xs font-semibold text-emerald-400">Mesin Rotasi Siklus Tinggi & Beban Variabel</p>
+            <p class="text-[11px] text-gray-300"><strong>Fitur:</strong> 21 Channel Telemetry, Rolling Mean (w=30), Trend Deviation.</p>
+            <p class="text-[11px] text-gray-400"><strong>Alasan:</strong> Memberikan estimasi kuantitatif sisa waktu operasi / RUL (Jam/Siklus) untuk perencanaan jadwal maintenance.</p>
           </div>
         </div>
       </div>
@@ -241,29 +249,24 @@
     <div class="slide flex-col justify-center space-y-6" id="slide-5">
       <div class="border-b border-gray-800 pb-4">
         <span class="text-xs font-mono text-purple-400 uppercase tracking-widest">SLIDE 05</span>
-        <h2 class="text-3xl font-bold text-white">Paderborn University Dataset</h2>
+        <h2 class="text-3xl font-bold text-white">Paderborn Dataset — Motor Induksi (Conveyor Prime Mover)</h2>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div class="glass-card p-4 rounded-xl space-y-2">
-          <p class="text-[10px] font-mono text-purple-400 uppercase">Target Machine</p>
-          <h3 class="text-sm font-bold text-white">Induction Motor (1.5 kW)</h3>
-          <p class="text-xs text-gray-400">Motor induksi beban variabel dengan kontrol frekuensi inverter.</p>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="glass-card p-6 rounded-2xl space-y-3 border-t-2 border-purple-500">
+          <p class="text-xs font-mono text-purple-400 uppercase font-bold">Target Mesin Industri Astra</p>
+          <h3 class="text-lg font-bold text-white">Induction Motor 1.5 kW</h3>
+          <p class="text-xs text-gray-300 leading-relaxed">Motor induksi beban variabel yang merupakan penggerak utama (prime mover) pada Conveyor Line, Pompa Industri, dan Kipas Astra.</p>
         </div>
-        <div class="glass-card p-4 rounded-xl space-y-2">
-          <p class="text-[10px] font-mono text-purple-400 uppercase">Sensors Available</p>
-          <h3 class="text-sm font-bold text-white">Phase Currents & Vibration</h3>
-          <p class="text-xs text-gray-400">Arus stator 64kHz, akselerometer getaran, temperatur, dan kecepatan putar.</p>
+        <div class="glass-card p-6 rounded-2xl space-y-3 border-t-2 border-purple-500">
+          <p class="text-xs font-mono text-purple-400 uppercase font-bold">Fitur Yang Diekstrak (25 Fitur)</p>
+          <h3 class="text-lg font-bold text-white">Arus Stator & Vibration</h3>
+          <p class="text-xs text-gray-300 leading-relaxed">Arus Stator Phase A/B (64kHz), Total Harmonic Distortion (THD), Vibration RMS, Kurtosis, Crest Factor, Energy Spectrum Bands.</p>
         </div>
-        <div class="glass-card p-4 rounded-xl space-y-2">
-          <p class="text-[10px] font-mono text-purple-400 uppercase">Fault Types</p>
-          <h3 class="text-sm font-bold text-white">Real Accelerated Damage</h3>
-          <p class="text-xs text-gray-400">Kerusakan alami (pitting, fatigue) pada inner race dan outer race.</p>
-        </div>
-        <div class="glass-card p-4 rounded-xl space-y-2">
-          <p class="text-[10px] font-mono text-purple-400 uppercase">Features Extracted</p>
-          <h3 class="text-sm font-bold text-white">25 Time & Freq Features</h3>
-          <p class="text-xs text-gray-400">RMS, Kurtosis, Crest Factor, Energy Spectrum, Peak-to-Peak.</p>
+        <div class="glass-card p-6 rounded-2xl space-y-3 border-t-2 border-purple-500">
+          <p class="text-xs font-mono text-purple-400 uppercase font-bold">Alasan Penggunaan Dataset</p>
+          <h3 class="text-lg font-bold text-white">MCSA Electrical Sensing</h3>
+          <p class="text-xs text-gray-300 leading-relaxed">80% mesin pabrik Astra memakai motor induksi. MCSA memungkinkan deteksi dini keausan mekanis & listrik via sinyal arus tanpa tempel sensor fisik pada area panas.</p>
         </div>
       </div>
     </div>
@@ -272,29 +275,24 @@
     <div class="slide flex-col justify-center space-y-6" id="slide-6">
       <div class="border-b border-gray-800 pb-4">
         <span class="text-xs font-mono text-blue-400 uppercase tracking-widest">SLIDE 06</span>
-        <h2 class="text-3xl font-bold text-white">CWRU Bearing Dataset</h2>
+        <h2 class="text-3xl font-bold text-white">CWRU Dataset — Bearing Rig (Conveyor & Gearbox Bearings)</h2>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div class="glass-card p-4 rounded-xl space-y-2">
-          <p class="text-[10px] font-mono text-blue-400 uppercase">Target Machine</p>
-          <h3 class="text-sm font-bold text-white">Bearing Test Motor</h3>
-          <p class="text-xs text-gray-400">Motor penguji 2 HP dengan sensor getaran ujung drive-end & fan-end.</p>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="glass-card p-6 rounded-2xl space-y-3 border-t-2 border-blue-500">
+          <p class="text-xs font-mono text-blue-400 uppercase font-bold">Target Mesin Industri Astra</p>
+          <h3 class="text-lg font-bold text-white">Bearing Conveyor & Gearbox</h3>
+          <p class="text-xs text-gray-300 leading-relaxed">Drive-End & Fan-End Bearing Motor 2 HP yang digunakan pada sistem conveyor line dan gearbox transmisi Astra.</p>
         </div>
-        <div class="glass-card p-4 rounded-xl space-y-2">
-          <p class="text-[10px] font-mono text-blue-400 uppercase">Bearing Fault Types</p>
-          <h3 class="text-sm font-bold text-white">Single-Point Defect</h3>
-          <p class="text-xs text-gray-400">Ball Fault, Inner Race Fault, Outer Race Fault (diameter 0.007"-0.021").</p>
+        <div class="glass-card p-6 rounded-2xl space-y-3 border-t-2 border-blue-500">
+          <p class="text-xs font-mono text-blue-400 uppercase font-bold">Fitur Yang Diekstrak</p>
+          <h3 class="text-lg font-bold text-white">FFT Envelope & Frequencies</h3>
+          <p class="text-xs text-gray-300 leading-relaxed">Getaran Akselerasi Frekuensi Tinggi (12k/48k Hz), Envelope FFT Spectrum, BPFO, BPFI, BSF, FTF, Spectral Kurtosis.</p>
         </div>
-        <div class="glass-card p-4 rounded-xl space-y-2">
-          <p class="text-[10px] font-mono text-blue-400 uppercase">Available Features</p>
-          <h3 class="text-sm font-bold text-white">Accelerometers (12k/48k Hz)</h3>
-          <p class="text-xs text-gray-400">Sinyal akselerasi aksial & radial frekuensi tinggi.</p>
-        </div>
-        <div class="glass-card p-4 rounded-xl space-y-2">
-          <p class="text-[10px] font-mono text-blue-400 uppercase">Purpose in MaintenX</p>
-          <h3 class="text-sm font-bold text-white">Precision Fault Classifier</h3>
-          <p class="text-xs text-gray-400">Digabungkan dengan Paderborn untuk memperkuat akurasi diagnosis 10 kelas spesifik.</p>
+        <div class="glass-card p-6 rounded-2xl space-y-3 border-t-2 border-blue-500">
+          <p class="text-xs font-mono text-blue-400 uppercase font-bold">Alasan Penggunaan Dataset</p>
+          <h3 class="text-lg font-bold text-white">Primary Failure Cause (#1)</h3>
+          <p class="text-xs text-gray-300 leading-relaxed">Kerusakan bearing menyumbang 45%-50% unplanned downtime conveyor Astra. CWRU paling presisi untuk klasifikasi 10 kelas titik cacat (Inner/Outer Race, Ball).</p>
         </div>
       </div>
     </div>
@@ -303,24 +301,24 @@
     <div class="slide flex-col justify-center space-y-6" id="slide-7">
       <div class="border-b border-gray-800 pb-4">
         <span class="text-xs font-mono text-amber-400 uppercase tracking-widest">SLIDE 07</span>
-        <h2 class="text-3xl font-bold text-white">NASA IMS (Intelligent Maintenance Systems)</h2>
+        <h2 class="text-3xl font-bold text-white">NASA IMS Dataset — Degradation (Heavy Conveyor Shaft)</h2>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div class="glass-card p-6 rounded-2xl space-y-3">
-          <span class="material-symbols-outlined text-amber-400 text-3xl">history_toggle_off</span>
-          <h3 class="text-base font-bold text-white">Run-to-Failure Dataset</h3>
-          <p class="text-xs text-gray-300 leading-relaxed">Pengujian kontinyu selama 35 hari berturut-turut tanpa henti hingga bantalan mengalami kegagalan total struktural.</p>
+        <div class="glass-card p-6 rounded-2xl space-y-3 border-t-2 border-amber-500">
+          <p class="text-xs font-mono text-amber-400 uppercase font-bold">Target Mesin Industri Astra</p>
+          <h3 class="text-lg font-bold text-white">Heavy Conveyor Shaft Rig</h3>
+          <p class="text-xs text-gray-300 leading-relaxed">Poros berputar conveyor beban berat Astra yang beroperasi dengan beban radial kontinyu.</p>
         </div>
-        <div class="glass-card p-6 rounded-2xl space-y-3">
-          <span class="material-symbols-outlined text-amber-400 text-3xl">trending_down</span>
-          <h3 class="text-base font-bold text-white">Bearing Degradation Curve</h3>
-          <p class="text-xs text-gray-300 leading-relaxed">Merekam perubahan mikro dari kondisi optimal, pemulaan mikro-cracking, hingga kenaikan energi RMS pada fase akhir.</p>
+        <div class="glass-card p-6 rounded-2xl space-y-3 border-t-2 border-amber-500">
+          <p class="text-xs font-mono text-amber-400 uppercase font-bold">Fitur Yang Diekstrak</p>
+          <h3 class="text-lg font-bold text-white">RMS Trend & Health Index</h3>
+          <p class="text-xs text-gray-300 leading-relaxed">Getaran Frekuensi Tinggi (20kHz), RMS Acceleration Trajectory, Crest Factor Evolution, Health Index Score (skala 0% s/d 100%).</p>
         </div>
-        <div class="glass-card p-6 rounded-2xl space-y-3">
-          <span class="material-symbols-outlined text-amber-400 text-3xl">monitor_heart</span>
-          <h3 class="text-base font-bold text-white">Health Monitoring Baseline</h3>
-          <p class="text-xs text-gray-300 leading-relaxed">Menjadi baseline perhitungan Health Index (0% - 100%) pada dashboard untuk mendeteksi keausan dini.</p>
+        <div class="glass-card p-6 rounded-2xl space-y-3 border-t-2 border-amber-500">
+          <p class="text-xs font-mono text-amber-400 uppercase font-bold">Alasan Penggunaan Dataset</p>
+          <h3 class="text-lg font-bold text-white">Gradual Degradation Tracking</h3>
+          <p class="text-xs text-gray-300 leading-relaxed">Eksperimen 35 hari run-to-failure. Astra membutuhkan pemantauan penurunan kondisi bertahap (Health Index) agar dapat merencanakan stok spare part.</p>
         </div>
       </div>
     </div>
@@ -329,22 +327,22 @@
     <div class="slide flex-col justify-center space-y-6" id="slide-8">
       <div class="border-b border-gray-800 pb-4">
         <span class="text-xs font-mono text-emerald-400 uppercase tracking-widest">SLIDE 08</span>
-        <h2 class="text-3xl font-bold text-white">NASA CMAPSS & Multi-Dataset Harmonization</h2>
+        <h2 class="text-3xl font-bold text-white">NASA CMAPSS Dataset — Turbofan Engine & Harmonization</h2>
       </div>
 
       <!-- Part 1: CMAPSS Overview -->
       <div class="grid grid-cols-3 gap-4">
         <div class="glass-card p-4 rounded-xl text-center">
-          <p class="text-[10px] font-mono text-emerald-400 uppercase">Core Capability</p>
-          <p class="text-sm font-bold text-white mt-1">Remaining Useful Life (RUL)</p>
+          <p class="text-[10px] font-mono text-emerald-400 uppercase">Target Mesin Astra</p>
+          <p class="text-xs font-bold text-white mt-1">Mesin Rotasi Siklus Tinggi</p>
         </div>
         <div class="glass-card p-4 rounded-xl text-center">
-          <p class="text-[10px] font-mono text-emerald-400 uppercase">Sensor Telemetry</p>
-          <p class="text-sm font-bold text-white mt-1">21 Multi-Sensor Channels</p>
+          <p class="text-[10px] font-mono text-emerald-400 uppercase">Fitur Yang Diekstrak</p>
+          <p class="text-xs font-bold text-white mt-1">21 Telemetry & Rolling Stats</p>
         </div>
         <div class="glass-card p-4 rounded-xl text-center">
-          <p class="text-[10px] font-mono text-emerald-400 uppercase">Operational Mode</p>
-          <p class="text-sm font-bold text-white mt-1">High-Altitude Sliding Windows</p>
+          <p class="text-[10px] font-mono text-emerald-400 uppercase">Alasan Penggunaan</p>
+          <p class="text-xs font-bold text-white mt-1">RUL Prediction (Jam/Hari)</p>
         </div>
       </div>
 
@@ -786,11 +784,11 @@
       1: "Selamat pagi jajaran manajemen ASTRA Industrial Operations. Hari ini tim Solution Architect kami mempresentasikan MaintenX - platform Predictive Maintenance berbasis AI yang dirancang untuk mendeteksi keausan komponen secara real-time sebelum terjadi kerusakan fatal.",
       2: "Project ini dibuat karena unplanned downtime pada motor induksi pabrik sangat mahal. Masalah utamanya adalah kegagalan mekanis yang mendadak. Solusi MaintenX menghasilkan rekomendasi maintenance otomatis beserta estimasi sisa umur komponen (RUL).",
       3: "Saat ini pada tahap PoC Baseline, kami belum terhubung langsung ke sensor dan database Astra, melainkan menggunakan dataset industri terbuka sebagai baseline. Ketika nantinya diimplementasikan ke Astra, arsitektur pipeline AI tetap sama - hanya sumber datanya yang beralih ke sensor Astra.",
-      4: "Kami menggunakan empat dataset publik yaitu Paderborn, CWRU, NASA IMS, dan NASA CMAPSS. Mengapa empat? Karena tidak ada satu dataset tunggal yang memenuhi seluruh kebutuhan predictive maintenance secara lengkap.",
-      5: "Paderborn Dataset berfokus pada motor induksi 1.5 kW. Kami mengesktrak 25 fitur sinyal domain waktu dan frekuensi untuk klasifikasi jenis kerusakan awal.",
-      6: "CWRU Dataset berfokus pada keretakan spesifik bearing (Ball, Inner Race, Outer Race). Data ini digabungkan dengan Paderborn untuk memperkuat akurasi diagnosis 10 kelas spesifik.",
-      7: "NASA IMS adalah dataset run-to-failure selama 35 hari berturut-turut hingga bearing rusak total. Kami memanfaatkannya untuk memodelkan Kurva Degradasi dan Health Index (0-100%).",
-      8: "NASA CMAPSS digunakan khusus untuk estimasi Remaining Useful Life (RUL). Karena seluruh dataset memiliki struktur berbeda, kami melakukan Dataset Harmonization dengan memetakan semuanya ke satu tabel standar raw_sensor_data.",
+      4: "Kami memetakan 4 dataset terstandar ini secara spesifik terhadap jenis-jenis mesin industri utama di pabrik ASTRA: Paderborn untuk Motor Induksi, CWRU untuk Bearing Conveyor & Gearbox, NASA IMS untuk Poros Conveyor Beban Berat, dan NASA CMAPSS untuk Mesin Rotasi Siklus Tinggi (RUL).",
+      5: "Dataset Paderborn berfokus pada Motor Induksi 1.5 kW yang merupakan penggerak utama conveyor line Astra. Kami mengekstrak 25 fitur arus stator dan getaran. Keunggulannya, kita dapat mendeteksi keausan mekanis melalui sinyal listrik (MCSA) tanpa harus menempelkan sensor fisik pada area motor yang panas atau sulit dijangkau.",
+      6: "CWRU Dataset berfokus khusus pada Bearing Conveyor dan Gearbox. Mengapa bearing sangat krusial? Karena kerusakan bearing menyumbang hampir 50% dari total unplanned downtime pada sistem conveyor pabrik. CWRU memberikan data terkalibrasi paling presisi untuk mengidentifikasi letak persis kerusakan pada inner race, outer race, maupun bola bearing.",
+      7: "NASA IMS merekam proses kerusakan alami bearing pada poros conveyor beban berat selama 35 hari berturut-turut hingga rusak total. Dataset ini kami gunakan untuk membuat kurva Health Index (100% hingga 0%) pada dashboard agar tim maintenance Astra dapat melihat degradasi mesin secara gradual minggu demi minggu.",
+      8: "NASA CMAPSS digunakan khusus untuk menghitung sisa umur komponen (RUL) dalam satuan jam/hari. Selanjutnya, seluruh 4 dataset dipetakan ke 1 tabel standar raw_sensor_data. Jika suatu dataset tidak memiliki parameter tertentu (misal: torque), nilainya diisi NULL. Struktur ini menjamin bahwa saat nanti Astra menghubungkan sensor IoT fisiknya, yang berubah hanyalah kolom source_dataset menjadi astra_sensor.",
       9: "Ini adalah Entity Relationship Diagram (ERD). Data mentah mengalir dari raw_sensor_data, dibersihkan ke clean_sensor_data, diekstrak menjadi feature_dataset, lalu diprediksi oleh AI dan disimpan di alerts_history.",
       10: "General System Flow bekerja melalui 3 pipeline utama: Ingestion Stream, Cleaning Engine yang berjalan setiap 30 detik (Pandas & SQLAlchemy), serta Feature Engineering & AI Model Scheduler yang berjalan setiap 5 menit.",
       11: "Terdapat tiga model AI yang bekerja secara berurutan (Cascade Multi-Stage AI Pipeline): Model A1 untuk Anomaly Detection, Model A2 untuk Fault Classification, dan Model B untuk RUL Estimation.",
@@ -807,10 +805,10 @@
       "1. Title & Team",
       "2. Project Overview",
       "3. Project Limitation (PoC vs Astra)",
-      "4. Dataset Overview",
-      "5. Paderborn Dataset",
-      "6. CWRU Dataset",
-      "7. NASA IMS Dataset",
+      "4. Dataset & Target Machine Overview",
+      "5. Paderborn Dataset (Motor Induksi)",
+      "6. CWRU Dataset (Bearing Rig)",
+      "7. NASA IMS Dataset (Heavy Shaft)",
       "8. NASA CMAPSS & Harmonization",
       "9. ERD (Database Diagram)",
       "10. General System Flow",

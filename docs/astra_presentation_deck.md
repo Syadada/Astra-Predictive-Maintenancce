@@ -3,7 +3,7 @@
 
 > [!NOTE]
 > **Alur Presentasi Solution Architect:**
-> Problem → Limitation → Dataset → Database → Data Pipeline → AI Models → Decision Engine → Performance → Dashboard Demo → Q&A
+> Problem → Limitation → Dataset & Target Machine → Database → Data Pipeline → AI Models → Decision Engine → Performance → Dashboard Demo → Q&A
 
 ---
 
@@ -12,11 +12,11 @@
 1. [Slide 1: Title & Introduction](#slide-1-title--introduction)
 2. [Slide 2: Project Overview](#slide-2-project-overview)
 3. [Slide 3: Project Limitation (PoC Baseline vs Future Astra)](#slide-3-project-limitation-poc-baseline-vs-future-astra)
-4. [Slide 4: Dataset Overview](#slide-4-dataset-overview)
-5. [Slide 5: Paderborn Dataset Details](#slide-5-paderborn-dataset-details)
-6. [Slide 6: CWRU Dataset Details](#slide-6-cwru-dataset-details)
-7. [Slide 7: NASA IMS Dataset (Health Degradation)](#slide-7-nasa-ims-dataset-health-degradation)
-8. [Slide 8: NASA CMAPSS & Multi-Dataset Harmonization](#slide-8-nasa-cmapss--multi-dataset-harmonization)
+4. [Slide 4: Dataset & Target Industrial Machine Overview](#slide-4-dataset--target-industrial-machine-overview)
+5. [Slide 5: Paderborn Dataset — Motor Induksi (Conveyor Prime Mover)](#slide-5-paderborn-dataset--motor-induksi-conveyor-prime-mover)
+6. [Slide 6: CWRU Dataset — Bearing Test Rig (Conveyor & Gearbox Bearings)](#slide-6-cwru-dataset--bearing-test-rig-conveyor--gearbox-bearings)
+7. [Slide 7: NASA IMS Dataset — Bearing Degradation (Heavy Conveyor Shaft)](#slide-7-nasa-ims-dataset--bearing-degradation-heavy-conveyor-shaft)
+8. [Slide 8: NASA CMAPSS Dataset — Turbofan Engine (High-Cycle Machinery) & Harmonization](#slide-8-nasa-cmapss-dataset--turbofan-engine-high-cycle-machinery--harmonization)
 9. [Slide 9: Database Entity Relationship Diagram (ERD)](#slide-9-database-entity-relationship-diagram-erd)
 10. [Slide 10: General System Flow & Execution Pipelines](#slide-10-general-system-flow--execution-pipelines)
 11. [Slide 11: AI Models Cascade Architecture](#slide-11-ai-models-cascade-architecture)
@@ -79,82 +79,89 @@ Induction Motor ──► Sensor Data ──► AI Analysis ──► Maintenanc
 
 ---
 
-### Slide 4: Dataset Overview
+### Slide 4: Dataset & Target Industrial Machine Overview
 
 #### 📄 Slide Content
 
-| Dataset | Target Machine | Purpose in MaintenX |
-| :--- | :--- | :--- |
-| **Paderborn** | Induction Motor (1.5 kW) | Fault Classification (Stator Current & Vibration) |
-| **CWRU** | Bearing Test Motor (2 HP) | High-Precision Bearing Fault Diagnosis |
-| **NASA IMS** | Bearing Test Rig | Health Degradation & Health Index Baseline |
-| **NASA CMAPSS** | Turbofan Engine | Remaining Useful Life (RUL) Prediction |
+| Dataset | Target Mesin Industri Astra | Fitur Utama Yang Diekstrak | Alasan Penggunaan Dataset |
+| :--- | :--- | :--- | :--- |
+| **Paderborn** | **Motor Induksi 1.5 kW** (Penggerak Utama Conveyor Line & Pompa) | Arus Stator 2-Fasa (64kHz), Vibration RMS, Kurtosis, THD | Motor induksi adalah penggerak utama 80% mesin pabrik ASTRA; MCSA memungkinkan deteksi dini via listrik. |
+| **CWRU** | **Bearing Motor 2 HP** (Bearing Conveyor, Gearbox & Transmisi) | Sinyal Getaran Frekuensi Tinggi (12k/48k Hz), FFT Envelope, BPFO/BPFI | Kerusakan bearing adalah penyebab #1 unplanned downtime conveyor (45%-50%); CWRU paling presisi untuk 10 kelas cacat. |
+| **NASA IMS** | **Heavy Rotating Shaft Rig** (Poros Berputar Conveyor Beban Berat) | Vibration Acceleration Trend, Crest Factor, Health Index (0-100%) | Memodelkan degradasi berbulan-bulan (run-to-failure 35 hari) untuk prediksi tren keausan sebelum rusak total. |
+| **NASA CMAPSS** | **Turbofan / High-Cycle Rig** (Mesin Rotasi Siklus Tinggi & Beban Variabel) | 21 Sensor Telemetri, Rolling Mean (w=30), Trend Deviation | Memberikan estimasi kuantitatif sisa waktu operasi / RUL (Jam/Siklus) untuk perencanaan jadwal maintenance. |
 
 #### 🗣️ Yang Dijelaskan (Speaker Script)
-> *"Kami menggabungkan studi dari empat dataset industri terkemuka. Mengapa menggunakan 4 dataset? Karena **tidak ada satu dataset tunggal di dunia yang memenuhi seluruh kebutuhan predictive maintenance**.*
-> *Paderborn memberikan karakteristik motor induksi, CWRU mendiagnosis keretakan spesifik bearing, NASA IMS memodelkan degradasi berbulan-bulan hingga rusak total, dan NASA CMAPSS memodelkan perkiraan sisa umur (RUL)."*
+> *"Kami memetakan 4 dataset terstandar ini secara spesifik terhadap jenis-jenis mesin industri utama di pabrik ASTRA:*
+> 1. ***Paderborn*** *diperuntukkan bagi **Motor Induksi** penggerak conveyor.*
+> 2. ***CWRU*** *diperuntukkan bagi diagnosis spesifik **Bearing Conveyor & Gearbox**.*
+> 3. ***NASA IMS*** *memodelkan **Poros Conveyor Beban Berat** selama 35 hari run-to-failure.*
+> 4. ***NASA CMAPSS*** *memodelkan **Mesin Rotasi Siklus Tinggi** untuk estimasi RUL (Remaining Useful Life)."*
 
 ---
 
-### Slide 5: Paderborn Dataset Details
+### Slide 5: Paderborn Dataset — Motor Induksi (Conveyor Prime Mover)
 
 #### 📄 Slide Content
-- **Machine**: Induction Motor (1.5 kW, variable load & frequency)
-- **Available Sensors**: Phase Currents (64kHz), Accelerometer Vibration, Temperature, Speed
-- **Fault Types**: Real Accelerated Damage (pitting, fatigue, inner/outer race defects)
-- **Features Used**: 25 Time & Frequency Domain Features (RMS, Kurtosis, Crest Factor, Energy Spectrum)
+- **Target Mesin Industri**: **Induction Motor 1.5 kW** (Penggerak Utama Conveyor Line, Pompa Industri & Fan Astra)
+- **Fitur Utama Yang Diekstrak (25 Fitur)**:
+  - *Current Domain*: Arus Stator Phase A & B (64 kHz), Total Harmonic Distortion (THD), Current Peak-to-Peak.
+  - *Vibration Domain*: RMS Acceleration, Kurtosis, Crest Factor, Energy Spectrum Bands, Skewness.
+- **Alasan Mengapa Dataset Ini Digunakan**:
+  > Motor induksi merupakan *prime mover* pada lebih dari 80% jalur produksi conveyor dan mesin industri Astra. Penggunaan sinyal arus listrik stator (*Motor Current Signature Analysis / MCSA*) memungkinkan sistem mendeteksi kerusakan mekanis dan listrik **tanpa harus memasang sensor getaran fisik langsung pada permukaan motor yang sulit dijangkau atau bersuhu tinggi**.
 
 #### 🗣️ Yang Dijelaskan (Speaker Script)
-> *"Dataset Paderborn berfokus pada motor induksi. Sensor utama yang digunakan adalah arus listrik stator dan getaran. Dari sinyal mentah ini, kami mengesktrak 25 fitur fisik untuk membedakan kondisi normal dan indikasi awal kerusakan mekanis."*
+> *"Dataset Paderborn berfokus pada Motor Induksi 1.5 kW yang merupakan penggerak utama conveyor line Astra. Kami mengekstrak 25 fitur arus stator dan getaran. Keunggulannya, kita dapat mendeteksi keausan mekanis melalui sinyal listrik (MCSA) tanpa harus menempelkan sensor fisik pada area motor yang panas atau sulit dijangkau."*
 
 ---
 
-### Slide 6: CWRU Dataset Details
+### Slide 6: CWRU Dataset — Bearing Test Rig (Conveyor & Gearbox Bearings)
 
 #### 📄 Slide Content
-- **Machine**: Reliance Electric Motor Test Rig (2 HP)
-- **Bearing Fault Types**: Single-Point Defect (Ball Fault, Inner Race Fault, Outer Race Fault)
-- **Available Features**: Drive-End & Fan-End Accelerometer Vibration Signals (12k/48k Hz)
-- **Purpose**: High-precision 10-class bearing fault classification
+- **Target Mesin Industri**: **Bearing Motor & Transmisi Conveyor** (Drive-End & Fan-End Bearing Assembly 2 HP)
+- **Fitur Utama Yang Diekstrak**:
+  - *Frequency Domain*: Envelope Spectrum FFT, Ball Pass Frequency Outer Race (BPFO), Ball Pass Frequency Inner Race (BPFI), Ball Spin Frequency (BSF), Fundamental Train Frequency (FTF).
+  - *Time Domain*: High-Frequency Accelerometer Signal (12k/48k Hz), Peak Amplitude, Spectral Kurtosis.
+- **Alasan Mengapa Dataset Ini Digunakan**:
+  > Kegagalan bearing adalah penyebab utama nomor 1 (*primary root cause*) yang menyumbang 45% hingga 50% *unplanned downtime* pada sistem conveyor dan gearbox industri Astra. Dataset CWRU menyediakan baseline internasional yang paling presisi dan terkalibrasi untuk mengklasifikasikan 10 kategori titik cacat bearing (Inner Race, Outer Race, Ball Defect) dengan diameter kerusakan mikro mulai dari 0.007 hingga 0.021 inci.
 
 #### 🗣️ Yang Dijelaskan (Speaker Script)
-> *"CWRU berfokus khusus pada bearing fault. Dataset ini kami gabungkan dengan Paderborn untuk memperkuat akurasi klasifikasi kerusakan spesifik pada bola bearing, inner race, maupun outer race."*
+> *"CWRU Dataset berfokus khusus pada Bearing Conveyor dan Gearbox. Mengapa bearing sangat krusial? Karena kerusakan bearing menyumbang hampir 50% dari total unplanned downtime pada sistem conveyor pabrik. CWRU memberikan data terkalibrasi paling presisi untuk mengidentifikasi letak persis kerusakan pada inner race, outer race, maupun bola bearing."*
 
 ---
 
-### Slide 7: NASA IMS Dataset (Health Degradation)
+### Slide 7: NASA IMS Dataset — Bearing Degradation (Heavy Conveyor Shaft)
 
 #### 📄 Slide Content
-- **Experiment Mode**: Continuous Run-to-Failure Test (35 days uninterrupted run until catastrophic failure)
-- **Degradation Target**: Bearing Structural Degradation Curve
-- **Available Features**: High-Frequency Vibration Telemetry
-- **Purpose**: Baseline for Health Index Calculation (0% to 100%)
+- **Target Mesin Industri**: **Poros Berputar Conveyor Beban Berat / Heavy Duty Industrial Shaft Rig**
+- **Fitur Utama Yang Diekstrak**:
+  - *Degradation Features*: Continuous Vibration Acceleration (20 kHz), RMS Growth Trajectory, Crest Factor Trend, Kurtosis Evolution.
+  - *Health Index Metric*: Health Index Score Kuantitatif (skala 0% s/d 100%).
+- **Alasan Mengapa Dataset Ini Digunakan**:
+  > Berbeda dari pengujian biner biasa, NASA IMS merekam eksperimen *Run-to-Failure* kontinyu selama 35 hari berturut-turut tanpa henti hingga bantalan mengalami kegagalan total. Di operasional Astra, tim perawatan membutuhkan indikator **Health Index** yang menurun secara bertahap dalam rentang mingguan/bulanan agar dapat merencanakan pembelian spare part dan jadwal *shut-down* pabrik jauh sebelum kerusakan total terjadi.
 
 #### 🗣️ Yang Dijelaskan (Speaker Script)
-> *"NASA IMS memberikan gambaran bagaimana komponen terdegradasi seiring waktu selama 35 hari berturut-turut. Dataset ini menjadi dasar bagi algoritma kami dalam menghitung **Health Index** mesin dari 100% (sehat) menurun ke 0% (kritis)."*
+> *"NASA IMS merekam proses kerusakan alami bearing pada poros conveyor beban berat selama 35 hari berturut-turut hingga rusak total. Dataset ini kami gunakan untuk membuat kurva Health Index (100% hingga 0%) pada dashboard agar tim maintenance Astra dapat melihat degradasi mesin secara gradual minggu demi minggu."*
 
 ---
 
-### Slide 8: NASA CMAPSS & Multi-Dataset Harmonization
+### Slide 8: NASA CMAPSS Dataset — Turbofan Engine (High-Cycle Machinery) & Harmonization
 
 #### 📄 Slide Content
-- **Top Section**: Remaining Useful Life (RUL) | Multi-Sensor Telemetry | Sequential Sliding Window Features
-- **Mapping Flow**:
-```
-Paderborn ──► CWRU ──► NASA IMS ──► NASA CMAPSS ──► raw_sensor_data
-```
+- **Target Mesin Industri**: **Mesin Rotasi Siklus Tinggi & Beban Variabel / High-Cycle Industrial Equipment**
+- **Fitur Utama Yang Diekstrak**:
+  - *Multi-Sensor Telemetry*: 21 Channel Telemetri (Suhu Outlet Kompresor, Tekanan Burner, Kecepatan Spool Core/Fan N1 & N2, Fuel Flow Ratio).
+  - *Sequential Features*: Rolling Window Aggregation (Window Size = 30 step), Rolling Mean, Rolling Standard Deviation, Sensor Trend Deviations.
+- **Alasan Mengapa Dataset Ini Digunakan**:
+  > NASA CMAPSS merupakan benchmark terbaik di dunia untuk melatih model regresi berbasis AI dalam menghitung sisa waktu operasional atau **Remaining Useful Life (RUL)** dalam satuan jam (*hours*) atau siklus (*cycles*). Astra membutuhkan estimasi RUL kuantitatif ini agar manajemen dapat menjawab pertanyaan kritis: *"Berapa hari/jam lagi conveyor ini masih aman beroperasi sebelum wajib diservis?"*
 
-- **Harmonized Database Table Schema (`raw_sensor_data`)**:
+- **Multi-Dataset Harmonization Table Schema (`raw_sensor_data`)**:
 
 | timestamp | machine_id | vibration | current | rpm | temperature | torque | source_dataset |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
 | `2026-07-30 00:00:00` | `MTR-01` | `0.42` | `22.4` | `1450` | `48.5` | `NULL` | `paderborn` |
 
 #### 🗣️ Yang Dijelaskan (Speaker Script)
-> *"Pertama, NASA CMAPSS digunakan khusus untuk estimasi Remaining Useful Life (RUL).*
-> *Selanjutnya, karena setiap dataset memiliki struktur yang berbeda-beda, kami merancang **Dataset Harmonization**: Seluruh dataset dipetakan ke satu tabel tunggal `raw_sensor_data`.*
-> *Jika suatu dataset tidak memiliki parameter tertentu (misal: torque), maka nilainya diisi `NULL`.*
-> *Struktur ini dibuat agar pipeline AI tetap sama walaupun sumber data berbeda. **Saat nanti menggunakan data sensor Astra, hanya kolom `source_dataset` yang beralih menjadi `astra_sensor`.** Transisi ini sangat natural menuju arsitektur database (ERD)."*
+> *"NASA CMAPSS digunakan khusus untuk menghitung sisa umur komponen (RUL) dalam satuan jam/hari. Selanjutnya, seluruh 4 dataset dipetakan ke 1 tabel standar `raw_sensor_data`. Jika suatu dataset tidak memiliki parameter tertentu (misal: torque), nilainya diisi `NULL`. Struktur ini menjamin bahwa saat nanti Astra menghubungkan sensor IoT fisiknya, yang berubah hanyalah kolom `source_dataset` menjadi `astra_sensor`."*
 
 ---
 
