@@ -34,6 +34,17 @@ class SequenceBuilder:
                 return self.scalers[motor_id]
             except Exception as e:
                 print(f"[SequenceBuilder] Error loading scaler for {motor_id}: {e}")
+        
+        # Fallback to scaler_MTR-01.pkl if specific scaler does not exist
+        fallback_path = os.path.join(self.scaler_dir, 'scaler_MTR-01.pkl')
+        if os.path.exists(fallback_path):
+            try:
+                scaler = joblib.load(fallback_path)
+                self.scalers[motor_id] = scaler
+                print(f"[SequenceBuilder] Scaler for {motor_id} not found. Using fallback scaler_MTR-01.pkl.")
+                return scaler
+            except Exception as e:
+                print(f"[SequenceBuilder] Error loading fallback scaler for {motor_id}: {e}")
         return None
 
     def save_scaler(self, motor_id, scaler):

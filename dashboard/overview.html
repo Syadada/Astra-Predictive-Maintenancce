@@ -1259,7 +1259,9 @@
     <div class="p-lg grid grid-cols-1 md:grid-cols-3 gap-xl">
       <div class="space-y-md">
         <h4 class="font-data-label text-on-surface-variant uppercase text-[10px]">Live Sensor Sparkline</h4>
-        <canvas class="w-full h-32 border border-outline/10 rounded-lg bg-surface" id="canvas-live-${rowNum}"></canvas>
+        <div class="h-32 bg-surface-container rounded border border-border relative overflow-hidden">
+          <canvas class="w-full h-full" id="canvas-live-${rowNum}"></canvas>
+        </div>
       </div>
       <div class="space-y-md">
         <h4 class="font-data-label text-on-surface-variant uppercase text-[10px]">AI Prediction</h4>
@@ -1304,8 +1306,8 @@
         const canvas = document.getElementById(canvasId);
         if (!canvas) return;
         const ctx = canvas.getContext('2d');
-        const w = canvas.width = canvas.parentElement.clientWidth;
-        const h = canvas.height = canvas.parentElement.clientHeight || 128;
+        const w = canvas.width = canvas.parentElement.clientWidth || canvas.clientWidth || 300;
+        const h = canvas.height = canvas.parentElement.clientHeight || canvas.clientHeight || 128;
         ctx.clearRect(0, 0, w, h);
 
         const max = Math.max(...data) * 1.05;

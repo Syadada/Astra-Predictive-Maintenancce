@@ -412,7 +412,7 @@
             }
 
             // Update sensor label values
-            const sensorLabels = document.querySelectorAll('aside .space-y-lg div');
+            const sensorLabels = document.querySelectorAll('aside .space-y-lg > div');
             if (sensorLabels.length >= 3) {
                 sensorLabels[0].querySelector('.font-data-value').innerText = `${eq.latest_vibration.toFixed(2)} mm/s`;
                 sensorLabels[1].querySelector('.font-data-value').innerText = `${eq.latest_temperature.toFixed(1)} °C`;
@@ -511,13 +511,13 @@
                                 <td class="px-lg py-lg w-48">
                                     <div class="flex items-center gap-sm">
                                         <div class="flex-1 bg-surface-container-high h-1.5 rounded-full overflow-hidden">
-                                            <div class="\${eq.status === 'critical' ? 'bg-red-alert' : (eq.status === 'warning' ? 'bg-amber-warn' : 'bg-green-good')} h-full" style="width: \${Math.round(eq.health_index*100)}%"></div>
+                                            <div class="${eq.status === 'critical' ? 'bg-red-alert' : (eq.status === 'warning' ? 'bg-amber-warn' : 'bg-green-good')} h-full" style="width: ${Math.round(eq.health_index*100)}%"></div>
                                         </div>
-                                        <span class="font-data-value text-data-value \${eq.status === 'critical' ? 'text-red-alert' : (eq.status === 'warning' ? 'text-amber-warn' : 'text-green-good')}">\${Math.round(eq.health_index*100)}</span>
+                                        <span class="font-data-value text-data-value ${eq.status === 'critical' ? 'text-red-alert' : (eq.status === 'warning' ? 'text-amber-warn' : 'text-green-good')}">${Math.round(eq.health_index*100)}</span>
                                     </div>
                                 </td>
                                 <td class="px-lg py-lg">
-                                    <span class="px-sm py-xs \${statusClass} font-data-label text-[10px] rounded uppercase font-bold tracking-wider">\${statusText}</span>
+                                    <span class="px-sm py-xs ${statusClass} font-data-label text-[10px] rounded uppercase font-bold tracking-wider">${statusText}</span>
                                 </td>
                                 <td class="px-lg py-lg text-right">
                                     <span class="material-symbols-outlined text-outline opacity-0 group-hover:opacity-100 transition-opacity" data-icon="chevron_right">chevron_right</span>
