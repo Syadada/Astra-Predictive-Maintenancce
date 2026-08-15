@@ -7,8 +7,10 @@ os.environ["VECLIB_MAXIMUM_THREADS"] = "1"
 os.environ["NUMEXPR_NUM_THREADS"] = "1"
 
 print("Starting script...")
+# pyrefly: ignore [missing-import]
 import joblib
 print("Imported joblib")
+# pyrefly: ignore [missing-import]
 import numpy as np
 print("Imported numpy")
 

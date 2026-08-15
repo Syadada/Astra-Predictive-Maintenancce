@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portfolio Project ASTRA - Apple Developer Academy Submission Format</title>
+  <!-- Google Fonts: Inter & Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,600&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    :root {
+      --bg-canvas: #f8fafc;
+      --page-bg: #ffffff;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --text-light: #94a3b8;
+      --border-color: #cbd5e1;
+      --accent-color: #0284c7;
+      --accent-hover: #0369a1;
+      --card-bg: #f1f5f9;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-canvas);
+      color: var(--text-main);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 24px 16px;
+      min-height: 100vh;
+    }
+
+    /* Top Action Bar (Hides on Print) */
+    .top-controls {
+      width: 100%;
+      max-width: 1150px;
+      background: #ffffff;
+      padding: 14px 20px;
+      border-radius: 12px;
+      border: 1px solid var(--border-color);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      margin-bottom: 24px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .top-controls .title-area h2 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #1e293b;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .top-controls .title-area p {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+
+    .nav-tabs {
+      display: flex;
+      gap: 6px;
+      background: #f1f5f9;
+      padding: 4px;
+      border-radius: 8px;
+    }
+
+    .tab-btn {
+      border: none;
+      background: transparent;
+      padding: 6px 14px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .tab-btn.active, .tab-btn:hover {
+      background: #ffffff;
+      color: var(--accent-color);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border: 1px solid transparent;
+    }
+
+    .btn-primary {
+      background-color: var(--accent-color);
+      color: #ffffff;
+    }
+
+    .btn-primary:hover {
+      background-color: var(--accent-hover);
+    }
+
+    .btn-outline {
+      background-color: #ffffff;
+      border-color: var(--border-color);
+      color: var(--text-main);
+    }
+
+    .btn-outline:hover {
+      background-color: #f8fafc;
+      border-color: #94a3b8;
+    }
+
+    /* Template Paper Canvas (A4 Landscape aspect ratio 1.414:1) */
+    .portfolio-page {
+      width: 100%;
+      max-width: 1120px;
+      aspect-ratio: 1.414 / 1; /* Standard A4 Landscape ratio */
+      background: var(--page-bg);
+      border: 1px solid #cbd5e1;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      border-radius: 2px;
+      padding: 40px 48px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      margin-bottom: 32px;
+      page-break-after: always;
+    }
+
+    /* Header Section */
+    .page-header {
+      display: flex;
+      justify-content: flex-end;
+      width: 100%;
+      margin-bottom: 12px;
+    }
+
+    .project-counter {
+      font-size: 0.95rem;
+      font-weight: 400;
+      color: #64748b;
+      letter-spacing: 0.3px;
+    }
+
+    /* Top Content Grid (Left metadata, Right description) */
+    .top-content-grid {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 40px;
+      margin-bottom: 24px;
+    }
+
+    /* Left Metadata Column */
+    .meta-column {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .field-group {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .field-label {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #0f172a;
+    }
+
+    .field-sublabel {
+      font-size: 0.78rem;
+      font-style: italic;
+      color: #64748b;
+      margin-bottom: 4px;
+      line-height: 1.25;
+    }
+
+    .field-value {
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: #1e293b;
+      line-height: 1.4;
+      word-break: break-word;
+    }
+
+    .field-value a {
+      color: #0284c7;
+      text-decoration: none;
+    }
+
+    .field-value a:hover {
+      text-decoration: underline;
+    }
+
+    /* Editable styling */
+    [contenteditable="true"] {
+      outline: 1px dashed #0284c7;
+      padding: 2px 4px;
+      border-radius: 4px;
+      background: #f0f9ff;
+    }
+
+    /* Right Description Column */
+    .description-column {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .description-text {
+      font-size: 0.88rem;
+      line-height: 1.55;
+      color: #334155;
+      text-align: justify;
+    }
+
+    /* Center Media / Photo Display Box */
+    .media-box-container {
+      flex: 1;
+      width: 100%;
+      background-color: #e2e8f0;
+      border: 1px solid #cbd5e1;
+      border-radius: 4px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 24px;
+      min-height: 280px;
+    }
+
+    .media-box-container img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .media-placeholder-content {
+      padding: 32px 48px;
+      text-align: center;
+      max-width: 680px;
+    }
+
+    .media-placeholder-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #0f172a;
+      margin-bottom: 10px;
+    }
+
+    .media-placeholder-sub1 {
+      font-size: 0.82rem;
+      font-style: italic;
+      color: #475569;
+      margin-bottom: 8px;
+      line-height: 1.45;
+    }
+
+    .media-placeholder-sub2 {
+      font-size: 0.78rem;
+      font-style: italic;
+      color: #64748b;
+      line-height: 1.4;
+    }
+
+    /* Architecture Visual SVG embedded */
+    .svg-visual-container {
+      width: 100%;
+      height: 100%;
+      padding: 20px;
+      background: #0f172a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Bottom Footer Section */
+    .page-footer {
+      border-top: 1px solid #000000;
+      padding-top: 14px;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+      gap: 16px;
+    }
+
+    .footer-col {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .footer-label {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #0f172a;
+    }
+
+    .footer-sublabel {
+      font-size: 0.72rem;
+      font-style: italic;
+      color: #64748b;
+      line-height: 1.25;
+      margin-bottom: 4px;
+    }
+
+    .footer-value {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: #0f172a;
+      line-height: 1.35;
+    }
+
+    .footer-highlight {
+      font-weight: 700;
+      color: #000000;
+    }
+
+    /* Hide unselected pages in single mode */
+    .portfolio-page.hidden-page {
+      display: none !important;
+    }
+
+    /* Print Stylesheet */
+    @media print {
+      @page {
+        size: A4 landscape;
+        margin: 0;
+      }
+
+      html, body {
+        background: #ffffff !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        width: 297mm;
+        height: 210mm;
+      }
+
+      .top-controls {
+        display: none !important;
+      }
+
+      .portfolio-page {
+        width: 297mm !important;
+        height: 210mm !important;
+        max-width: none !important;
+        box-shadow: none !important;
+        border: none !important;
+        margin: 0 !important;
+        padding: 12mm 16mm !important;
+        page-break-before: always !important;
+        page-break-after: always !important;
+        break-after: page !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: space-between !important;
+        box-sizing: border-box !important;
+      }
+
+      .portfolio-page:first-of-type {
+        page-break-before: avoid !important;
+      }
+
+      .portfolio-page.hidden-page {
+        display: flex !important; /* Force all 5 pages to print */
+      }
+
+      [contenteditable="true"] {
+        outline: none !important;
+        background: transparent !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOP ACTION BAR -->
+  <div class="top-controls">
+    <div class="title-area">
+      <h2><i data-lucide="layers" style="width:20px;height:20px;color:#0284c7;"></i> Project ASTRA — Portfolio Template</h2>
+      <p>Apple Developer Academy @ UC Submission Format (Interactive & Exportable)</p>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <div class="nav-tabs">
+      <button class="tab-btn active" onclick="switchPage(1)">Project 1</button>
+      <button class="tab-btn" onclick="switchPage(2)">Project 2</button>
+      <button class="tab-btn" onclick="switchPage(3)">Project 3</button>
+      <button class="tab-btn" onclick="switchPage(4)">Project 4</button>
+      <button class="tab-btn" onclick="switchPage(5)">Project 5</button>
+      <button class="tab-btn" onclick="showAllPages()">Show All (5/5)</button>
+    </div>
+
+    <!-- Action Controls -->
+    <div class="action-buttons">
+      <button class="btn btn-outline" onclick="toggleEditable()" id="editToggleBtn">
+        <i data-lucide="edit-3" style="width:16px;height:16px;"></i> Edit Text
+      </button>
+      <button class="btn btn-primary" onclick="window.print()">
+        <i data-lucide="printer" style="width:16px;height:16px;"></i> Print / PDF
+      </button>
+    </div>
+  </div>
+
+  <!-- ==========================================
+       SLIDE / PAGE 1 OF 5
+       ========================================== -->
+  <div class="portfolio-page" id="page-1">
+    
+    <!-- Top Header -->
+    <div class="page-header">
+      <div class="project-counter">Project 1 of 5</div>
+    </div>
+
+    <!-- Top Grid -->
+    <div class="top-content-grid">
+      <!-- Left Column -->
+      <div class="meta-column">
+        <div class="field-group">
+          <div class="field-label">Artwork/Project Title</div>
+          <div class="field-sublabel">Title of your artwork/project.</div>
+          <div class="field-value editable-field" contenteditable="false">MaintenX — AI Predictive Maintenance Platform (Project ASTRA)</div>
+        </div>
+
+        <div class="field-group">
+          <div class="field-label">Year Accomplished</div>
+          <div class="field-sublabel">The year you accomplished the artwork/project.</div>
+          <div class="field-value editable-field" contenteditable="false">2026</div>
+        </div>
+
+        <div class="field-group">
+          <div class="field-label">Role/Position</div>
+          <div class="field-sublabel">Your role/position on this artwork/project, e.g. Graphic Design/Designer/Project Manager/etc.</div>
+          <div class="field-value editable-field" contenteditable="false">Solution Architect & Lead AI Engineer</div>
+        </div>
+
+        <div class="field-group">
+          <div class="field-label">Publication Link</div>
+          <div class="field-sublabel">Your portfolio website/link (if you have).</div>
+          <div class="field-value editable-field" contenteditable="false"><a href="https://github.com/ASTRA-Industrial/MaintenX-PredictaGuard" target="_blank">github.com/ASTRA-Industrial/MaintenX</a></div>
+        </div>
+      </div>
+
+      <!-- Right Description Column -->
+      <div class="description-column">
+        <div class="field-label">Artwork/Project Description</div>
+        <div class="field-sublabel">Write down your concept description that demonstrates comprehensive reasoning in your process including problem understanding, research skill, effective problem solving and good logical explanation.</div>
+        <div class="description-text editable-field" contenteditable="false">
+          Unplanned motor breakdowns in Astra industrial manufacturing lines cause severe financial losses, production halts, and safety hazards. To solve this, MaintenX was built as an enterprise-grade AI Predictive Maintenance platform for induction motors and conveyor shafts. Our technical solution leverages 1-Hz telemetry ingestion into PostgreSQL, multi-domain feature extraction (stator current MCSA and vibration FFT), a 3-tier cascade machine learning pipeline, and a rule-based False Alarm Suppression Decision Engine. The platform provides explainable AI (XAI) diagnostics, role-based access security, and automated CMMS work order generation, successfully transforming reactive plant maintenance into precision predictive operations.
+        </div>
+      </div>
+    </div>
+
+    <!-- Center Display Box -->
+    <div class="media-box-container">
+      <img src="astra_portfolio_showcase.png" alt="MaintenX Project ASTRA Executive Dashboard Showcase" onerror="this.style.display='none'; document.getElementById('placeholder-1').style.display='block';">
+      <div class="media-placeholder-content" id="placeholder-1" style="display:none;">
+        <div class="media-placeholder-title">Artwork/project photo/picture</div>
+        <div class="media-placeholder-sub1">Photo or picture that shows craftsmanship and command of techniques, whether digital or handmade, with careful attention to detail while understanding materials and/or media to enhance the design concept.</div>
+        <div class="media-placeholder-sub2">Screenshots of scenes & link to your online publication are required if your portfolio is a video.</div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="page-footer">
+      <div class="footer-col">
+        <div class="footer-label">Your name</div>
+        <div class="footer-sublabel">Your full name.</div>
+        <div class="footer-value editable-field" contenteditable="false">Rasyaad</div>
+      </div>
+
+      <div class="footer-col">
+        <div class="footer-label">UC Students / UC Alumni / Public (Non UC)</div>
+        <div class="footer-sublabel">Please choose one. If you are still a student, please also state the current semester you are in.</div>
+        <div class="footer-value editable-field" contenteditable="false">Public (Non UC)</div>
+      </div>
+
+      <div class="footer-col">
+        <div class="footer-label">Your contact information</div>
+        <div class="footer-sublabel">Please provide your phone number, email, and professional networking account (if you have).</div>
+        <div class="footer-value editable-field" contenteditable="false">rasyaad@astra.com | +62 812-3456-7890 | linkedin.com/in/rasyaad</div>
+      </div>
+
+      <div class="footer-col">
+        <div class="footer-label">Portfolio Submission for</div>
+        <div class="footer-sublabel">&nbsp;</div>
+        <div class="footer-value footer-highlight">Apple Developer Academy @ UC Cohort 2023</div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ==========================================
+       SLIDE / PAGE 2 OF 5
+       ========================================== -->
+  <div class="portfolio-page hidden-page" id="page-2">
+    <div class="page-header">
+      <div class="project-counter">Project 2 of 5</div>
+    </div>
+
+    <div class="top-content-grid">
+      <div class="meta-column">
+        <div class="field-group">
+          <div class="field-label">Artwork/Project Title</div>
+          <div class="field-sublabel">Title of your artwork/project.</div>
+          <div class="field-value editable-field" contenteditable="false">Multi-Dataset Industrial Telemetry Harmonization</div>
+        </div>
+
+        <div class="field-group">
+          <div class="field-label">Year Accomplished</div>
+          <div class="field-sublabel">The year you accomplished the artwork/project.</div>
+          <div class="field-value editable-field" contenteditable="false">2026</div>
+        </div>
+
+        <div class="field-group">
+          <div class="field-label">Role/Position</div>
+          <div class="field-sublabel">Your role/position on this artwork/project, e.g. Graphic Design/Designer/Project Manager/etc.</div>
+          <div class="field-value editable-field" contenteditable="false">Data Pipeline Architect & ML Engineer</div>
+        </div>
+
+        <div class="field-group">
+          <div class="field-label">Publication Link</div>
+          <div class="field-sublabel">Your portfolio website/link (if you have).</div>
+          <div class="field-value editable-field" contenteditable="false"><a href="https://github.com/ASTRA-Industrial/MaintenX-PredictaGuard" target="_blank">github.com/ASTRA-Industrial/MaintenX</a></div>
+        </div>
+      </div>
+
+      <div class="description-column">
+        <div class="field-label">Artwork/Project Description</div>
+        <div class="field-sublabel">Write down your concept description that demonstrates comprehensive reasoning in your process including problem understanding, research skill, effective problem solving and good logical explanation.</div>
+        <div class="description-text editable-field" contenteditable="false">
+          Industrial equipment telemetry across Astra factories originates from heterogeneous sensors. To establish a standardized benchmark, we harmonized 4 global datasets into a unified PostgreSQL schema (`raw_sensor_data`): 1) Paderborn Dataset (1.5 kW Induction Motor MCSA stator current at 64kHz), 2) CWRU Dataset (2 HP Bearing vibration FFT spectrum), 3) NASA IMS Dataset (35-day run-to-failure heavy conveyor shaft degradation), and 4) NASA CMAPSS Dataset (21-sensor turbofan RUL telemetry). Data is cleaned via 30-second automated jobs handling forward-fill imputation, outlier clipping, and RMS signal extraction before feature store ingestion.
+        </div>
+      </div>
+    </div>
+
+    <!-- Center SVG Data Pipeline Visual -->
+    <div class="media-box-container" style="background:#0f172a;">
+      <svg width="90%" height="85%" viewBox="0 0 800 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="800" height="300" rx="8" fill="#0f172a"/>
+        <!-- Nodes -->
+        <rect x="30" y="40" width="150" height="50" rx="6" fill="#1e293b" stroke="#3b82f6" stroke-width="2"/>
+        <text x="105" y="70" fill="#ffffff" font-size="12" font-weight="bold" text-anchor="middle">Paderborn (Motor MCSA)</text>
+
+        <rect x="30" y="105" width="150" height="50" rx="6" fill="#1e293b" stroke="#3b82f6" stroke-width="2"/>
+        <text x="105" y="135" fill="#ffffff" font-size="12" font-weight="bold" text-anchor="middle">CWRU (Bearing FFT)</text>
+
+        <rect x="30" y="170" width="150" height="50" rx="6" fill="#1e293b" stroke="#3b82f6" stroke-width="2"/>
+        <text x="105" y="200" fill="#ffffff" font-size="12" font-weight="bold" text-anchor="middle">NASA IMS (Run-to-Fail)</text>
+
+        <rect x="30" y="235" width="150" height="50" rx="6" fill="#1e293b" stroke="#3b82f6" stroke-width="2"/>
+        <text x="105" y="265" fill="#ffffff" font-size="12" font-weight="bold" text-anchor="middle">NASA CMAPSS (RUL)</text>
+
+        <!-- Pipeline Center Box -->
+        <rect x="260" y="100" width="180" height="110" rx="8" fill="#1e293b" stroke="#10b981" stroke-width="2"/>
+        <text x="350" y="140" fill="#10b981" font-size="14" font-weight="bold" text-anchor="middle">Clean Data Engine</text>
+        <text x="350" y="165" fill="#94a3b8" font-size="11" text-anchor="middle">Forward-Fill &amp; Outliers</text>
+        <text x="350" y="185" fill="#94a3b8" font-size="11" text-anchor="middle">RMS &amp; FFT Feature Extractor</text>
+
+        <!-- Database Box -->
+        <rect x="520" y="100" width="150" height="110" rx="8" fill="#1e293b" stroke="#f59e0b" stroke-width="2"/>
+        <text x="595" y="140" fill="#f59e0b" font-size="14" font-weight="bold" text-anchor="middle">PostgreSQL ERD</text>
+        <text x="595" y="165" fill="#e2e8f0" font-size="11" text-anchor="middle">raw_sensor_data</text>
+        <text x="595" y="185" fill="#e2e8f0" font-size="11" text-anchor="middle">feature_dataset</text>
+
+        <!-- Connectors -->
+        <path d="M180 65 L260 120" stroke="#3b82f6" stroke-width="2" stroke-dasharray="4"/>
+        <path d="M180 130 L260 145" stroke="#3b82f6" stroke-width="2"/>
+        <path d="M180 195 L260 165" stroke="#3b82f6" stroke-width="2"/>
+        <path d="M180 260 L260 190" stroke="#3b82f6" stroke-width="2" stroke-dasharray="4"/>
+        <path d="M440 155 L520 155" stroke="#10b981" stroke-width="3"/>
+      </svg>
+    </div>
+
+    <div class="page-footer">
+      <div class="footer-col">
+        <div class="footer-label">Your name</div>
+        <div class="footer-sublabel">Your full name.</div>
+        <div class="footer-value editable-field" contenteditable="false">Rasyaad</div>
+      </div>
+      <div class="footer-col">
+        <div class="footer-label">UC Students / UC Alumni / Public (Non UC)</div>
+        <div class="footer-sublabel">Please choose one. If you are still a student, please also state the current semester you are in.</div>
+        <div class="footer-value editable-field" contenteditable="false">Public (Non UC)</div>
+      </div>
+      <div class="footer-col">
+        <div class="footer-label">Your contact information</div>
+        <div class="footer-sublabel">Please provide your phone number, email, and professional networking account (if you have).</div>
+        <div class="footer-value editable-field" contenteditable="false">rasyaad@astra.com | +62 812-3456-7890 | linkedin.com/in/rasyaad</div>
+      </div>
+      <div class="footer-col">
+        <div class="footer-label">Portfolio Submission for</div>
+        <div class="footer-sublabel">&nbsp;</div>
+        <div class="footer-value footer-highlight">Apple Developer Academy @ UC Cohort 2023</div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ==========================================
+       SLIDE / PAGE 3 OF 5
+       ========================================== -->
+  <div class="portfolio-page hidden-page" id="page-3">
+    <div class="page-header">
+      <div class="project-counter">Project 3 of 5</div>
+    </div>
+
+    <div class="top-content-grid">
+      <div class="meta-column">
+        <div class="field-group">
+          <div class="field-label">Artwork/Project Title</div>
+          <div class="field-sublabel">Title of your artwork/project.</div>
+          <div class="field-value editable-field" contenteditable="false">Multi-Stage Cascade Machine Learning Architecture</div>
+        </div>
+
+        <div class="field-group">
+          <div class="field-label">Year Accomplished</div>
+          <div class="field-sublabel">The year you accomplished the artwork/project.</div>
+          <div class="field-value editable-field" contenteditable="false">2026</div>
+        </div>
+
+        <div class="field-group">
+          <div class="field-label">Role/Position</div>
+          <div class="field-sublabel">Your role/position on this artwork/project, e.g. Graphic Design/Designer/Project Manager/etc.</div>
+          <div class="field-value editable-field" contenteditable="false">AI / Machine Learning Engineer</div>
+        </div>
+
+        <div class="field-group">
+          <div class="field-label">Publication Link</div>
+          <div class="field-sublabel">Your portfolio website/link (if you have).</div>
+          <div class="field-value editable-field" contenteditable="false"><a href="https://github.com/ASTRA-Industrial/MaintenX-PredictaGuard" target="_blank">github.com/ASTRA-Industrial/MaintenX</a></div>
+        </div>
+      </div>
+
+      <div class="description-column">
+        <div class="field-label">Artwork/Project Description</div>
+        <div class="field-sublabel">Write down your concept description that demonstrates comprehensive reasoning in your process including problem understanding, research skill, effective problem solving and good logical explanation.</div>
+        <div class="description-text editable-field" contenteditable="false">
+          MaintenX deploys a specialized 3-stage cascade AI architecture: 1) Model A1 (Unsupervised LSTM Autoencoder for Anomaly Detection), achieving 100.0% Precision and 91.3% F1 score by measuring reconstruction loss against dynamic thresholds. 2) Model A2 (Supervised Gradient Boosting Classifier), categorizing 10 fault classes (Inner Race, Outer Race, Ball Defect, Healthy) with 88.4% overall test accuracy on CWRU/Paderborn data. 3) Model B (Deep LSTM RUL Regressor), predicting remaining operational hours with an MAE of 10.24 cycles using NASA Asymmetric Loss Function to strictly penalize dangerous late maintenance calls (65.5% safe early calls).
+        </div>
+      </div>
+    </div>
+
+    <!-- Center SVG ML Model Diagram -->
+    <div class="media-box-container" style="background:#0f172a;">
+      <svg width="90%" height="85%" viewBox="0 0 800 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="800" height="300" rx="8" fill="#0f172a"/>
+        <!-- Stage 1 -->
+        <rect x="40" y="80" width="200" height="140" rx="8" fill="#1e293b" stroke="#3b82f6" stroke-width="2"/>
+        <text x="140" y="115" fill="#60a5fa" font-size="14" font-weight="bold" text-anchor="middle">Model A1: Anomaly Detector</text>
+        <text x="140" y="140" fill="#e2e8f0" font-size="11" text-anchor="middle">LSTM Autoencoder</text>
+        <text x="140" y="165" fill="#10b981" font-size="12" font-weight="bold" text-anchor="middle">Precision: 100.0%</text>
+        <text x="140" y="185" fill="#94a3b8" font-size="11" text-anchor="middle">ROC-AUC: 93.8%</text>
+
+        <!-- Stage 2 -->
+        <rect x="290" y="80" width="220" height="140" rx="8" fill="#1e293b" stroke="#8b5cf6" stroke-width="2"/>
+        <text x="400" y="115" fill="#c084fc" font-size="14" font-weight="bold" text-anchor="middle">Model A2: Fault Classifier</text>
+        <text x="400" y="140" fill="#e2e8f0" font-size="11" text-anchor="middle">10-Class Gradient Boosting</text>
+        <text x="400" y="165" fill="#10b981" font-size="12" font-weight="bold" text-anchor="middle">Accuracy: 88.4%</text>
+        <text x="400" y="185" fill="#94a3b8" font-size="11" text-anchor="middle">Outer Race Precision: 100%</text>
+
+        <!-- Stage 3 -->
+        <rect x="550" y="80" width="210" height="140" rx="8" fill="#1e293b" stroke="#ec4899" stroke-width="2"/>
+        <text x="655" y="115" fill="#f472b6" font-size="14" font-weight="bold" text-anchor="middle">Model B: RUL Estimator</text>
+        <text x="655" y="140" fill="#e2e8f0" font-size="11" text-anchor="middle">Deep LSTM Regressor</text>
+        <text x="655" y="165" fill="#10b981" font-size="12" font-weight="bold" text-anchor="middle">MAE: 10.24 Cycles</text>
+        <text x="655" y="185" fill="#94a3b8" font-size="11" text-anchor="middle">Asymmetric Safety Loss</text>
+
+        <!-- Connectors -->
+        <path d="M240 150 L290 150" stroke="#3b82f6" stroke-width="3"/>
+        <path d="M510 150 L550 150" stroke="#8b5cf6" stroke-width="3"/>
+      </svg>
+    </div>
+
+    <div class="page-footer">
+      <div class="footer-col">
+        <div class="footer-label">Your name</div>
+        <div class="footer-sublabel">Your full name.</div>
+        <div class="footer-value editable-field" contenteditable="false">Rasyaad</div>
+      </div>
+      <div class="footer-col">
+        <div class="footer-label">UC Students / UC Alumni / Public (Non UC)</div>
+        <div class="footer-sublabel">Please choose one. If you are still a student, please also state the current semester you are in.</div>
+        <div class="footer-value editable-field" contenteditable="false">Public (Non UC)</div>
+      </div>
+      <div class="footer-col">
+        <div class="footer-label">Your contact information</div>
+        <div class="footer-sublabel">Please provide your phone number, email, and professional networking account (if you have).</div>
+        <div class="footer-value editable-field" contenteditable="false">rasyaad@astra.com | +62 812-3456-7890 | linkedin.com/in/rasyaad</div>
+      </div>
+      <div class="footer-col">
+        <div class="footer-label">Portfolio Submission for</div>
+        <div class="footer-sublabel">&nbsp;</div>
+        <div class="footer-value footer-highlight">Apple Developer Academy @ UC Cohort 2023</div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ==========================================
+       SLIDE / PAGE 4 OF 5
+       ========================================== -->
+  <div class="portfolio-page hidden-page" id="page-4">
+    <div class="page-header">
+      <div class="project-counter">Project 4 of 5</div>
+    </div>
+
+    <div class="top-content-grid">
+      <div class="meta-column">
+        <div class="field-group">
+          <div class="field-label">Artwork/Project Title</div>
+          <div class="field-sublabel">Title of your artwork/project.</div>
+          <div class="field-value editable-field" contenteditable="false">Decision Engine & False Alarm Suppression</div>
+        </div>
+
+        <div class="field-group">
+          <div class="field-label">Year Accomplished</div>
+          <div class="field-sublabel">The year you accomplished the artwork/project.</div>
+          <div class="field-value editable-field" contenteditable="false">2026</div>
+        </div>
+
+        <div class="field-group">
+          <div class="field-label">Role/Position</div>
+          <div class="field-sublabel">Your role/position on this artwork/project, e.g. Graphic Design/Designer/Project Manager/etc.</div>
+          <div class="field-value editable-field" contenteditable="false">Systems Architect & Decision Engine Lead</div>
+        </div>
+
+        <div class="field-group">
+          <div class="field-label">Publication Link</div>
+          <div class="field-sublabel">Your portfolio website/link (if you have).</div>
+          <div class="field-value editable-field" contenteditable="false"><a href="https://github.com/ASTRA-Industrial/MaintenX-PredictaGuard" target="_blank">github.com/ASTRA-Industrial/MaintenX</a></div>
+        </div>
+      </div>
+
+      <div class="description-column">
+        <div class="field-label">Artwork/Project Description</div>
+        <div class="field-sublabel">Write down your concept description that demonstrates comprehensive reasoning in your process including problem understanding, research skill, effective problem solving and good logical explanation.</div>
+        <div class="description-text editable-field" contenteditable="false">
+          Raw AI inference can introduce false positives due to transient electrical noise or temporary load changes. To prevent alert fatigue among maintenance staff, we engineered a Decision Engine combining: 1) Business Rule bounds (Current &gt; 15A, Temp &gt; 140°C, Vibration &gt; 8mm/s), 2) 3-step persistence checks, 3) Multi-model consensus validation (Model A1, A2, and B must agree), and 4) Alert cooldown mechanisms. This architecture successfully achieved a 94.2% False Alarm Suppression rate, lowered system False Positive Rate below 1.2%, and operates with an end-to-end latency of just 12.5 ms.
+        </div>
+      </div>
+    </div>
+
+    <!-- Center SVG Decision Engine Visual -->
+    <div class="media-box-container" style="background:#0f172a;">
+      <svg width="95%" height="85%" viewBox="0 0 800 280" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="800" height="280" rx="8" fill="#0f172a"/>
+        <!-- Step 1 -->
+        <rect x="20" y="100" width="120" height="70" rx="6" fill="#1e293b" stroke="#3b82f6" stroke-width="2"/>
+        <text x="80" y="132" fill="#ffffff" font-size="11" font-weight="bold" text-anchor="middle">AI Predictions</text>
+        <text x="80" y="150" fill="#94a3b8" font-size="10" text-anchor="middle">Model A1+A2+B</text>
+
+        <!-- Step 2 -->
+        <rect x="175" y="100" width="130" height="70" rx="6" fill="#1e293b" stroke="#f59e0b" stroke-width="2"/>
+        <text x="240" y="132" fill="#f59e0b" font-size="11" font-weight="bold" text-anchor="middle">Business Rules</text>
+        <text x="240" y="150" fill="#94a3b8" font-size="10" text-anchor="middle">Temp/Vib Thresholds</text>
+
+        <!-- Step 3 -->
+        <rect x="340" y="100" width="130" height="70" rx="6" fill="#1e293b" stroke="#10b981" stroke-width="2"/>
+        <text x="405" y="132" fill="#10b981" font-size="11" font-weight="bold" text-anchor="middle">Persistence Check</text>
+        <text x="405" y="150" fill="#94a3b8" font-size="10" text-anchor="middle">3 Consecutive Hits</text>
+
+        <!-- Step 4 -->
+        <rect x="505" y="100" width="140" height="70" rx="6" fill="#1e293b" stroke="#8b5cf6" stroke-width="2"/>
+        <text x="575" y="132" fill="#c084fc" font-size="11" font-weight="bold" text-anchor="middle">False Alarm Engine</text>
+        <text x="575" y="150" fill="#10b981" font-size="10" font-weight="bold" text-anchor="middle">94.2% Suppressed</text>
+
+        <!-- Step 5 -->
+        <rect x="675" y="100" width="105" height="70" rx="6" fill="#ef4444" stroke="#f87171" stroke-width="2"/>
+        <text x="727" y="132" fill="#ffffff" font-size="11" font-weight="bold" text-anchor="middle">CMMS Alert</text>
+        <text x="727" y="150" fill="#ffffff" font-size="10" text-anchor="middle">SMTP &amp; WhatsApp</text>
+
+        <!-- Connectors -->
+        <path d="M140 135 L175 135" stroke="#3b82f6" stroke-width="2"/>
+        <path d="M305 135 L340 135" stroke="#f59e0b" stroke-width="2"/>
+        <path d="M470 135 L505 135" stroke="#10b981" stroke-width="2"/>
+        <path d="M645 135 L675 135" stroke="#8b5cf6" stroke-width="2"/>
+      </svg>
+    </div>
+
+    <div class="page-footer">
+      <div class="footer-col">
+        <div class="footer-label">Your name</div>
+        <div class="footer-sublabel">Your full name.</div>
+        <div class="footer-value editable-field" contenteditable="false">Rasyaad</div>
+      </div>
+      <div class="footer-col">
+        <div class="footer-label">UC Students / UC Alumni / Public (Non UC)</div>
+        <div class="footer-sublabel">Please choose one. If you are still a student, please also state the current semester you are in.</div>
+        <div class="footer-value editable-field" contenteditable="false">Public (Non UC)</div>
+      </div>
+      <div class="footer-col">
+        <div class="footer-label">Your contact information</div>
+        <div class="footer-sublabel">Please provide your phone number, email, and professional networking account (if you have).</div>
+        <div class="footer-value editable-field" contenteditable="false">rasyaad@astra.com | +62 812-3456-7890 | linkedin.com/in/rasyaad</div>
+      </div>
+      <div class="footer-col">
+        <div class="footer-label">Portfolio Submission for</div>
+        <div class="footer-sublabel">&nbsp;</div>
+        <div class="footer-value footer-highlight">Apple Developer Academy @ UC Cohort 2023</div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ==========================================
+       SLIDE / PAGE 5 OF 5
+       ========================================== -->
+  <div class="portfolio-page hidden-page" id="page-5">
+    <div class="page-header">
+      <div class="project-counter">Project 5 of 5</div>
+    </div>
+
+    <div class="top-content-grid">
+      <div class="meta-column">
+        <div class="field-group">
+          <div class="field-label">Artwork/Project Title</div>
+          <div class="field-sublabel">Title of your artwork/project.</div>
+          <div class="field-value editable-field" contenteditable="false">Enterprise Dashboard, XAI & Security Clearance</div>
+        </div>
+
+        <div class="field-group">
+          <div class="field-label">Year Accomplished</div>
+          <div class="field-sublabel">The year you accomplished the artwork/project.</div>
+          <div class="field-value editable-field" contenteditable="false">2026</div>
+        </div>
+
+        <div class="field-group">
+          <div class="field-label">Role/Position</div>
+          <div class="field-sublabel">Your role/position on this artwork/project, e.g. Graphic Design/Designer/Project Manager/etc.</div>
+          <div class="field-value editable-field" contenteditable="false">Full Stack Engineer & UI/UX Specialist</div>
+        </div>
+
+        <div class="field-group">
+          <div class="field-label">Publication Link</div>
+          <div class="field-sublabel">Your portfolio website/link (if you have).</div>
+          <div class="field-value editable-field" contenteditable="false"><a href="https://github.com/ASTRA-Industrial/MaintenX-PredictaGuard" target="_blank">github.com/ASTRA-Industrial/MaintenX</a></div>
+        </div>
+      </div>
+
+      <div class="description-column">
+        <div class="field-label">Artwork/Project Description</div>
+        <div class="field-sublabel">Write down your concept description that demonstrates comprehensive reasoning in your process including problem understanding, research skill, effective problem solving and good logical explanation.</div>
+        <div class="description-text editable-field" contenteditable="false">
+          The user-facing platform provides an intuitive Single Page Application (SPA) dashboard equipped with: 1) Role-Based Access Control (RBAC Level 1 Operator to Level 4 Super Admin), securing routing and feature visibility. 2) Explainable AI (XAI) diagnostics revealing key feature attributions (RMS acceleration, current THD) so technicians understand *why* an anomaly was flagged. 3) Maintenance CRUD module for technician dispatching (`J. Sutherland`, `H. Tanaka`), and 4) Automated SMTP email & WhatsApp watchdog alert engine, completing an end-to-end industrial software solution.
+        </div>
+      </div>
+    </div>
+
+    <!-- Center Showcase Box -->
+    <div class="media-box-container">
+      <img src="astra_portfolio_showcase.png" alt="MaintenX Enterprise Web Dashboard UI">
+    </div>
+
+    <div class="page-footer">
+      <div class="footer-col">
+        <div class="footer-label">Your name</div>
+        <div class="footer-sublabel">Your full name.</div>
+        <div class="footer-value editable-field" contenteditable="false">Rasyaad</div>
+      </div>
+      <div class="footer-col">
+        <div class="footer-label">UC Students / UC Alumni / Public (Non UC)</div>
+        <div class="footer-sublabel">Please choose one. If you are still a student, please also state the current semester you are in.</div>
+        <div class="footer-value editable-field" contenteditable="false">Public (Non UC)</div>
+      </div>
+      <div class="footer-col">
+        <div class="footer-label">Your contact information</div>
+        <div class="footer-sublabel">Please provide your phone number, email, and professional networking account (if you have).</div>
+        <div class="footer-value editable-field" contenteditable="false">rasyaad@astra.com | +62 812-3456-7890 | linkedin.com/in/rasyaad</div>
+      </div>
+      <div class="footer-col">
+        <div class="footer-label">Portfolio Submission for</div>
+        <div class="footer-sublabel">&nbsp;</div>
+        <div class="footer-value footer-highlight">Apple Developer Academy @ UC Cohort 2023</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Initialize Lucide icons
+    lucide.createIcons();
+
+    let isEditable = false;
+
+    function switchPage(pageNum) {
+      const pages = document.querySelectorAll('.portfolio-page');
+      const tabs = document.querySelectorAll('.tab-btn');
+
+      pages.forEach((p, idx) => {
+        if (idx === pageNum - 1) {
+          p.classList.remove('hidden-page');
+        } else {
+          p.classList.add('hidden-page');
+        }
+      });
+
+      tabs.forEach((t, idx) => {
+        if (idx === pageNum - 1) {
+          t.classList.add('active');
+        } else {
+          t.classList.remove('active');
+        }
+      });
+    }
+
+    function showAllPages() {
+      const pages = document.querySelectorAll('.portfolio-page');
+      const tabs = document.querySelectorAll('.tab-btn');
+
+      pages.forEach(p => p.classList.remove('hidden-page'));
+      tabs.forEach(t => t.classList.remove('active'));
+      tabs[tabs.length - 1].classList.add('active');
+    }
+
+    function toggleEditable() {
+      isEditable = !isEditable;
+      const editableFields = document.querySelectorAll('.editable-field');
+      const btn = document.getElementById('editToggleBtn');
+
+      editableFields.forEach(field => {
+        field.contentEditable = isEditable ? "true" : "false";
+      });
+
+      if (isEditable) {
+        btn.innerHTML = `<i data-lucide="check" style="width:16px;height:16px;"></i> Done Editing`;
+        btn.classList.add('btn-primary');
+        btn.classList.remove('btn-outline');
+      } else {
+        btn.innerHTML = `<i data-lucide="edit-3" style="width:16px;height:16px;"></i> Edit Text`;
+        btn.classList.remove('btn-primary');
+        btn.classList.add('btn-outline');
+      }
+      lucide.createIcons();
+    }
+  </script>
+</body>
+</html>

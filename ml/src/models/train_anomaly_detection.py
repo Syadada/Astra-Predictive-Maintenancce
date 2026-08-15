@@ -12,10 +12,14 @@ Run from ml/:  python -X utf8 src/models/train_anomaly_detection.py
 import os
 import json
 import warnings
+# pyrefly: ignore [missing-import]
 import numpy as np
+# pyrefly: ignore [missing-import]
 import joblib
+# pyrefly: ignore [missing-import]
 import matplotlib
 matplotlib.use("Agg")
+# pyrefly: ignore [missing-import]
 import matplotlib.pyplot as plt
 import seaborn as sns
 
@@ -80,7 +84,7 @@ def run():
 
     # ------------------------------------------------------------------
     # Model 1: IsolationForest (unsupervised — fit on normal only)
-    # ------------------------------------------------------------------
+
     print_section("Model 1: IsolationForest (unsupervised)")
     X_normal = X_tr[y_tr == 0]
     isoforest = IsolationForest(n_estimators=300, contamination="auto",

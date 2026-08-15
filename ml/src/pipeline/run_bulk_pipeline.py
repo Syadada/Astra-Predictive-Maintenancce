@@ -1,6 +1,7 @@
 import os
 import sys
 import pandas as pd
+# pyrefly: ignore [missing-import]
 from sqlalchemy import create_engine
 from collections import namedtuple
 
@@ -27,6 +28,7 @@ def run_bulk_pipeline():
     cleaner = CleaningPipeline()
     engineer = FeatureEngineeringPipeline()
     
+    # pyrefly: ignore [missing-import]
     from sqlalchemy import text
     with engine.connect() as conn:
         conn.execute(text("TRUNCATE TABLE feature_windows CASCADE"))

@@ -7,6 +7,7 @@ Synthetic Kerry CSVs are used for sensor value display (sparklines).
 import os
 import math
 import random
+# pyrefly: ignore [missing-import]
 import numpy as np
 import pandas as pd
 

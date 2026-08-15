@@ -1,4 +1,5 @@
 import os
+# pyrefly: ignore [missing-import]
 from pptx import Presentation
 
 PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))

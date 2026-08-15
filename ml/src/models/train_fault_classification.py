@@ -12,10 +12,14 @@ Run from ml/:  python -X utf8 src/models/train_fault_classification.py
 import os
 import json
 import warnings
+# pyrefly: ignore [missing-import]
 import numpy as np
+# pyrefly: ignore [missing-import]
 import joblib
+# pyrefly: ignore [missing-import]
 import matplotlib
 matplotlib.use("Agg")
+# pyrefly: ignore [missing-import]
 import matplotlib.pyplot as plt
 import seaborn as sns
 

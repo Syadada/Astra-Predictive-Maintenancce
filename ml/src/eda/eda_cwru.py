@@ -9,9 +9,12 @@ Run from ml/:  python src/eda/eda_cwru.py
 import os
 import warnings
 import pandas as pd
+# pyrefly: ignore [missing-import]
 import numpy as np
+# pyrefly: ignore [missing-import]
 import matplotlib
 matplotlib.use("Agg")
+# pyrefly: ignore [missing-import]
 import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.decomposition import PCA

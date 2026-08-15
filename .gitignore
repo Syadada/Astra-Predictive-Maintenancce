@@ -32,3 +32,9 @@ ml/get-pip.py
 
 # Local secrets overrides
 ml/src/api/local_config.py
+
+# Nested extracted subfolders and zip packages
+PredictaGuard-feature-astra-v2/
+*.zip
+ASTRA_Project_Submission/
+

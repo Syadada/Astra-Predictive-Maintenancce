@@ -1,5 +1,6 @@
 import os
 import sys
+# pyrefly: ignore [missing-import]
 from pptx import Presentation
 
 # Force stdout to use utf-8
