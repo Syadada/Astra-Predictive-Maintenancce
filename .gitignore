@@ -51,4 +51,6 @@ goal/
 # Images and raw data
 dashboard/*.png
 dashboard/*.jpg
+dashboard/astra_portfolio*.html
 /ml/data/raw/
+
