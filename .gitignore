@@ -37,4 +37,18 @@ ml/src/api/local_config.py
 PredictaGuard-feature-astra-v2/
 *.zip
 ASTRA_Project_Submission/
+15-08-2026/
+scratch/
 
+# Ignore presentation files, PDFs, docx, evaluasi, and goal folders
+*.pptx
+*.ppt
+*.pdf
+*.docx
+evaluasi/
+goal/
+
+# Images and raw data
+dashboard/*.png
+dashboard/*.jpg
+/ml/data/raw/
