@@ -52,5 +52,7 @@ goal/
 dashboard/*.png
 dashboard/*.jpg
 dashboard/astra_portfolio*.html
+dashboard/presentationsite.html
 /ml/data/raw/
+
 
